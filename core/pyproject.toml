@@ -1,0 +1,19 @@
+[project]
+name = "wattwise-core"
+version = "0.1.0"
+description = "Wattwise: leitura de FIT, qualidade de dados e métricas de treino (sem base de dados nem rede)"
+requires-python = ">=3.12"
+dependencies = ["numpy>=2.0", "scipy>=1.13", "pydantic>=2.7", "pyyaml>=6.0", "garmin-fit-sdk>=21.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "hypothesis>=6", "fit-tool>=0.9"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

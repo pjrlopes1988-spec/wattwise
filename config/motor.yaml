@@ -1,0 +1,53 @@
+# Wattwise — parâmetros do motor e das métricas.
+# Valores por defeito da ESPECIFICACAO.md. O Paulo valida e ajusta.
+# Qualquer alteração muda a versão (hash) registada em cada decisão do motor.
+
+potencia:
+  # Limite superior de cada zona em % do FTP (inclusivo). Z7 não tem limite. (D-007)
+  zonas_coggan_limites_pct: [55, 75, 90, 105, 120, 150]
+  np_janela_s: 30
+  curva_duracoes_s: [5, 60, 300, 1200, 3600]
+
+frequencia_cardiaca:
+  # Friel, ciclismo: limite superior de cada zona em % da FC limiar (D-013)
+  zonas_friel_limites_pct: [81, 89, 93, 99, 102, 106]
+  zonas_friel_nomes: [Z1, Z2, Z3, Z4, Z5a, Z5b, Z5c]
+  # Coeficiente b do TRIMP de Banister (o fator 'a' anula-se na normalização) (D-011)
+  hrss_b_masculino: 1.92
+  hrss_b_feminino: 1.67
+  desacoplamento_bom_pct: 5.0
+
+carga_forma:
+  constante_condicao_dias: 42
+  constante_fadiga_dias: 7
+  # "linear": x/42 (como na spec); "exponencial": 1 - e^(-1/42) (D-008)
+  fator_media: linear
+  # Abaixo desta Condição a forma em % não é calculada ("a calibrar") (D-009)
+  condicao_minima_para_pct: 15
+  # Último recurso sem potência nem FC: carga = RPE x min x 100 / (rpe_limiar x 60) (D-021)
+  rpe_limiar: 7
+  faixas_frescura_pct:
+    transicao_acima: 25
+    fresco_acima: 5
+    neutra_acima: -10
+    otima_acima: -30   # abaixo disto: risco elevado
+
+modelo_potencia_critica:
+  duracao_minima_esforco_s: 300
+  duracao_maxima_esforco_s: 1800
+  # FTP = CP x fator. A VALIDAR pelo Paulo e na comparação com o Intervals.icu (D-010)
+  ftp_fator_cp: 1.0
+  # Valores de população para o ajuste com um único esforço, sem histórico (D-010). A VALIDAR.
+  populacao:
+    w_linha_j: 15000
+    pmax_w_por_kg: 14.0
+
+qualidade:
+  potencia_maxima_plausivel_w: 2500
+  fc_minima_plausivel: 30
+  fc_folga_acima_fc_max: 5        # bpm acima da FC máx. do atleta = pico
+  fc_salto_maximo_bpm_por_s: 25
+  cadencia_minima_falha_potencia: 30  # potência 0 com cadência acima disto = falha de sinal
+  pausa_minima_s: 10                 # intervalo sem registos maior que isto = pausa
+  indice_minimo_para_modelos: 0.9    # eFTP, W' e modelos personalizados
+  penalizacao_fc_otica: 0.1

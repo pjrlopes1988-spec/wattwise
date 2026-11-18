@@ -1,6 +1,7 @@
 # Wattwise — Proposta de Arquitetura (Fase 0)
 
-> Estado: **proposta, aguarda aprovação do Paulo**.
+> Estado: **provisória** — em uso desde 18/11/2026; muda-se o que o Paulo não aprovar.
+> Nota: a estrutura de pacotes foi simplificada (ver D-019): o código está em `core/src/ww/`.
 > Base: `ESPECIFICACAO.md` v1 (nov. 2026). Decisões e perguntas em `DECISOES.md`.
 
 ---
