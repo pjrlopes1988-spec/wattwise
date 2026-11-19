@@ -222,3 +222,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Desacoplamento: não comparável neste ficheiro.** Intervals.icu 6,3%; na Wattwise varia entre −3,7% e +6,9% consoante pormenores (aquecimento, média vs. potência ponderada), porque a volta é muito irregular (NP 224 vs. média 175). Como a spec indica, o desacoplamento só é calculado em esforços contínuos em Z2; validar com a volta estável de 10/11 (Intervals: 0,6%).
 - **Por validar:** carga por FC (HRSS) — faltam a FC limiar, FC máxima e FC de repouso definidas no Intervals.icu.
 - **Estado:** Provisória.
+
+### D-040 — 3.º ficheiro real (rolo, 5 × 5 min em Z3, 09/11/2026) e intervalos a partir de 76%
+- **Resultado (FTP 338):** média 0,0%, potência ponderada 0,0%, intensidade 0,0%, carga −0,4%, FC média +0,1%, melhores 5 s / 1 / 5 / 20 min entre 0,0% e +0,4%. Qualidade 0,999.
+- **Desacoplamento:** Intervals.icu 10,9%; Wattwise 11,8% (média ÷ média por metade, método clássico). Variantes testadas: 10,2% (potência ponderada ÷ FC) a 11,8%. Mantém-se o método clássico; diferença < 1 ponto aceite (tolerância nos testes: ±1,5 pontos).
+- **Intervalos (substitui os limiares de D-029/D-035):** com entrada a 88% nenhum dos 5 blocos a ~270 W (80% do FTP) era detetado; o Intervals.icu deteta-os. Novos limiares: **entrada 76% do FTP (início da Z3), saída 70%**. Resultado: 5 intervalos, durações a ≤ 9 s e potências a ≤ 2,6% da tabela do Intervals.icu; o bloco de 12 min de 17/11 passa a 716 s (planeado 720 s). Numa volta de estrada (14/11) são detetados 24 esforços (sobretudo subidas).
+- **Pontas dos intervalos:** acertadas com o mínimo entre o segundo e a mediana dos 3 s à volta, para um pico isolado de ruído não esticar o intervalo.
+- **Estado:** Provisória.

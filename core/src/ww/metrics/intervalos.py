@@ -8,6 +8,7 @@ Para cada intervalo calcula-se também a recuperação da FC (HRRc).
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 
 import numpy as np
@@ -82,6 +83,13 @@ def detetar(serie: Serie, cfg: Intervalos, *, ftp: float | None = None, fc_limia
         return []
 
     suave = np.nan_to_num(media_centrada(x, cfg.suavizacao_s), nan=-1.0)
+    # Para acertar as pontas: um segundo conta se ele e a mediana dos 3 s à volta estão acima do
+    # limiar (a mediana ignora um pico isolado de ruído e mantém a transição exata de um bloco)
+    viz = np.vstack([np.concatenate((x[:1], x[:-1])), x, np.concatenate((x[1:], x[-1:]))])
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)   # colunas só com NaN
+        mediana = np.nanmedian(viz, axis=0)
+    fino = np.nan_to_num(np.minimum(x, mediana), nan=-1.0)
     seqs = _histerese(suave, limiar, saida)
 
     juntas: list[list[int]] = []
@@ -94,14 +102,15 @@ def detetar(serie: Serie, cfg: Intervalos, *, ftp: float | None = None, fc_limia
     fc = serie.fc
     out = []
     for a, b in juntas:
-        # A suavização desloca as pontas (para fora ou para dentro): acerta-as no sinal original
-        while a > 0 and np.isfinite(x[a - 1]) and x[a - 1] >= limiar:
+        # A suavização desloca as pontas (para fora ou para dentro): acerta-as num sinal pouco
+        # suavizado (3 s), para um pico isolado de ruído não esticar o intervalo
+        while a > 0 and fino[a - 1] >= limiar:
             a -= 1
-        while b < len(x) and np.isfinite(x[b]) and x[b] >= limiar:
+        while b < len(x) and fino[b] >= limiar:
             b += 1
-        while a < b and not (np.isfinite(x[a]) and x[a] >= limiar):
+        while a < b and not fino[a] >= limiar:
             a += 1
-        while b > a and not (np.isfinite(x[b - 1]) and x[b - 1] >= limiar):
+        while b > a and not fino[b - 1] >= limiar:
             b -= 1
         if b - a < cfg.duracao_minima_s:
             continue

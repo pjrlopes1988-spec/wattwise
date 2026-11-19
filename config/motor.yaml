@@ -80,8 +80,8 @@ qualidade:
 
 intervalos:
   # Deteção automática (sem depender do botão de volta) (D-029)
-  limiar_pct_ftp: 88          # trabalho = potência suavizada >= 88% do FTP
-  saida_pct_ftp: 80           # ...e só acaba abaixo de 80% (histerese: oscilações não partem o intervalo)
+  limiar_pct_ftp: 76          # trabalho = potência suavizada >= 76% do FTP (início da Z3)
+  saida_pct_ftp: 70           # ...e só acaba abaixo de 70% (histerese: oscilações não partem o intervalo)
   limiar_pct_fc_limiar: 92    # sem potência: FC >= 92% da FC limiar
   saida_pct_fc_limiar: 88
   suavizacao_s: 10

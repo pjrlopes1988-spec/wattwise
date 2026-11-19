@@ -20,9 +20,11 @@ PASTA = Path(__file__).parent / "fixtures" / "fit"
 
 FICHEIRO_ROLO = PASTA / "wahoo_roam_rolo_2026-11-17.fit"
 FICHEIRO_ESTRADA = PASTA / "wahoo_roam_estrada_2026-11-14.fit"
+FICHEIRO_Z3 = PASTA / "wahoo_roam_rolo_z3_2026-11-09.fit"
 
 # Os ficheiros reais são dados pessoais e não estão no repositório (D-036): sem eles, salta.
 precisa_rolo = pytest.mark.skipif(not FICHEIRO_ROLO.exists(), reason="ficheiro FIT real não disponível (D-036)")
+precisa_z3 = pytest.mark.skipif(not FICHEIRO_Z3.exists(), reason="ficheiro FIT real não disponível (D-036)")
 precisa_estrada = pytest.mark.skipif(not FICHEIRO_ESTRADA.exists(), reason="ficheiro FIT real não disponível (D-036)")
 
 
@@ -98,3 +100,43 @@ def test_estrada_qualidade(estrada, cfg):
     limpa, rel = limpar(estrada, cfg.qualidade)
     assert rel.indice > 0.99
     assert avaliar(limpa, cfg.qualidade) == []
+
+
+@pytest.fixture(scope="module")
+def z3():
+    # Wahoo ELEMNT ROAM, rolo, 09/11/2026, 57 min, cinta de FC.
+    # 10 min a ~205 W, 5 × (5 min a ~270 W em cadência baixa + 3 min a ~190 W), arrefecimento.
+    return ler_ficheiro(FICHEIRO_Z3)
+
+
+@precisa_z3
+def test_z3_contra_o_intervals(z3, cfg):
+    r = analisar(z3, Fisiologia("M", ftp=338), cfg)
+    assert r.potencia_media == pytest.approx(226, rel=0.01)
+    assert r.potencia_ponderada == pytest.approx(237, rel=0.01)
+    assert r.intensidade == pytest.approx(0.701, rel=0.01)
+    assert r.carga == pytest.approx(47, rel=0.02)
+    assert r.fc_media == pytest.approx(138, rel=0.01)
+    for d, iv in {5: 657, 60: 305, 300: 277, 1200: 247}.items():
+        assert r.curva[d] == pytest.approx(iv, rel=0.01), d
+    assert r.curva[3600] is None   # atividade com menos de 60 min
+
+
+@precisa_z3
+def test_z3_desacoplamento(z3, cfg):
+    # Intervals.icu: 10,9%. Método clássico (média ÷ média por metade) dá 11,8% (D-040).
+    from ww.metrics.hr import desacoplamento
+    limpa, _ = limpar(z3, cfg.qualidade)
+    assert desacoplamento(limpa.potencia, limpa.fc) == pytest.approx(10.9, abs=1.5)
+
+
+@precisa_z3
+def test_z3_cinco_intervalos_como_no_intervals(z3, cfg):
+    # Tabela de intervalos do Intervals.icu: (duração s, potência média W)
+    intervals = [(301, 272), (293, 271), (301, 269), (295, 270), (294, 270)]
+    limpa, _ = limpar(z3, cfg.qualidade)
+    iv = detetar(limpa, cfg.intervalos, ftp=338)
+    assert len(iv) == 5
+    for meu, (dur, pot) in zip(iv, intervals):
+        assert abs(meu.duracao_s - dur) <= 10
+        assert meu.potencia_media == pytest.approx(pot, rel=0.03)
