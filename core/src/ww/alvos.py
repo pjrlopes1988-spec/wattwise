@@ -48,11 +48,15 @@ def resumir(passos: tuple[Passo, ...], **kw: object) -> list[str]:
             while passos[i + rep * tam:i + (rep + 1) * tam] == bloco:
                 rep += 1
             if rep > 1 or tam == 1:
-                txt = "; ".join(f"{_dur(p.segundos)} a {descrever(p, **kw)}" for p in bloco)  # type: ignore[arg-type]
+                txt = "; ".join(_frase(p, descrever(p, **kw)) for p in bloco)  # type: ignore[arg-type]
                 linhas.append(f"{rep} × [{txt}]" if rep > 1 else txt)
                 i += rep * tam
                 break
     return linhas
+
+
+def _frase(p: Passo, alvo: str) -> str:
+    return f"{_dur(p.segundos)} em {alvo}" if alvo.startswith("rampa") else f"{_dur(p.segundos)} a {alvo}"
 
 
 def _dur(seg: int) -> str:

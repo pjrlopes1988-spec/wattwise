@@ -87,20 +87,20 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 - **quinta 26/11** — Tejo · Resistência Z2 · 60 min · carga 40  
   10 min a 125–150 W (Z1) → 40 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 - **sábado 28/11** — Sintra · Tempo 2 × 15 min · 60 min · carga 48  
-  12 min a rampa 112→175 W → 2 × [15 min a 190–212 W (Z3); 5 min a 125–150 W (Z1)] → 8 min a rampa 150→112 W
+  12 min em rampa 112→175 W → 2 × [15 min a 190–212 W (Z3); 5 min a 125–150 W (Z1)] → 8 min em rampa 150→112 W
 - **domingo 29/11** — Tejo · Resistência Z2 · 120 min · carga 85  
   10 min a 125–150 W (Z1) → 100 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 
 **Semana 5 — Construção** (a partir de 21/12/2026)
 
 - **segunda 21/12** — Lousã · Sweet spot 2 × 12 min · 52 min · carga 47  
-  12 min a rampa 112→175 W → 2 × [12 min a 220–232 W (Z4); 4 min a 125–150 W (Z1)] → 8 min a rampa 150→112 W
+  12 min em rampa 112→175 W → 2 × [12 min a 220–232 W (Z4); 4 min a 125–150 W (Z1)] → 8 min em rampa 150→112 W
 - **terça 22/12** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 125–150 W (Z1) → 70 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 - **quinta 24/12** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 125–150 W (Z1) → 70 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 - **sábado 26/12** — Malhão · Limiar 4 × 6 min · 60 min · carga 57 · ALTA INTENSIDADE  
-  12 min a rampa 112→175 W → 4 × [6 min a 238–255 W (Z4); 4 min a 125–150 W (Z1)] → 8 min a rampa 150→112 W
+  12 min em rampa 112→175 W → 4 × [6 min a 238–255 W (Z4); 4 min a 125–150 W (Z1)] → 8 min em rampa 150→112 W
 - **domingo 27/12** — Tejo · Resistência Z2 · 210 min · carga 152  
   10 min a 125–150 W (Z1) → 190 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 
@@ -151,12 +151,12 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 - **sábado 28/11** — Tejo · Resistência Z2 · 165 min · carga 119  
   10 min a 155–186 W (Z1) → 145 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
 - **domingo 29/11** — Marão · Tempo 3 × 12 min · 68 min · carga 55  
-  12 min a rampa 140→217 W → 3 × [12 min a 236–264 W (Z3); 4 min a 155–186 W (Z1)] → 8 min a rampa 186→140 W
+  12 min em rampa 140→217 W → 3 × [12 min a 236–264 W (Z3); 4 min a 155–186 W (Z1)] → 8 min em rampa 186→140 W
 
 **Semana 5 — Construção** (a partir de 21/12/2026)
 
 - **segunda 21/12** — Açor · Sweet spot 4 × 10 min · 76 min · carga 73  
-  12 min a rampa 140→217 W → 4 × [10 min a 273–288 W (Z4); 4 min a 155–186 W (Z1)] → 8 min a rampa 186→140 W
+  12 min em rampa 140→217 W → 4 × [10 min a 273–288 W (Z4); 4 min a 155–186 W (Z1)] → 8 min em rampa 186→140 W
 - **terça 22/12** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 155–186 W (Z1) → 70 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
 - **quarta 23/12** — Tejo · Resistência Z2 · 60 min · carga 40  
@@ -166,7 +166,7 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 - **sábado 26/12** — Tejo · Resistência Z2 · 195 min · carga 141  
   10 min a 155–186 W (Z1) → 175 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
 - **domingo 27/12** — Torre · Limiar 4 × 8 min · 68 min · carga 70 · ALTA INTENSIDADE  
-  12 min a rampa 140→217 W → 4 × [8 min a 294–316 W (Z4); 4 min a 155–186 W (Z1)] → 8 min a rampa 186→140 W
+  12 min em rampa 140→217 W → 4 × [8 min a 294–316 W (Z4); 4 min a 155–186 W (Z1)] → 8 min em rampa 186→140 W
 
 ---
 
@@ -200,14 +200,14 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 - **sexta 27/11** — Tejo · Resistência Z2 · 60 min · carga 40  
   10 min a 120–144 W (Z1) → 40 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 - **sábado 28/11** — Alvão · Tempo 3 × 15 min · 80 min · carga 67  
-  12 min a rampa 108→168 W → 3 × [15 min a 182–204 W (Z3); 5 min a 120–144 W (Z1)] → 8 min a rampa 144→108 W
+  12 min em rampa 108→168 W → 3 × [15 min a 182–204 W (Z3); 5 min a 120–144 W (Z1)] → 8 min em rampa 144→108 W
 - **domingo 29/11** — Tejo · Resistência Z2 · 120 min · carga 85  
   10 min a 120–144 W (Z1) → 100 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 
 **Semana 5 — Específico** (a partir de 21/12/2026)
 
 - **segunda 21/12** — Cierzo · VO2máx 5 × 4 min · 60 min · carga 61 · ALTA INTENSIDADE  
-  12 min a rampa 108→168 W → 5 × [4 min a 254–283 W (Z5); 4 min a 108–132 W (Z1)] → 8 min a rampa 144→108 W
+  12 min em rampa 108→168 W → 5 × [4 min a 254–283 W (Z5); 4 min a 108–132 W (Z1)] → 8 min em rampa 144→108 W
 - **terça 22/12** — Tejo · Resistência Z2 · 120 min · carga 85  
   10 min a 120–144 W (Z1) → 100 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 - **quinta 24/12** — Tejo · Resistência Z2 · 120 min · carga 85  
@@ -215,7 +215,7 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 - **sexta 25/12** — Tejo · Resistência Z2 · 60 min · carga 40  
   10 min a 120–144 W (Z1) → 40 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 - **sábado 26/12** — Xaloc · Anaeróbio 6 × 45 s · 50 min · carga 34 · ALTA INTENSIDADE  
-  12 min a rampa 108→168 W → 6 × [45 s a 300–336 W (Z6); 4 min 15 s a 108–132 W (Z1)] → 8 min a rampa 144→108 W
+  12 min em rampa 108→168 W → 6 × [45 s a 300–336 W (Z6); 4 min 15 s a 108–132 W (Z1)] → 8 min em rampa 144→108 W
 - **domingo 27/12** — Tejo · Resistência Z2 · 150 min · carga 107  
   10 min a 120–144 W (Z1) → 130 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 
@@ -262,14 +262,14 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 **Semana 1 — Base** (a partir de 23/11/2026)
 
 - **quarta 25/11** — Montesinho · Express Tempo 30 · 30 min · carga 27  
-  5 min a rampa 104→161 W, cadência 90 rpm → 2 × [10 min a 179–189 W (Z3), cadência 90 rpm; 2 min a 126 W (Z1), cadência 90 rpm] → 1 min a 115 W (Z1), cadência 85 rpm
+  5 min em rampa 104→161 W, cadência 90 rpm → 2 × [10 min a 179–189 W (Z3), cadência 90 rpm; 2 min a 126 W (Z1), cadência 90 rpm] → 1 min a 115 W (Z1), cadência 85 rpm
 - **sábado 28/11** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 115–138 W (Z1) → 70 min a 143–166 W (Z2) → 10 min a 115–138 W (Z1)
 
 **Semana 5 — Construção** (a partir de 21/12/2026)
 
 - **quarta 23/12** — Gerês · Express Sweet Spot 30 · 30 min · carga 30  
-  5 min a rampa 104→161 W, cadência 90 rpm → 2 × [9 min a 202–212 W (Z3), cadência 90 rpm; 3 min a 115 W (Z1), cadência 90 rpm] → 1 min a 115 W (Z1), cadência 85 rpm
+  5 min em rampa 104→161 W, cadência 90 rpm → 2 × [9 min a 202–212 W (Z3), cadência 90 rpm; 3 min a 115 W (Z1), cadência 90 rpm] → 1 min a 115 W (Z1), cadência 85 rpm
 - **sábado 26/12** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 115–138 W (Z1) → 70 min a 143–166 W (Z2) → 10 min a 115–138 W (Z1)
 
@@ -319,7 +319,7 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 - **sábado 26/12** — Tejo · Resistência Z2 · 150 min · carga 107  
   10 min a 95–114 W (Z1) → 130 min a 118–137 W (Z2) → 10 min a 95–114 W (Z1)
 - **domingo 27/12** — Lousã · Sweet spot 2 × 12 min · 52 min · carga 47  
-  12 min a rampa 86→133 W → 2 × [12 min a 167–177 W (Z4); 4 min a 95–114 W (Z1)] → 8 min a rampa 114→86 W
+  12 min em rampa 86→133 W → 2 × [12 min a 167–177 W (Z4); 4 min a 95–114 W (Z1)] → 8 min em rampa 114→86 W
 
 ---
 
