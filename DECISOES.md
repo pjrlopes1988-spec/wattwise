@@ -427,3 +427,12 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Recusado fora de **1–7 W/kg** (erro de escrita); se ficar a mais de **15%** do eFTP, a app pede confirmação mas aceita.
 - **Modo do FTP** (escolha do atleta): **automático** (sugerido; o valor manual é respeitado e a app continua a propor ajustes pelo eFTP, sempre com aceitar/recusar — D-024/D-034) ou **manual** (a app nunca propõe mudanças; o eFTP aparece só como informação).
 - **Estado:** Aprovada (pedido do Paulo); limites provisórios.
+
+## Fase 4 — app
+
+### D-072 — Estilo dos ecrãs e servidor (API)
+- Protótipo dos ecrãs (8): https://claude.ai/artifact/QJvfhiR2pQmn9xB2cDTn3a — estilo grafite + verde-lima "watt", cartões-herói escuros, Inter Tight nos números. Aprovado pelo Paulo ("manda").
+- **Servidor** `backend/` (FastAPI + SQLAlchemy; SQLite nos testes, PostgreSQL na UE em produção): registo com consentimento explícito para dados de saúde (registado com versão do texto); perfil e preferências; provas A–D e etapas; FTP manual; plano; questionário da manhã; "Hoje" (prontidão + decisão + guarda da rampa + explicação) com **registo de auditoria** de cada decisão; escolha indoor/outdoor; upload de FIT (análise, deduplicação, ficheiro original guardado); exportação ZWO/ERG/MRC; exportação e apagamento de todos os dados (RGPD).
+- **Explicações** (`ww.explicacao`): textos-modelo PT-PT a partir do registo, só com os números do registo; são a explicação por defeito e a reserva do LLM (spec 7.5). O LLM fica atrás de interruptor até parecer jurídico (D-016).
+- **Por fazer nesta fase:** autenticação (Fase 6), app React Native/Expo, funcionamento offline, painel interno.
+- **Estado:** Provisória.
