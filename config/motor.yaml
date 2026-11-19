@@ -68,6 +68,25 @@ qualidade:
   pausa_minima_s: 10                 # intervalo sem registos maior que isto = pausa
   indice_minimo_para_modelos: 0.9    # eFTP, W' e modelos personalizados
   penalizacao_fc_otica: 0.1
+  # Atividades suspeitas (excluídas do eFTP até o atleta confirmar) (D-028)
+  velocidade_motorizada_ms: 20.0         # 72 km/h...
+  velocidade_motorizada_min_s: 60        # ...mantidos durante 60 s seguidos
+  eficiencia_desvio_suspeito_pct: 20     # potência/FC muito diferente do habitual do atleta
+  curva_salto_suspeito_pct: 25           # melhor potência muito acima do melhor da época
+
+intervalos:
+  # Deteção automática (sem depender do botão de volta) (D-029)
+  limiar_pct_ftp: 88          # trabalho = potência suavizada >= 88% do FTP
+  limiar_pct_fc_limiar: 92    # sem potência: FC >= 92% da FC limiar
+  suavizacao_s: 10
+  duracao_minima_s: 30
+  juntar_pausas_ate_s: 10     # quedas curtas dentro do mesmo intervalo
+  recuperacao_fc_s: 60        # HRRc: descida da FC 60 s após o fim
+
+seiler:
+  # Zona mais alta (de 7) incluída em "baixa" e em "limiar"; acima = "alta" (D-014)
+  potencia_ultima_zona: [2, 4]
+  fc_ultima_zona: [2, 4]
 
 recuperacao:
   # VFC (spec 6.4): média de 7 dias comparada com a faixa normal dos últimos 60 dias (D-026)

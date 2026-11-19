@@ -41,6 +41,7 @@ def ler_bytes(dados: bytes, pausa_minima_s: float = 10) -> Serie:
         pausa_minima_s=pausa_minima_s,
         fonte_fc=_fonte_fc(mensagens.get("device_info_mesgs", [])),
         desporto=_desporto(mensagens.get("session_mesgs", [])),
+        subdesporto=_subdesporto(mensagens.get("session_mesgs", [])),
         avisos=tuple(avisos),
     )
 
@@ -51,6 +52,7 @@ def construir_serie(
     pausa_minima_s: float,
     fonte_fc: FonteFC = "desconhecida",
     desporto: str = "cycling",
+    subdesporto: str = "",
     avisos: tuple[str, ...] = (),
 ) -> Serie:
     regs = sorted((r for r in registos if r.get("timestamp") is not None), key=lambda r: r["timestamp"])
@@ -81,7 +83,7 @@ def construir_serie(
         cad[sl] = _num(r.get("cadence"))
         vel[sl] = _num(r.get("enhanced_speed", r.get("speed")))
         pos += n
-    return Serie(inicio, pot, fc, cad, vel, fonte_fc=fonte_fc, desporto=desporto, avisos=avisos)
+    return Serie(inicio, pot, fc, cad, vel, fonte_fc=fonte_fc, desporto=desporto, subdesporto=subdesporto, avisos=avisos)
 
 
 def _num(v: Any) -> float:
@@ -105,3 +107,9 @@ def _desporto(sessoes: list[dict[str, Any]]) -> str:
     if sessoes and sessoes[0].get("sport"):
         return str(sessoes[0]["sport"])
     return "cycling"
+
+
+def _subdesporto(sessoes: list[dict[str, Any]]) -> str:
+    if sessoes and sessoes[0].get("sub_sport"):
+        return str(sessoes[0]["sub_sport"])
+    return ""

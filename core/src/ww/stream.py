@@ -28,6 +28,7 @@ class Serie:
     velocidade: Array  # m/s
     fonte_fc: FonteFC = "desconhecida"
     desporto: str = "cycling"
+    subdesporto: str = ""
     avisos: tuple[str, ...] = field(default_factory=tuple)
 
     def __post_init__(self) -> None:

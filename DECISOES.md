@@ -72,7 +72,7 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 ### D-014 — Correspondência para as 3 zonas de Seiler
 - **Contexto:** o modelo de Seiler define-se por limiares fisiológicos (LT1/LT2), que a app não mede diretamente.
 - **Proposta:** Baixa = Z1–Z2 de potência (ou FC < ~limiar aeróbio); Limiar = Z3–Z4; Alta = Z5 ou mais. Configurável.
-- **Estado:** Provisória (proposta em uso; falta o valor/validação do Paulo).
+- **Estado:** Provisória; implementada em `ww.metrics.aerobio` (Baixa = Z1–Z2, Limiar = Z3–Z4, Alta = Z5+). Falta a validação do Paulo.
 
 ### D-015 — Linhas de base de VFC por fonte
 - **Proposta:** uma linha de base por fonte e por métrica (rMSSD ≠ SDNN, spec 5). Se o atleta mudar de dispositivo, nova calibração de 14 dias; durante esse tempo o motor decide sem VFC e diz isso na explicação.
@@ -147,4 +147,19 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 
 ### D-027 — Importação de bem-estar por CSV
 - **Decisão:** até haver integrações (Fase 5), a VFC, a FC de repouso e o sono entram por CSV exportado da app do atleta. Formato base `data;fonte;rmssd;sdnn;fc_repouso;sono_h`; outros formatos com um mapa de colunas. Valores fora de limites plausíveis são rejeitados e reportados, nunca corrigidos.
+- **Estado:** Provisória.
+
+### D-028 — Atividades suspeitas
+- **Decisão:** marcam-se como suspeitas (e ficam fora do eFTP/W′ até o atleta confirmar; a carga conta na mesma):
+  - **transporte motorizado:** ≥ 60 s seguidos acima de 72 km/h;
+  - **e-bike:** registada como tal no ficheiro (sub_sport);
+  - **potência inconsistente:** potência ponderada / FC média a mais de 20% do habitual do atleta (potenciómetro ou rolo mal calibrado, outra bicicleta);
+  - **potência muito acima do habitual:** melhor potência numa duração > 25% acima do melhor da época.
+- Calibração por potenciómetro: escala e desvio por dispositivo, aplicados antes de qualquer cálculo.
+- **Limitação:** e-bike sem indicação no ficheiro não é detetada (precisaria de altimetria; fica para depois).
+- **Estado:** Provisória.
+
+### D-029 — Deteção automática de intervalos
+- **Decisão:** trabalho = potência suavizada (média centrada de 10 s) ≥ 88% do FTP, ou, sem potência, FC ≥ 92% da FC limiar. Quedas ≤ 10 s juntam-se ao mesmo intervalo; intervalos < 30 s ignorados; pontas acertadas no sinal original. HRRc = FC no fim − FC 60 s depois.
+- **Limitação:** sprints curtos (< 30 s) e intervalos em Z3 (sweet spot abaixo de 88%) não são detetados com estes valores; podem precisar de uma segunda passagem com limiares próprios.
 - **Estado:** Provisória.

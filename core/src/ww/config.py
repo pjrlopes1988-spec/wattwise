@@ -109,6 +109,24 @@ class Qualidade(_Base):
     pausa_minima_s: float = Field(gt=0)
     indice_minimo_para_modelos: float = Field(ge=0, le=1)
     penalizacao_fc_otica: float = Field(ge=0, le=1)
+    velocidade_motorizada_ms: float = Field(gt=0)
+    velocidade_motorizada_min_s: int = Field(gt=0)
+    eficiencia_desvio_suspeito_pct: float = Field(gt=0)
+    curva_salto_suspeito_pct: float = Field(gt=0)
+
+
+class Intervalos(_Base):
+    limiar_pct_ftp: float = Field(gt=0)
+    limiar_pct_fc_limiar: float = Field(gt=0)
+    suavizacao_s: int = Field(ge=1)
+    duracao_minima_s: int = Field(ge=1)
+    juntar_pausas_ate_s: int = Field(ge=0)
+    recuperacao_fc_s: int = Field(ge=1)
+
+
+class Seiler(_Base):
+    potencia_ultima_zona: tuple[int, int]
+    fc_ultima_zona: tuple[int, int]
 
 
 class Config(_Base):
@@ -118,6 +136,8 @@ class Config(_Base):
     modelo_potencia_critica: ModeloPotenciaCritica
     eftp: Eftp
     recuperacao: Recuperacao
+    intervalos: Intervalos
+    seiler: Seiler
     qualidade: Qualidade
     versao: str = ""
 
