@@ -62,6 +62,10 @@ eftp:
   descida_minimo_dias_dados: 42  # sem 6 semanas de dados de potência na app, não se propõem descidas
   descida_max_pct: 5.0           # cada proposta desce no máximo 5%
   fator_teste_20min: 0.95
+  # FTP definido manualmente pelo atleta (D-071)
+  ftp_manual_w_kg_min: 1.0           # fora de 1–7 W/kg: recusado (quase de certeza erro de escrita)
+  ftp_manual_w_kg_max: 7.0
+  ftp_manual_aviso_diferenca_pct: 15 # mais longe do eFTP do que isto: pedir confirmação (mas aceitar)
 
 qualidade:
   potencia_maxima_plausivel_w: 2500

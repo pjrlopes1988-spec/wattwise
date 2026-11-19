@@ -90,6 +90,9 @@ class Eftp(_Base):
     descida_minimo_dias_dados: int = Field(ge=0)
     descida_max_pct: float = Field(gt=0)
     fator_teste_20min: float = Field(gt=0.8, le=1.0)
+    ftp_manual_w_kg_min: float = Field(gt=0)
+    ftp_manual_w_kg_max: float = Field(gt=0)
+    ftp_manual_aviso_diferenca_pct: float = Field(gt=0)
 
 
 class Recuperacao(_Base):

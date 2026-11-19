@@ -49,8 +49,10 @@ def avaliar(
     hoje: date,
     cfg: Config,
     dias_com_dados_potencia: int,
+    modo: str = "automatico",
 ) -> Proposta | None:
-    if estimativa is None or ftp_atual <= 0:
+    # Modo manual: o atleta gere o FTP; a app nunca propõe mudanças (mostra o eFTP só como informação) (D-071)
+    if modo == "manual" or estimativa is None or ftp_atual <= 0:
         return None
     c = cfg.eftp
     est = estimativa.ftp

@@ -19,7 +19,8 @@ Sexo = Literal["M", "F"]
 Nivel = Literal["iniciante", "intermedio", "avancado", "competicao"]
 Disciplina = Literal["estrada", "gravel", "btt_xco", "btt_maratona", "contrarrelogio"]
 TipoObjetivo = Literal["prova", "ftp", "peso", "resistencia"]
-Fonte = Literal["atleta", "dispositivo", "teste", "estimado"]
+Fonte = Literal["atleta", "dispositivo", "teste", "estimado", "eftp"]
+ModoFTP = Literal["automatico", "manual"]
 Ambiente = Literal["indoor", "outdoor"]
 OndeTreina = Literal["outdoor", "indoor", "ambos"]
 Prioridade = Literal["A", "B", "C", "D"]
@@ -54,6 +55,14 @@ class Objetivo:
     tipo: TipoObjetivo
     data_prova: date | None = None
     nome_prova: str = ""
+
+
+@dataclass(frozen=True)
+class RegistoFTP:
+    """Um valor de FTP e a data a partir da qual vale (D-071)."""
+    data: date
+    valor: float
+    fonte: Fonte                       # "atleta" (manual), "teste", "eftp" (proposta aceite), "estimado"
 
 
 @dataclass(frozen=True)
@@ -123,6 +132,9 @@ class Atleta:
     provas: tuple[Prova, ...] = ()     # calendário de provas A–D (D-060)
     ciclo: Ciclo | None = None         # escolha do atleta; None = ainda não escolheu → sugestão (D-061)
     agressividade: int | None = None   # 1 (menos agressivo) a 5 (mais agressivo); None = sugestão 3 (D-069)
+    # FTP: histórico com data e origem; modo automático (propostas pelo eFTP) ou manual (D-071)
+    historico_ftp: tuple["RegistoFTP", ...] = ()
+    ftp_modo: ModoFTP = "automatico"
 
     def idade(self, em: date) -> int:
         d = self.data_nascimento
@@ -264,3 +276,37 @@ def agressividade(a: Atleta, hoje: date, cfg: Config) -> int:
     if a.idade(hoje) < cfg.perfil.idade_adulto:
         v = min(v, cfg.plano.agressividade_max_menores)
     return v
+
+
+# ------------------------------------------------------------------ FTP manual (D-071)
+
+class FTPInvalido(ValueError):
+    pass
+
+
+def ftp_em_vigor(a: Atleta, data: date) -> float | None:
+    """FTP válido numa data: o último registo até essa data. Atividades antigas usam o FTP da sua época."""
+    anteriores = [r for r in a.historico_ftp if r.data <= data]
+    if anteriores:
+        return max(anteriores, key=lambda r: r.data).valor
+    return a.ftp.valor if a.ftp is not None else None
+
+
+def definir_ftp_manual(a: Atleta, valor: float, data: date, cfg: Config,
+                       eftp: float | None = None) -> tuple[Atleta, tuple[str, ...]]:
+    """O atleta escreve o seu FTP. Vale a partir de `data`; o histórico anterior não muda.
+
+    Recusa valores fora de 1–7 W/kg (erro de escrita); avisa (e pede confirmação na app) se ficar
+    longe do eFTP. Devolve o atleta atualizado e os avisos.
+    """
+    e = cfg.eftp
+    wkg = valor / a.peso_kg
+    if not e.ftp_manual_w_kg_min <= wkg <= e.ftp_manual_w_kg_max:
+        raise FTPInvalido(f"{valor:.0f} W = {wkg:.1f} W/kg: fora de {e.ftp_manual_w_kg_min:g}–{e.ftp_manual_w_kg_max:g} W/kg")
+    avisos: list[str] = []
+    if eftp:
+        dif = (valor - eftp) / eftp * 100
+        if abs(dif) > e.ftp_manual_aviso_diferenca_pct:
+            avisos.append(f"diferenca_grande_eftp:{dif:+.0f}%")
+    hist = tuple(r for r in a.historico_ftp if r.data != data) + (RegistoFTP(data, float(valor), "atleta"),)
+    return replace(a, ftp=Valor(float(valor), "atleta"), historico_ftp=tuple(sorted(hist, key=lambda r: r.data))), tuple(avisos)

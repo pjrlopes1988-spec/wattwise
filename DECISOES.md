@@ -421,3 +421,9 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 ### D-070 — Fase 3 fechada (Paulo, 19/11/2026)
 - Motor de adaptação diária aprovado; critério cumprido (simulação de temporada em 8 cenários × 6 meses, 0 violações). Limiares provisórios a rever com o Paulo (prontidão e rampa por nível) e a validar na fase alfa com atletas reais.
 - Próximo: Fase 4 — app no telemóvel. Primeiro uma proposta dos ecrãs para aprovação; só depois o código.
+
+### D-071 — O atleta pode definir o FTP manualmente (Paulo, 19/11/2026)
+- No Perfil → "FTP e zonas", o atleta escreve o FTP; vale **a partir dessa data** (histórico `historico_ftp` com data e origem: manual, teste, eFTP aceite, estimado). As atividades anteriores mantêm o FTP que estava em vigor (`ftp_em_vigor`).
+- Recusado fora de **1–7 W/kg** (erro de escrita); se ficar a mais de **15%** do eFTP, a app pede confirmação mas aceita.
+- **Modo do FTP** (escolha do atleta): **automático** (sugerido; o valor manual é respeitado e a app continua a propor ajustes pelo eFTP, sempre com aceitar/recusar — D-024/D-034) ou **manual** (a app nunca propõe mudanças; o eFTP aparece só como informação).
+- **Estado:** Aprovada (pedido do Paulo); limites provisórios.
