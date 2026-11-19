@@ -203,6 +203,7 @@ class Provas(_Base):
     conta_como_sessao_chave: dict[str, bool]
     ativacao_antes: dict[str, bool]
     etapas_max_dias: int = Field(ge=2, le=60)
+    prolongar_recuperacao_max_semanas: int = Field(ge=0, le=3)
     duracao_por_defeito_h: float = Field(gt=0)
     intensidade_por_duracao: list[tuple[float, float]]
 

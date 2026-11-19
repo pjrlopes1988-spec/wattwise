@@ -1,6 +1,6 @@
 # Wattwise — Planos dos cenários de teste (Fase 2)
 
-Gerado com a configuração `0e3e472b058c` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
+Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
 
 **Como ler:** *Carga alvo* = a necessária para subir a Condição o máximo permitido para o nível; *Planeada* = o que cabe na disponibilidade; *Subida* = variação da Condição na semana (limite: iniciante 5, intermedio 6, avancado 7, competicao 8). Em todos os cenários, verificado por testes automáticos: disponibilidade respeitada, dias de descanso mínimos, nunca mais de 2 dias seguidos de alta intensidade, recuperação pelo menos a cada 4 semanas, subida da Condição dentro do limite em quaisquer 7 dias seguidos.
 
@@ -367,7 +367,7 @@ Gerado com a configuração `0e3e472b058c` e a biblioteca provisória de 240 tre
 | 15 | 01/03 | Afinação | 259 | 200 (6.0 h) | 48.9 | -3.6 | 4× recuperacao, 1× vo2max, 1× resistencia |  |
 | 16 | 08/03 | Afinação | 259 | 259 (4.7 h) | 47.5 | -1.5 | 1× vo2max, 1× prova A |  |
 | 17 | 15/03 | Recuperação | 282 | 212 (6.5 h) | 45.0 | -2.5 | 5× recuperacao, 1× resistencia |  |
-| 18 | 22/03 | Construção | 631 | 456 (10.1 h) | 48.3 | +3.3 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~194) |
+| 18 | 22/03 | Construção | 631 | 456 (10.1 h) | 48.3 | +3.3 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~194); verificar prontidão antes de retomar a carga (após prova A) |
 | 19 | 29/03 | Construção | 654 | 483 (10.4 h) | 51.7 | +3.4 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~191) |
 | 20 | 05/04 | Construção | 542 | 346 (6.5 h) | 51.4 | -0.3 | 3× resistencia, 1× limiar, 1× vo2max, 1× prova B | mini-afinação para prova B; carga limitada pela disponibilidade (faltam ~198) |
 | 21 | 12/04 | Recuperação | 208 | 147 (4.5 h) | 46.8 | -4.6 | 5× recuperacao, 1× resistencia |  |

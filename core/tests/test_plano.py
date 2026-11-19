@@ -395,10 +395,24 @@ def test_validacao_etapas(cfg):
     uma = Prova("V", date(2027, 6, 1), "A", etapas=(Etapa(date(2027, 6, 1), 2),))
     with pytest.raises(PerfilInvalido, match="pelo menos 2 etapas"):
         validar(_replace(base, provas=(uma,)), HOJE, cfg)
-    longe = Prova.por_etapas("V", "B", (Etapa(date(2027, 6, 1)), Etapa(date(2027, 7, 15))))
-    with pytest.raises(PerfilInvalido, match="mais de 30 dias"):
+    longe = Prova.por_etapas("V", "B", (Etapa(date(2027, 6, 1)), Etapa(date(2027, 6, 8))))   # 8 dias
+    with pytest.raises(PerfilInvalido, match="mais de 7 dias"):
         validar(_replace(base, provas=(longe,)), HOJE, cfg)
     sobreposta = (Prova("X", date(2027, 6, 2), "C"),
                   Prova.por_etapas("V", "A", (Etapa(date(2027, 6, 1)), Etapa(date(2027, 6, 2)))))
     with pytest.raises(PerfilInvalido, match="mesmo dia"):
         validar(_replace(base, provas=sobreposta), HOJE, cfg)
+
+
+
+def test_etapas_seguidas_ate_uma_semana_sao_validas(cfg):
+    volta = Prova.por_etapas("Volta", "A", tuple(Etapa(date(2027, 6, 1) + timedelta(days=k), 3) for k in range(7)))
+    validar(_replace(CENARIOS["epoca_provas_abcd"], provas=(volta,)), HOJE, cfg)
+
+
+def test_verificar_prontidao_depois_da_recuperacao_de_A(epoca, cfg):
+    a, p = epoca
+    marcadas = [s for s in p.semanas if s.verificar_prontidao]
+    # 1.ª A (14/03, semana 16) → recuperação na 17 → verificar na 18; a 2.ª A acaba o plano
+    assert [s.numero for s in marcadas] == [18]
+    assert p.semanas[16].fase == "recuperacao"

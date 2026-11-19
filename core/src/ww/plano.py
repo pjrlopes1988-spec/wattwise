@@ -73,6 +73,9 @@ class Semana:
     condicao_inicio: float
     condicao_fim: float
     notas: tuple[str, ...]
+    # 1.ª semana depois da recuperação de uma prova A: o motor diário (Fase 3) avalia a prontidão
+    # antes de retomar a carga e, se preciso, prolonga a recuperação (D-063)
+    verificar_prontidao: bool = False
 
     @property
     def carga_planeada(self) -> float:
@@ -621,7 +624,13 @@ def gerar(
         treinos.sort(key=lambda t: t.data)
         condicao_dia.update(diaria)
         altos |= {t.data for t in treinos if t.alta_intensidade}
-        s = Semana(i + 1, seg, fase, alvo, tuple(treinos), ctl, ctl_fim, tuple(notas))
+        depois_de_A = (fase != "recuperacao" and i > 0 and seq[i - 1] == "recuperacao"
+                       and any(semana_de(p.ultima_data) < i for p in provas if p.prioridade == "A")
+                       and any(i - 1 - cp.semanas_recuperacao_apos_A <= semana_de(p.ultima_data) <= i - 1
+                               for p in provas if p.prioridade == "A"))
+        if depois_de_A:
+            notas.append("verificar prontidão antes de retomar a carga (após prova A)")
+        s = Semana(i + 1, seg, fase, alvo, tuple(treinos), ctl, ctl_fim, tuple(notas), depois_de_A)
         semanas.append(s)
         registo.append(f"S{s.numero} ({seg}) {fase}: alvo {alvo:.0f}, planeado {s.carga_planeada:.0f}, "
                        f"condição {ctl:.1f} → {ctl_fim:.1f}" + (f" — {'; '.join(notas)}" if notas else ""))
