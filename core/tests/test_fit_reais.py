@@ -29,7 +29,6 @@ def rolo():
     # Wahoo ELEMNT ROAM, rolo, 17/11/2026, 75 min, potência sem FC.
     # Treino planeado: 15 min aquecimento, 12 min 297–310 W, 4 min 185 W, 12 min 297–310 W
     # (interrompido por paragens), 4 min 185 W, 12 min 209–243 W, 5 min 169 W.
-    # Valores do Wahoo: FTP 334, média 211 W, NP 240 W, IF 0,717, TSS 63,9.
     return ler_ficheiro(FICHEIRO_ROLO)
 
 
@@ -39,13 +38,18 @@ def test_leitura(rolo):
     assert abs(rolo.duracao_s - 4492) <= 5   # tempo de timer do Wahoo
 
 
-def test_metricas_contra_o_wahoo(rolo, cfg):
-    r = analisar(rolo, Fisiologia("M", ftp=334), cfg)
-    assert r.potencia_ponderada == pytest.approx(240, rel=0.01)
+def test_metricas_contra_o_intervals(rolo, cfg):
+    # Valores do Intervals.icu (19/11/2026), com o FTP definido lá: 338 W (o Wahoo tem 334).
+    # O Intervals usa o tempo em movimento (~4215 s); o Wahoo usa o tempo total (NP 240, TSS 63,9).
+    r = analisar(rolo, Fisiologia("M", ftp=338), cfg)
     assert r.potencia_media == pytest.approx(211, rel=0.01)
-    assert r.intensidade == pytest.approx(0.717, rel=0.01)
-    assert r.carga == pytest.approx(63.9, rel=0.01)
+    assert r.potencia_ponderada == pytest.approx(242, rel=0.01)
+    assert r.intensidade == pytest.approx(0.716, rel=0.01)
+    assert r.carga == pytest.approx(60, rel=0.02)
     assert r.fonte_carga == "potencia"
+    assert abs(r.tempo_movimento_s - 4215) <= 10
+    for d, iv in {5: 413, 60: 318, 300: 303, 1200: 278, 3600: 223}.items():
+        assert r.curva[d] == pytest.approx(iv, rel=0.01), d
 
 
 def test_qualidade_e_sem_suspeitas(rolo, cfg):

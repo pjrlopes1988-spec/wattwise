@@ -197,3 +197,21 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Se um dia se quiser que corram sempre (ex.: na integração contínua), a alternativa é guardá-los num armazenamento privado na UE, com consentimento dos atletas.
 - 1.º ficheiro: Wahoo ELEMNT ROAM, rolo, 17/11/2026 (sem posição GPS nem perfil): potência ponderada 239,5 vs. 240 W (−0,2%), potência média 211,7 vs. 211 W (+0,3%), carga 64,2 vs. 63,9 (+0,5%), intensidade 0,717 vs. 0,717.
 - **Estado:** Aprovada.
+
+### D-037 — Tempo em movimento (alinhamento com o Intervals.icu)
+- **Contexto:** comparação do ficheiro de 17/11/2026 com o Intervals.icu. Diferenças iniciais: potência ponderada 239,5 vs. 242, carga 62,7 vs. 60 (com o mesmo FTP), melhor 60 min sem valor vs. 223 W.
+- **Decisão:**
+  - **Parado** = velocidade 0 (roda livre a andar conta como movimento); sem dados de velocidade, potência 0 e cadência 0.
+  - **Carga** calculada com o tempo em movimento.
+  - **Potência ponderada:** média móvel de 30 s sobre a atividade inteira, contando só as janelas que terminam num segundo em movimento.
+  - **Curva de potência:** segundos sem dados contam como 0 W (nunca aumentam a curva); janelas com < 90% de dados válidos são ignoradas.
+- **Resultado (FTP 338, o do Intervals):** média +0,3%, potência ponderada +0,2%, intensidade +0,2%, carga +0,5%, melhores 5 s / 1 / 5 / 20 / 60 min entre 0,0% e +0,3%.
+- **Nota:** o Wahoo usa o tempo total (potência ponderada 240, TSS 63,9); a referência passa a ser o Intervals.icu (spec 10.2).
+- **Estado:** Provisória (confirmar com mais ficheiros, sobretudo de estrada).
+
+### D-038 — Observações da tabela do Intervals.icu do Paulo (19/11/2026)
+- O FTP definido no Intervals.icu (338 W) é diferente do do Wahoo (334 W), e o eFTP do próprio Intervals.icu é 313 W (W′ ≈ 25,3 kJ). A app tem de deixar claro qual é o FTP em vigor e de onde veio.
+- O W′ do Paulo (≈ 25 kJ) está bem acima do valor de população em uso (15 kJ); rever esse valor (D-025).
+- Uma atividade vinda da Strava não tem ficheiro original (como previsto).
+- O desacoplamento que o Intervals.icu mostra para sessões de intervalos (25–51%) não tem significado fisiológico; na app só se calcula em esforços contínuos em Z2 (spec 6.2).
+- **Estado:** Informação.

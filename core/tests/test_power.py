@@ -85,3 +85,22 @@ def test_curva_de_potencia():
 def test_melhor_media_nao_usa_janelas_com_falhas():
     p = np.array([200.0] * 10 + [np.nan] + [400.0] * 4 + [100.0] * 10)
     assert melhor_media(p, 5) == pytest.approx((4 * 400 + 100) / 5)
+
+
+def test_np_ignora_janelas_paradas():
+    # 600 s a 200 W, 300 s parado (0 W), 600 s a 200 W
+    p = np.array([200.0] * 600 + [0.0] * 300 + [200.0] * 600)
+    mov = np.array([True] * 600 + [False] * 300 + [True] * 600)
+    assert potencia_normalizada(p) < 200            # sem informação de movimento, a paragem baixa a NP
+    # com movimento: só sobram janelas que terminam a andar; as 29 primeiras após a paragem
+    # misturam zeros, por isso a NP fica ligeiramente abaixo de 200
+    n = potencia_normalizada(p, movimento=mov)
+    assert 195 < n < 200
+
+
+def test_curva_conta_falhas_como_zero():
+    p = np.full(100, 300.0)
+    p[50:55] = np.nan                                 # 5% em falta → janela aceite, conta 0 W
+    assert melhor_media(p, 100) == pytest.approx(285.0)
+    p[50:61] = np.nan                                 # 11% em falta → janela rejeitada
+    assert melhor_media(p, 100) is None

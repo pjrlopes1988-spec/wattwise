@@ -17,7 +17,7 @@ from ww.metrics import hr as m_hr
 from ww.metrics import power as m_pot
 from ww.metrics.fc_personalizado import ModeloFC
 from ww.quality.clean import Relatorio, limpar
-from ww.stream import Serie
+from ww.stream import Serie, em_movimento
 
 FonteCarga = Literal["potencia", "fc_personalizado", "fc", "rpe", "nenhuma"]
 
@@ -37,6 +37,7 @@ class Fisiologia:
 @dataclass(frozen=True)
 class Resumo:
     duracao_s: int
+    tempo_movimento_s: int
     qualidade: Relatorio
     potencia_media: float | None
     potencia_ponderada: float | None
@@ -58,8 +59,10 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
     tem_p = bool(np.isfinite(p).any())
     tem_f = bool(np.isfinite(f).any())
 
+    mov = em_movimento(limpa)
+    t_mov = int(mov.sum())
     pm = float(np.nanmean(p)) if tem_p else None
-    npw = m_pot.potencia_normalizada(p, cfg.potencia.np_janela_s) if tem_p else None
+    npw = m_pot.potencia_normalizada(p, cfg.potencia.np_janela_s, mov) if tem_p else None
     fcm = float(np.nanmean(f)) if tem_f else None
 
     carga: float | None = None
@@ -69,7 +72,7 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
 
     if npw is not None and fis.ftp:
         intensidade = m_pot.fator_intensidade(npw, fis.ftp)
-        carga = m_pot.carga_potencia(limpa.duracao_s, npw, fis.ftp)
+        carga = m_pot.carga_potencia(t_mov, npw, fis.ftp)
         fonte = "potencia"
         estimada = "ftp" in fis.estimados
     elif tem_f and fis.modelo_fc is not None and fis.fc_limiar:
@@ -83,12 +86,13 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
         fonte = "fc"
         estimada = bool({"fc_limiar", "fc_max", "fc_repouso"} & fis.estimados)
     elif rpe is not None:
-        carga = rpe * (limpa.duracao_s / 60.0) * 100.0 / (cfg.carga_forma.rpe_limiar * 60.0)
+        carga = rpe * (t_mov / 60.0) * 100.0 / (cfg.carga_forma.rpe_limiar * 60.0)
         fonte = "rpe"
         estimada = True
 
     return Resumo(
         duracao_s=limpa.duracao_s,
+        tempo_movimento_s=t_mov,
         qualidade=rel,
         potencia_media=pm,
         potencia_ponderada=npw,

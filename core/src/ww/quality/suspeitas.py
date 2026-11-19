@@ -14,7 +14,7 @@ import numpy as np
 
 from ww.config import Qualidade
 from ww.metrics.power import melhor_media, potencia_normalizada
-from ww.stream import Array, Serie
+from ww.stream import Array, Serie, em_movimento
 
 Codigo = Literal["transporte_motorizado", "e_bike", "potencia_inconsistente", "potencia_muito_acima_do_habitual"]
 
@@ -58,7 +58,7 @@ def avaliar(
         out.append(Suspeita("transporte_motorizado",
                             f"{seq} s seguidos acima de {cfg.velocidade_motorizada_ms * 3.6:.0f} km/h."))
 
-    npw = potencia_normalizada(serie.potencia)
+    npw = potencia_normalizada(serie.potencia, movimento=em_movimento(serie))
     fc_media = float(np.nanmean(serie.fc)) if serie.tem_fc else None
     if eficiencia_habitual and npw and fc_media:
         ef = npw / fc_media

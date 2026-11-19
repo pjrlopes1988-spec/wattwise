@@ -38,13 +38,19 @@ def _medias_moveis(x: Array, janela: int, min_validos: int) -> Array:
     return medias
 
 
-def potencia_normalizada(potencia: Array, janela_s: int = 30) -> float | None:
+def potencia_normalizada(
+    potencia: Array, janela_s: int = 30, movimento: np.ndarray | None = None
+) -> float | None:
     """NP: média móvel de 30 s → 4.ª potência → média → raiz 4.ª.
 
-    Janelas com menos de metade das amostras válidas são ignoradas (falhas de sinal).
+    - Janelas com menos de metade das amostras válidas são ignoradas (falhas de sinal).
+    - Com `movimento`, só contam as janelas que terminam num segundo em movimento
+      (as paragens não baixam a NP), como no Intervals.icu (D-037).
     Atividades mais curtas do que a janela não têm NP.
     """
     medias = _medias_moveis(potencia, janela_s, min_validos=max(1, janela_s // 2))
+    if movimento is not None and medias.size:
+        medias = medias[movimento[janela_s - 1:]]
     medias = medias[np.isfinite(medias)]
     if medias.size == 0:
         return None
@@ -64,9 +70,19 @@ def carga_potencia(duracao_s: float, np_w: float, ftp: float) -> float:
 
 
 def melhor_media(potencia: Array, duracao_s: int) -> float | None:
-    """Melhor média em `duracao_s` segundos, só com janelas sem amostras desconhecidas."""
-    medias = _medias_moveis(potencia, duracao_s, min_validos=duracao_s)
-    medias = medias[np.isfinite(medias)]
+    """Melhor média em `duracao_s` segundos (D-037).
+
+    Segundos desconhecidos contam como 0 W (conservador: nunca aumentam a curva);
+    janelas com menos de 90% de amostras válidas são ignoradas.
+    """
+    if len(potencia) < duracao_s:
+        return None
+    validos = np.isfinite(potencia)
+    soma = np.concatenate(([0.0], np.cumsum(np.where(validos, potencia, 0.0))))
+    conta = np.concatenate(([0], np.cumsum(validos)))
+    medias = (soma[duracao_s:] - soma[:-duracao_s]) / duracao_s
+    ok = (conta[duracao_s:] - conta[:-duracao_s]) >= 0.9 * duracao_s
+    medias = medias[ok]
     return float(medias.max()) if medias.size else None
 
 

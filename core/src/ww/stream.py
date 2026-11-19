@@ -53,5 +53,17 @@ class Serie:
         return replace(self, **alteracoes)  # type: ignore[arg-type]
 
 
+def em_movimento(serie: "Serie") -> np.ndarray:
+    """Segundos em movimento (D-037). Parado = velocidade 0; sem dados de velocidade,
+    parado = potência 0 e cadência 0 (ou desconhecidas). Roda livre a andar conta como movimento."""
+    vel = serie.velocidade
+    tem_vel = np.isfinite(vel)
+    parado_vel = tem_vel & (vel <= 0)
+    pot0 = np.nan_to_num(serie.potencia, nan=0.0) <= 0
+    cad0 = np.nan_to_num(serie.cadencia, nan=0.0) <= 0
+    parado_sem_vel = ~tem_vel & pot0 & cad0
+    return ~(parado_vel | parado_sem_vel)
+
+
 def vazia(n: int) -> Array:
     return np.full(n, np.nan, dtype=np.float64)
