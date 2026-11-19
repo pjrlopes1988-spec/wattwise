@@ -4,3 +4,6 @@ __pycache__/
 .pytest_cache/
 .hypothesis/
 *.egg-info/
+
+# Ficheiros FIT reais (dados pessoais) ficam fora do repositório até decisão do Paulo (D-036)
+core/tests/fixtures/fit/*.fit

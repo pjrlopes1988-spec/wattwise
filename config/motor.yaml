@@ -58,6 +58,9 @@ eftp:
   subida_sem_confirmacao_max_pct: 3.0
   alteracao_minima_pct: 1.0      # abaixo disto não se incomoda o atleta
   dias_para_resposta: 3          # depois: aplica descidas, nunca subidas
+  # Proteção contra descidas por sessões não máximas (D-034)
+  descida_minimo_dias_dados: 42  # sem 6 semanas de dados de potência na app, não se propõem descidas
+  descida_max_pct: 5.0           # cada proposta desce no máximo 5%
   fator_teste_20min: 0.95
 
 qualidade:
@@ -78,7 +81,9 @@ qualidade:
 intervalos:
   # Deteção automática (sem depender do botão de volta) (D-029)
   limiar_pct_ftp: 88          # trabalho = potência suavizada >= 88% do FTP
+  saida_pct_ftp: 80           # ...e só acaba abaixo de 80% (histerese: oscilações não partem o intervalo)
   limiar_pct_fc_limiar: 92    # sem potência: FC >= 92% da FC limiar
+  saida_pct_fc_limiar: 88
   suavizacao_s: 10
   duracao_minima_s: 30
   juntar_pausas_ate_s: 10     # quedas curtas dentro do mesmo intervalo

@@ -87,6 +87,8 @@ class Eftp(_Base):
     subida_sem_confirmacao_max_pct: float = Field(ge=0)
     alteracao_minima_pct: float = Field(ge=0)
     dias_para_resposta: int = Field(ge=1)
+    descida_minimo_dias_dados: int = Field(ge=0)
+    descida_max_pct: float = Field(gt=0)
     fator_teste_20min: float = Field(gt=0.8, le=1.0)
 
 
@@ -130,6 +132,8 @@ class Qualidade(_Base):
 class Intervalos(_Base):
     limiar_pct_ftp: float = Field(gt=0)
     limiar_pct_fc_limiar: float = Field(gt=0)
+    saida_pct_ftp: float = Field(gt=0)
+    saida_pct_fc_limiar: float = Field(gt=0)
     suavizacao_s: int = Field(ge=1)
     duracao_minima_s: int = Field(ge=1)
     juntar_pausas_ate_s: int = Field(ge=0)

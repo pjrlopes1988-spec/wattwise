@@ -5,6 +5,8 @@ Regras:
 - Alterações abaixo de `alteracao_minima_pct` não geram proposta.
 - Subidas acima de `subida_sem_confirmacao_max_pct` exigem um 2.º esforço (outra atividade)
   ou treinos de limiar cumpridos. Sem isso, propõe-se só a subida até esse limite (D-024).
+- Descidas só com ≥ `descida_minimo_dias_dados` dias de dados de potência e no máximo
+  `descida_max_pct` por proposta (D-034).
 - Sem resposta em `dias_para_resposta` dias: descidas aplicam-se; subidas expiram.
 """
 
@@ -46,6 +48,7 @@ def avaliar(
     confirmado_por_treinos_limiar: bool,
     hoje: date,
     cfg: Config,
+    dias_com_dados_potencia: int,
 ) -> Proposta | None:
     if estimativa is None or ftp_atual <= 0:
         return None
@@ -58,10 +61,13 @@ def avaliar(
     atividades = tuple(sorted({e.atividade_id for e in estimativa.esforcos}))
 
     if variacao < 0:
-        # Esforços antigos (com decaimento) ou novos mais fracos → proposta de descida
+        # Sem histórico suficiente, um eFTP baixo pode ser só uma sessão que não foi máxima (D-034)
+        if dias_com_dados_potencia < c.descida_minimo_dias_dados:
+            return None
         recentes = any((hoje - e.data).days <= cfg.eftp.decaimento_carencia_dias for e in estimativa.esforcos)
         motivo: Motivo = "novo_esforco" if recentes else "sem_esforcos_recentes"
-        return Proposta(hoje, ftp_atual, est, est, "descida", motivo, atividades)
+        proposto = max(est, ftp_atual * (1.0 - c.descida_max_pct / 100.0))
+        return Proposta(hoje, ftp_atual, proposto, est, "descida", motivo, atividades)
 
     limite = ftp_atual * (1.0 + c.subida_sem_confirmacao_max_pct / 100.0)
     if est <= limite:

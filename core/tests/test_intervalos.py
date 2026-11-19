@@ -81,3 +81,15 @@ def test_intervalos_com_ruido_realista(cfg):
         assert abs(i.inicio_s - (600 + k * 360)) <= 3
         assert abs(i.duracao_s - 240) <= 6
         assert i.potencia_media == pytest.approx(300, abs=10)
+
+
+def test_intervalo_a_oscilar_perto_do_limiar_nao_parte(cfg):
+    # Caso real: FTP 334 → entrada 294 W; alvo 297–310 W com descidas de 20 s a 275 W
+    trabalho = []
+    for _ in range(12):
+        trabalho += [(40, 302, 160), (20, 275, 160)]
+    p, f = blocos((600, 200, 120), *trabalho, (600, 185, 120))
+    iv = detetar(serie(p, f), cfg.intervalos, ftp=334)
+    assert len(iv) == 1
+    assert iv[0].inicio_s == 600
+    assert abs(iv[0].duracao_s - 720) <= 20

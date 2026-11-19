@@ -1,7 +1,8 @@
 """Deteção automática de intervalos (spec 6.5), sem depender do botão de volta.
 
-Trabalho = sinal suavizado (média centrada) acima do limiar; quedas curtas dentro do
-mesmo esforço são juntadas; esforços mais curtos do que a duração mínima são ignorados.
+Trabalho = sinal suavizado (média centrada) sobe acima do limiar de entrada e só acaba
+quando desce abaixo do limiar de saída (histerese); quedas curtas dentro do mesmo esforço
+são juntadas; esforços mais curtos do que a duração mínima são ignorados.
 Para cada intervalo calcula-se também a recuperação da FC (HRRc).
 """
 
@@ -51,20 +52,37 @@ def _sequencias(marca: np.ndarray) -> list[tuple[int, int]]:
     return list(zip(np.flatnonzero(d == 1).tolist(), np.flatnonzero(d == -1).tolist()))
 
 
+def _histerese(suave: Array, entrada: float, saida: float) -> list[tuple[int, int]]:
+    """Começa quando o sinal sobe acima de `entrada`; só acaba quando desce abaixo de `saida`."""
+    seqs: list[tuple[int, int]] = []
+    inicio = -1
+    for i, v in enumerate(suave):
+        if inicio < 0 and v >= entrada:
+            inicio = i
+        elif inicio >= 0 and v < saida:
+            seqs.append((inicio, i))
+            inicio = -1
+    if inicio >= 0:
+        seqs.append((inicio, len(suave)))
+    return seqs
+
+
 def _media(x: Array) -> float | None:
     return float(np.nanmean(x)) if np.isfinite(x).any() else None
 
 
 def detetar(serie: Serie, cfg: Intervalos, *, ftp: float | None = None, fc_limiar: float | None = None) -> list[Intervalo]:
     if ftp and serie.tem_potencia:
-        sinal, x, limiar = "potencia", serie.potencia, ftp * cfg.limiar_pct_ftp / 100.0
+        sinal, x = "potencia", serie.potencia
+        limiar, saida = ftp * cfg.limiar_pct_ftp / 100.0, ftp * cfg.saida_pct_ftp / 100.0
     elif fc_limiar and serie.tem_fc:
-        sinal, x, limiar = "fc", serie.fc, fc_limiar * cfg.limiar_pct_fc_limiar / 100.0
+        sinal, x = "fc", serie.fc
+        limiar, saida = fc_limiar * cfg.limiar_pct_fc_limiar / 100.0, fc_limiar * cfg.saida_pct_fc_limiar / 100.0
     else:
         return []
 
-    suave = media_centrada(x, cfg.suavizacao_s)
-    seqs = _sequencias(np.nan_to_num(suave, nan=-1.0) >= limiar)
+    suave = np.nan_to_num(media_centrada(x, cfg.suavizacao_s), nan=-1.0)
+    seqs = _histerese(suave, limiar, saida)
 
     juntas: list[list[int]] = []
     for a, b in seqs:

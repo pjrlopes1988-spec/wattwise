@@ -14,8 +14,9 @@ def est(ftp, aid="a1", dias_atras=2):
     return Estimativa(ftp, ftp, "morton_1_esforco", PERFIL, (e,))
 
 
-def av(atual, e, por_atividade=None, confirmado=False, cfg=None):
-    return avaliar(atual, e, por_atividade=por_atividade or {}, confirmado_por_treinos_limiar=confirmado, hoje=HOJE, cfg=cfg)
+def av(atual, e, por_atividade=None, confirmado=False, cfg=None, dias_dados=365):
+    return avaliar(atual, e, por_atividade=por_atividade or {}, confirmado_por_treinos_limiar=confirmado,
+                   hoje=HOJE, cfg=cfg, dias_com_dados_potencia=dias_dados)
 
 
 def test_sem_estimativa_nao_propoe(cfg):
@@ -67,3 +68,19 @@ def test_subida_grande_confirmada_por_treinos_de_limiar(cfg):
 def test_sem_resposta(cfg, tipo, dias, esperado):
     p = Proposta(HOJE, 250, 240 if tipo == "descida" else 257, 0, tipo, "novo_esforco", ())
     assert estado_sem_resposta(p, HOJE + timedelta(days=dias), cfg) == esperado
+
+
+def test_descida_limitada_a_5pct_por_proposta(cfg):
+    # Caso real (17/11/2026): FTP 334, sessão não máxima dá eFTP 279 (−16%)
+    p = av(334, est(279), cfg=cfg)
+    assert p.ftp_proposto == pytest.approx(334 * 0.95)   # 317,3
+    assert p.estimativa == 279
+
+
+def test_sem_6_semanas_de_dados_nao_propoe_descidas(cfg):
+    assert av(334, est(279), cfg=cfg, dias_dados=41) is None
+    assert av(334, est(279), cfg=cfg, dias_dados=42) is not None
+
+
+def test_sem_6_semanas_de_dados_subidas_continuam(cfg):
+    assert av(250, est(257), cfg=cfg, dias_dados=3).tipo == "subida"

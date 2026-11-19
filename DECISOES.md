@@ -180,3 +180,19 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 ### D-033 — Relatório de validação cruzada
 - `python -m ww.relatorio analisar PASTA --ftp … --sexo … --peso … --saida validacao.csv` gera um CSV (';' e vírgula decimal) com os valores da Wattwise e colunas `iv_*` vazias para os valores do Intervals.icu; `python -m ww.relatorio comparar validacao.csv` lista as diferenças acima de 5%.
 - **Estado:** Provisória.
+
+### D-034 — Proteção contra descidas de FTP por sessões não máximas
+- **Contexto (1.º ficheiro real, 17/11/2026):** uma sessão de intervalos no rolo, que não foi máxima, dá eFTP 279 W para um FTP de 334 W. Com as regras anteriores, a app propunha −16% e aplicava-o sozinha ao fim de 3 dias.
+- **Decisão:** sem pelo menos 42 dias de dados de potência na app não se propõem descidas; com histórico, cada proposta desce no máximo 5%. As subidas mantêm as regras de D-024.
+- **Estado:** Provisória.
+
+### D-035 — Intervalos com histerese
+- **Contexto (mesmo ficheiro):** um bloco de 12 min a 297–310 W com FTP 334 (limiar de 88% = 294 W) era partido em 3 pedaços por pequenas oscilações.
+- **Decisão:** um intervalo começa com a potência suavizada ≥ 88% do FTP e só acaba quando desce abaixo de 80% (FC: 92% / 88% da FC limiar). Agora o bloco é detetado como um só intervalo de 11 min 53 s a 302 W.
+- **Estado:** Provisória.
+
+### D-036 — Ficheiros reais de referência nos testes
+- **Pergunta:** os ficheiros FIT reais (dados pessoais de treino) ficam no repositório privado em `core/tests/fixtures/fit/`, ou fora do repositório?
+- **Por agora:** fora do repositório (`.gitignore`); os testes com ficheiros reais saltam-se quando os ficheiros não existem.
+- 1.º ficheiro: Wahoo ELEMNT ROAM, rolo, 17/11/2026 (sem posição GPS nem perfil do utilizador): potência ponderada 239,5 vs. 240 W (−0,2%), carga 64,2 vs. 63,9 (+0,5%).
+- **Estado:** Aberta.
