@@ -379,3 +379,8 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Depois de uma prova A (incluindo por etapas) mantém-se **1 semana de recuperação**.
 - A 1.ª semana a seguir fica marcada no plano (`Semana.verificar_prontidao`). O **motor diário (Fase 3)** avalia o atleta antes de retomar a carga (VFC, FC de repouso, questionário, sensações); se não estiver em condições, prolonga a recuperação (até `provas.prolongar_recuperacao_max_semanas`, por defeito 1 semana) e replaneia.
 - **Estado:** Aprovada (regra do Paulo); implementação da avaliação na Fase 3.
+
+### D-064 — Fase 2 aprovada (Paulo, 19/11/2026)
+- Planos dos cenários e biblioteca aprovados "para já". As decisões provisórias da Fase 2 (D-042 a D-063) mantêm-se e podem ser afinadas.
+- **Pendente para mais tarde:** biblioteca maior (mais treinos por tipo e nível), com treinos do Paulo quando os tiver.
+- Próximo: Fase 3 — motor de adaptação diária e limites de segurança (critério: simulação de temporada sem violações).

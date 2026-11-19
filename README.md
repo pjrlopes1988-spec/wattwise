@@ -3,8 +3,10 @@
 App de treino de ciclismo adaptativo. Ver `ESPECIFICACAO.md`, `ARQUITETURA.md` e `DECISOES.md`.
 
 ## Estado
-- Fase 0: concluída (decisões provisórias).
-- Fase 1 (em curso): leitura de FIT, qualidade de dados e métricas em `core/`.
+- Fase 0: concluída.
+- Fase 1: métricas validadas com ficheiros reais contra o Intervals.icu (ver DECISOES.md).
+- Fase 2: perfil, biblioteca (indoor/outdoor), plano com provas A–D e etapas — aprovada.
+- Fase 3: motor de adaptação diária (a seguir).
 
 ## Correr os testes
 ```bash
