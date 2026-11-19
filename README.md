@@ -6,7 +6,8 @@ App de treino de ciclismo adaptativo. Ver `ESPECIFICACAO.md`, `ARQUITETURA.md` e
 - Fase 0: concluída.
 - Fase 1: métricas validadas com ficheiros reais contra o Intervals.icu (ver DECISOES.md).
 - Fase 2: perfil, biblioteca (indoor/outdoor), plano com provas A–D e etapas — aprovada.
-- Fase 3: motor de adaptação diária (a seguir).
+- Fase 3: motor de adaptação diária — fechada (simulação de temporada sem violações).
+- Fase 4: app no telemóvel (em curso: proposta de ecrãs).
 
 ## Correr os testes
 ```bash

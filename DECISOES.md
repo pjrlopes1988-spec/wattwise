@@ -417,3 +417,7 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **A preferência nunca passa por cima da segurança:** a subida máxima de cada nível, os 2 dias seguidos de alta intensidade e todas as regras do motor diário mantêm-se. Menores de 18: limitado a 3.
 - Exemplo (avançado, 12 semanas): carga total 3459 → 4850 e Condição final 38,5 → 52,9 do nível 1 ao 5. Simulação de 6 meses com nível 5: 0 violações.
 - **Estado:** Provisória (o Paulo valida os valores de cada nível).
+
+### D-070 — Fase 3 fechada (Paulo, 19/11/2026)
+- Motor de adaptação diária aprovado; critério cumprido (simulação de temporada em 8 cenários × 6 meses, 0 violações). Limiares provisórios a rever com o Paulo (prontidão e rampa por nível) e a validar na fase alfa com atletas reais.
+- Próximo: Fase 4 — app no telemóvel. Primeiro uma proposta dos ecrãs para aprovação; só depois o código.
