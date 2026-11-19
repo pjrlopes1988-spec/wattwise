@@ -366,3 +366,11 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - 4+1 não é oferecido: a spec 7.3 obriga a recuperação pelo menos a cada 4 semanas.
 - Aplica-se a todas as fases e a todos os ciclos entre provas A. Na Fase 3, o motor poderá antecipar uma recuperação por sinais de cansaço/VFC, qualquer que seja o ciclo.
 - **Estado:** Aprovada (proposta do Paulo); idade do automático provisória.
+
+### D-062 — Provas por etapas (pedido do Paulo, 19/11/2026)
+- Uma prova pode ter **várias etapas**, cada uma com data, duração e descrição (ex.: "CR 15 km", "montanha"); as datas não têm de ser seguidas (dias de descanso). Prioridade A–D para a prova toda. Validação: ≥ 2 etapas, por ordem, em dias diferentes, no máximo 30 dias entre a 1.ª e a última (`provas.etapas_max_dias`), nenhuma no mesmo dia de outra prova.
+- **Antes:** afinação (A), dias sem intensidade (B/C) e ativação contam a partir da **1.ª etapa**.
+- **Durante:** cada etapa é um dia de prova com carga pela sua duração; dias de descanso entre etapas só com recuperação curta (≤ 45 min) ou descanso; sem sessões-chave. Uma prova A que continua na semana seguinte deixa essa semana leve.
+- **Depois:** dias fáceis e (A) semana de recuperação contam a partir da **última etapa**.
+- **Exceções assumidas** (a prova é a prova): sequências feitas só de dias de prova (etapas seguidas) não contam para o limite de 2 dias seguidos de alta intensidade — a regra continua a valer para tudo o resto (ex.: a ativação vai para 2 dias antes se a véspera a colasse às etapas); a rampa da Condição pode ser ultrapassada numa janela com etapas, depois de encurtar/aliviar tudo o resto, e o plano assinala "rampa acima do limite por causa da prova". Os testes de segurança verificam que só há excesso nessas condições.
+- **Estado:** Provisória (o Paulo valida, sobretudo os dias de descanso entre etapas e a recuperação depois).

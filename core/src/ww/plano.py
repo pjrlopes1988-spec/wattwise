@@ -26,7 +26,7 @@ from typing import Literal
 
 from ww.config import Config
 from ww.metrics.load import fator
-from ww.perfil import (Ambiente, Atleta, Prova, ambientes, calendario_provas, nivel_regras, precisa_de_teste,
+from ww.perfil import (Ambiente, Atleta, Etapa, Prova, ambientes, calendario_provas, nivel_regras, precisa_de_teste,
                        semanas_de_carga, tem_potencia)
 from ww.treinos import Passo, Treino, biblioteca
 
@@ -151,30 +151,37 @@ def _arredondar_abaixo(minutos: float, passo: int) -> int:
     return int(minutos // passo * passo)
 
 
-def _treino_prova(p: Prova, cfg: Config) -> Treino:
-    """A prova como um esforço com a intensidade típica para a sua duração (D-060)."""
+def _treino_prova(p: Prova, cfg: Config, etapa: "Etapa | None" = None, n: int = 1, total: int = 1) -> Treino:
+    """A prova (ou uma etapa) como um esforço com a intensidade típica para a sua duração (D-060, D-062)."""
     cp = cfg.provas
-    horas = p.duracao_h if p.duracao_h is not None else cp.duracao_por_defeito_h
+    dur = etapa.duracao_h if etapa is not None and etapa.duracao_h is not None else p.duracao_h
+    horas = dur if dur is not None else cp.duracao_por_defeito_h
+    data = etapa.data if etapa is not None else p.data
+    nome = f"Prova {p.prioridade}: {p.nome}"
+    if total > 1:
+        nome += f" — etapa {n}/{total}" + (f" ({etapa.descricao})" if etapa is not None and etapa.descricao else "")
     fi = next(i for h, i in cp.intensidade_por_duracao if horas <= h) if horas <= cp.intensidade_por_duracao[-1][0] \
         else cp.intensidade_por_duracao[-1][1]
     pct = fi * 100
-    return Treino(f"prova_{p.data.isoformat()}", f"Prova {p.prioridade}: {p.nome}", "prova", 5,
-                  (Passo(round(horas * 3600), pct - 5, pct + 5),))
+    return Treino(f"prova_{data.isoformat()}", nome, "prova", 5, (Passo(round(horas * 3600), pct - 5, pct + 5),))
 
 
-def fases_por_provas(n_sem: int, semanas_A: list[int], *, arranque_frio: bool, objetivo: str, cfg: Config,
-                     semanas_carga: int | None = None) -> list[Fase]:
+def fases_por_provas(n_sem: int, semanas_A: list[int] | list[tuple[int, int]], *, arranque_frio: bool, objetivo: str,
+                     cfg: Config, semanas_carga: int | None = None) -> list[Fase]:
     """Um ciclo completo para cada prova A (base/construção/específico/afinação); depois de cada A,
     semana(s) de recuperação; depois da última A, ciclos do objetivo geral (D-060)."""
     seq: list[Fase] = []
     ini = 0
-    for k, wa in enumerate(sorted(set(semanas_A))):
+    intervalos = sorted({(w, w) if isinstance(w, int) else w for w in semanas_A})
+    for k, (wa, wf) in enumerate(intervalos):
         if wa < ini:                       # A logo a seguir a outra A: só afinação nessa semana
             seq[wa] = "afinacao"
             continue
         seq += fases(wa - ini + 1, prova=True, arranque_frio=arranque_frio and k == 0, objetivo="prova", cfg=cfg,
                      semanas_carga=semanas_carga)
-        ini = wa + 1
+        # prova por etapas que continua nas semanas seguintes: semanas leves (só etapas e recuperação)
+        seq += ["recuperacao"] * (min(wf, n_sem - 1) - wa)
+        ini = wf + 1
         r = min(cfg.provas.semanas_recuperacao_apos_A, n_sem - ini)
         seq += ["recuperacao"] * r
         ini += r
@@ -230,8 +237,25 @@ def _sequencias_altas(dias_altos: set[date]) -> int:
     return melhor
 
 
+def _excesso(altos: set[date], max_seguidos: int, dias_de_prova: set[date] = frozenset()) -> int:  # type: ignore[assignment]
+    """Quanto se passa do limite de dias seguidos de alta intensidade. Sequências feitas só de
+    dias de prova (ex.: etapas seguidas) não contam: a prova é a prova (D-062)."""
+    pior = 0
+    for d in altos:
+        if d - timedelta(days=1) in altos:
+            continue
+        seq = [d]
+        while seq[-1] + timedelta(days=1) in altos:
+            seq.append(seq[-1] + timedelta(days=1))
+        if all(x in dias_de_prova for x in seq):
+            continue
+        pior = max(pior, len(seq) - max_seguidos)
+    return pior
+
+
 def _escolher_dias_chave(
-    candidatos: list[date], n: int, altos_antes: set[date], disp: dict[date, int], max_seguidos: int
+    candidatos: list[date], n: int, altos_antes: set[date], disp: dict[date, int], max_seguidos: int,
+    dias_de_prova: set[date] = frozenset(),  # type: ignore[assignment]
 ) -> list[date]:
     """Combinação de dias que respeita o limite de dias seguidos e maximiza o espaçamento."""
     if n <= 0 or not candidatos:
@@ -240,7 +264,7 @@ def _escolher_dias_chave(
     melhor: tuple | None = None
     escolha: list[date] = []
     for combo in itertools.combinations(sorted(candidatos), n):
-        viol = max(0, _sequencias_altas(altos_antes | set(combo)) - max_seguidos)
+        viol = _excesso(altos_antes | set(combo), max_seguidos, dias_de_prova)
         datas = sorted(altos_antes | set(combo))
         gaps = [(b - a).days for a, b in zip(datas, datas[1:]) if b in combo or a in combo]
         min_gap = min(gaps) if gaps else 7
@@ -249,7 +273,7 @@ def _escolher_dias_chave(
             melhor, escolha = chave, list(combo)
     if melhor and melhor[0] > 0:
         # não há forma de respeitar o limite com n sessões: tirar sessões até respeitar
-        return _escolher_dias_chave(candidatos, n - 1, altos_antes, disp, max_seguidos)
+        return _escolher_dias_chave(candidatos, n - 1, altos_antes, disp, max_seguidos, dias_de_prova)
     return escolha
 
 
@@ -276,12 +300,13 @@ def gerar(
     def semana_de(d: date) -> int:
         return (_segunda(d) - seg0).days // 7
 
-    semanas_A = [semana_de(p.data) for p in provas if p.prioridade == "A"]
+    semanas_A = [(semana_de(p.data), semana_de(p.ultima_data)) for p in provas if p.prioridade == "A"]
     if provas:
-        ate_ultima = semana_de(provas[-1].data) + 1
+        ultima = max(p.ultima_data for p in provas)
+        ate_ultima = semana_de(ultima) + 1
         # com prova A o plano termina na última prova; sem A, pelo menos o horizonte normal
         n_sem = ate_ultima if semanas_A else max(ate_ultima, c.horizonte_sem_prova_semanas)
-        fim = provas[-1].data if n_sem == ate_ultima else seg0 + timedelta(days=7 * n_sem - 1)
+        fim = ultima if n_sem == ate_ultima else seg0 + timedelta(days=7 * n_sem - 1)
     else:
         n_sem = c.horizonte_sem_prova_semanas
         fim = seg0 + timedelta(days=7 * n_sem - 1)
@@ -292,9 +317,14 @@ def gerar(
     # dias sem intensidade antes das provas e dias fáceis depois (B e C; a A tem a afinação)
     sem_intensidade: set[date] = set()
     faceis: set[date] = set()
+    dias_de_prova: set[date] = {e.data for p in provas for e in p.dias()}
     for p in provas:
         sem_intensidade |= {p.data - timedelta(days=k) for k in range(1, cp.dias_sem_intensidade_antes[p.prioridade] + 1)}
-        faceis |= {p.data + timedelta(days=k) for k in range(1, cp.dias_faceis_depois[p.prioridade] + 1)}
+        faceis |= {p.ultima_data + timedelta(days=k) for k in range(1, cp.dias_faceis_depois[p.prioridade] + 1)}
+        # dias de descanso entre etapas: só recuperação curta (D-062)
+        faceis |= {p.data + timedelta(days=k) for k in range((p.ultima_data - p.data).days)} - dias_de_prova
+    sem_intensidade -= dias_de_prova
+    faceis -= dias_de_prova
 
     f_c = fator(cfg.carga_forma.constante_condicao_dias, cfg.carga_forma.fator_media)
     f_a = fator(cfg.carga_forma.constante_fadiga_dias, cfg.carga_forma.fator_media)
@@ -356,7 +386,9 @@ def gerar(
 
         # --- carga-alvo
         datas_semana = [seg + timedelta(days=d) for d in range(7)]
-        provas_sem = [p for p in provas if p.data in datas_semana]
+        # etapas (ou provas de um dia) desta semana: (prova, etapa, n.º, total)
+        etapas_sem = [(p, e, n + 1, len(p.dias())) for p in provas for n, e in enumerate(p.dias()) if e.data in datas_semana]
+        provas_sem = [p for p, *_ in etapas_sem]
         if fase in FASES_CARGA:
             alvo = 7 * (ctl + rampa / k7)
             if any(p.prioridade == "B" for p in provas_sem):
@@ -373,9 +405,9 @@ def gerar(
         disp = {d: min(atleta.disponibilidade[d.weekday()],
                        cfg.indoor.duracao_max_min if amb(d) == "indoor" else 10**4) for d in datas
                 if atleta.disponibilidade[d.weekday()] >= c.duracao_minima_treino_min}
-        dias_prova = {p.data: p for p in provas_sem}
-        prova_A = next((p for p in provas_sem if p.prioridade == "A"), None)
-        dia_prova = prova_A.data if prova_A is not None else None
+        dias_prova = {e.data: p for p, e, *_ in etapas_sem}
+        etapa_A = min((e.data for p, e, *_ in etapas_sem if p.prioridade == "A"), default=None)
+        dia_prova = etapa_A                         # 1.ª etapa A desta semana (ativação antes dela)
         for d in dias_prova:
             disp.pop(d, None)
         for d in faceis & set(disp):
@@ -391,8 +423,9 @@ def gerar(
             notas.append(f"{int(c.dias_descanso_min[nivel])} dia(s) de descanso mínimo")
 
         treinos: list[TreinoPlaneado] = []
-        for p in provas_sem:
-            treinos.append(TreinoPlaneado(p.data, _treino_prova(p, cfg), "prova", True, "outdoor", prioridade=p.prioridade))
+        for p, e, n, total in etapas_sem:
+            treinos.append(TreinoPlaneado(e.data, _treino_prova(p, cfg, e if p.etapas else None, n, total), "prova",
+                                          True, "outdoor", prioridade=p.prioridade))
 
         if not disp:
             notas.append("sem dias disponíveis")
@@ -431,8 +464,9 @@ def gerar(
             if fase == "afinacao" and dia_prova is not None:
                 # ativação o mais perto possível da prova (2 dias antes no máximo)
                 cand = [d for d in cand if 1 <= (dia_prova - d).days <= 2] or cand
-            altos_ref = altos | set(dias_prova)
-            dias_chave = _escolher_dias_chave(cand, n_chave, altos_ref, disp, c.max_dias_alta_intensidade_seguidos)
+            altos_ref = altos | dias_de_prova
+            dias_chave = _escolher_dias_chave(cand, n_chave, altos_ref, disp, c.max_dias_alta_intensidade_seguidos,
+                                              dias_de_prova)
             if len(dias_chave) < n_chave:
                 notas.append(f"só {len(dias_chave)} de {n_chave} sessões-chave (disponibilidade/limite de dias seguidos)")
 
@@ -453,12 +487,15 @@ def gerar(
                 treinos.append(TreinoPlaneado(d, t, papel, alta_intensidade(t, cfg), amb(d)))
 
             # --- ativação 1–2 dias antes das provas que a pedem (ex.: B); não conta como sessão-chave
-            for p in provas_sem:
+            for p in {p for p, e, n, _ in etapas_sem if n == 1}:     # antes da 1.ª etapa
                 if not cp.ativacao_antes[p.prioridade]:
                     continue
                 ocupados = {t.data for t in treinos}
                 for k in (1, 2):
                     d = p.data - timedelta(days=k)
+                    altos_aqui = altos | dias_de_prova | {t.data for t in treinos if t.alta_intensidade}
+                    if _excesso(altos_aqui | {d}, c.max_dias_alta_intensidade_seguidos, dias_de_prova):
+                        continue                         # não colar mais um dia intenso às etapas
                     if d in disp and d not in ocupados:
                         ativ = _escolher_treino(libs[amb(d)], "vo2max", disp[d], 1, 5, tem_pot(d), mais_leve=True)
                         if ativ is not None:

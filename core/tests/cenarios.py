@@ -1,7 +1,7 @@
 """Atletas fictícios para testar o plano (spec 10.3). Sem dados de pessoas reais."""
 from datetime import date
 
-from ww.perfil import Atleta, Equipamento, Objetivo, Prova, Valor
+from ww.perfil import Atleta, Equipamento, Etapa, Objetivo, Prova, Valor
 
 HOJE = date(2026, 11, 19)
 INICIO = date(2026, 11, 23)   # segunda-feira
@@ -39,7 +39,10 @@ CENARIOS = {
             Prova("Granfondo de preparação", date(2027, 2, 14), "B", 3.0),
             Prova("Granfondo da Serra", date(2027, 3, 14), "A", 4.0),
             Prova("Contrarrelógio regional", date(2027, 4, 11), "B", 1.0),
-            Prova("Volta ao Alentejo (etapa)", date(2027, 5, 23), "A", 3.5),
+            # prova por etapas: qui, sex, sáb, (domingo de descanso), seg da semana seguinte
+            Prova.por_etapas("Volta ao Alentejo", "A", (
+                Etapa(date(2027, 5, 20), 0.5, "CR 15 km"), Etapa(date(2027, 5, 21), 3.5, "plana"),
+                Etapa(date(2027, 5, 22), 4.0, "montanha"), Etapa(date(2027, 5, 24), 3.0, "final"))),
         )),
     "juvenil_14_anos": Atleta(
         "Filipe (fictício)", date(2012, 5, 1), "M", 50, "competicao", "estrada", Objetivo("ftp"),

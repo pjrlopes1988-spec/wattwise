@@ -184,6 +184,7 @@ provas:
   dias_faceis_depois: {A: 2, B: 1, C: 0, D: 0}           # recuperação (≤ 45 min) ou descanso
   duracao_max_antes_min: 60          # nos dias sem intensidade antes da prova: treinos curtos e fáceis
   ativacao_antes: {A: false, B: true, C: false, D: false}   # ativação curta 1–2 dias antes (a A já a tem na afinação)
+  etapas_max_dias: 30                # provas por etapas: da 1.ª à última etapa (D-062)
   conta_como_sessao_chave: {A: true, B: true, C: true, D: true}
   duracao_por_defeito_h: 2.0
   # intensidade média estimada pela duração da prova (h → IF); carga = h × IF² × 100

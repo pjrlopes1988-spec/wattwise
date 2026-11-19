@@ -43,9 +43,12 @@ def test_dias_de_descanso_minimos(caso, cfg):
 
 
 def test_nunca_mais_de_2_dias_seguidos_de_alta_intensidade(caso, cfg):
+    # exceção: sequências feitas só de dias de prova (etapas seguidas) (D-062)
+    from ww.plano import _excesso
     _, _, p = caso
     altos = {t.data for t in p.treinos() if t.alta_intensidade}
-    assert _sequencias_altas(altos) <= cfg.plano.max_dias_alta_intensidade_seguidos
+    provas = {t.data for t in p.treinos() if t.papel == "prova"}
+    assert _excesso(altos, cfg.plano.max_dias_alta_intensidade_seguidos, provas) == 0
 
 
 def test_recuperacao_pelo_menos_a_cada_4_semanas(caso):
@@ -60,11 +63,18 @@ def test_rampa_da_condicao_nunca_ultrapassada(caso, cfg):
     _, a, p = caso
     rampa = cfg.plano.rampa_condicao_semana[nivel_regras(a, INICIO, cfg)]
     for s in p.semanas:
-        assert s.subida_condicao <= rampa + 1e-6, (s.numero, s.subida_condicao)
-    # verificação independente com o módulo de carga/forma
+        if not any(t.papel == "prova" for t in s.treinos):
+            assert s.subida_condicao <= rampa + 1e-6, (s.numero, s.subida_condicao)
+    # verificação independente com o módulo de carga/forma. Única exceção: janelas com dias de
+    # prova cuja carga não cabe na rampa (ex.: etapas seguidas) — e o plano tem de o assinalar (D-062)
     dias = serie_forma(p.cargas_diarias(), cfg.carga_forma, inicio=INICIO, fim=p.fim)
+    provas = {t.data for t in p.treinos() if t.papel == "prova"}
     for i in range(7, len(dias)):
-        assert dias[i].condicao - dias[i - 7].condicao <= rampa + 1e-6, dias[i].data
+        if dias[i].condicao - dias[i - 7].condicao > rampa + 1e-6:
+            janela = {dias[i].data - timedelta(days=k) for k in range(7)}
+            assert janela & provas, f"rampa ultrapassada sem prova: {dias[i].data}"
+            s = next(s for s in p.semanas if s.inicio <= dias[i].data < s.inicio + timedelta(days=7))
+            assert any("por causa da prova" in n for n in s.notas), (s.numero, s.notas)
 
 
 def test_teste_guiado_na_primeira_semana_so_se_estimado(caso):
@@ -222,8 +232,8 @@ def epoca(cfg):
 def test_todas_as_provas_no_plano_com_prioridade(epoca):
     a, p = epoca
     provas = {t.data: t for t in p.treinos() if t.papel == "prova"}
-    assert {d: t.prioridade for d, t in provas.items()} == {x.data: x.prioridade for x in a.provas}
-    assert p.fim == max(x.data for x in a.provas)
+    assert {d: t.prioridade for d, t in provas.items()} == {e.data: x.prioridade for x in a.provas for e in x.dias()}
+    assert p.fim == max(x.ultima_data for x in a.provas)
 
 
 def test_prova_A_com_afinacao_e_recuperacao_depois(epoca):
@@ -233,7 +243,8 @@ def test_prova_A_com_afinacao_e_recuperacao_depois(epoca):
             continue
         s = next(s for s in p.semanas if s.inicio <= x.data < s.inicio + timedelta(days=7))
         assert s.fase == "afinacao"
-        seguinte = [t for t in p.semanas if t.numero == s.numero + 1]
+        fim = next(s for s in p.semanas if s.inicio <= x.ultima_data < s.inicio + timedelta(days=7))
+        seguinte = [t for t in p.semanas if t.numero == fim.numero + 1]
         if seguinte:
             assert seguinte[0].fase == "recuperacao"
 
@@ -249,7 +260,7 @@ def test_sem_intensidade_antes_e_dias_faceis_depois(epoca, cfg):
                 assert t.papel in ("resistencia", "recuperacao", "ativacao"), (x.nome, t)
                 assert t.minutos <= cp.duracao_max_antes_min, (x.nome, t)
         for k in range(1, cp.dias_faceis_depois[x.prioridade] + 1):
-            t = por_dia.get(x.data + timedelta(days=k))
+            t = por_dia.get(x.ultima_data + timedelta(days=k))
             if t is not None:
                 assert t.minutos <= 45 and not t.alta_intensidade, (x.nome, t)
 
@@ -340,3 +351,54 @@ def test_fases_2_mais_1_a_mao(cfg):
     from ww.plano import fases
     assert fases(9, prova=False, arranque_frio=False, objetivo="ftp", cfg=cfg, semanas_carga=2) == \
         ["construcao", "construcao", "recuperacao"] * 3
+
+
+
+# ------------------------------------------------------------------ provas por etapas (D-062)
+from ww.perfil import Etapa  # noqa: E402
+
+
+def test_etapas_todas_no_plano_com_nome(epoca):
+    a, p = epoca
+    volta = next(x for x in a.provas if x.etapas)
+    etapas = [t for t in p.treinos() if t.papel == "prova" and t.data in {e.data for e in volta.etapas}]
+    assert [t.treino.nome for t in etapas] == [
+        "Prova A: Volta ao Alentejo — etapa 1/4 (CR 15 km)", "Prova A: Volta ao Alentejo — etapa 2/4 (plana)",
+        "Prova A: Volta ao Alentejo — etapa 3/4 (montanha)", "Prova A: Volta ao Alentejo — etapa 4/4 (final)"]
+    # carga de cada etapa pela sua duração: 0,5 h → IF 0,95 → 45,1; 4 h → 0,76 → 231
+    assert etapas[0].carga == pytest.approx(0.5 * 0.95 ** 2 * 100)
+    assert etapas[2].carga == pytest.approx(4 * 0.76 ** 2 * 100)
+
+
+def test_entre_etapas_so_recuperacao(epoca):
+    a, p = epoca
+    volta = next(x for x in a.provas if x.etapas)
+    por_dia = {t.data: t for t in p.treinos()}
+    d = volta.data
+    while d < volta.ultima_data:
+        t = por_dia.get(d)
+        if d not in {e.data for e in volta.etapas} and t is not None:
+            assert t.minutos <= 45 and not t.alta_intensidade, t       # dia de descanso da prova
+        d += timedelta(days=1)
+
+
+def test_semana_seguinte_as_etapas_e_leve(epoca):
+    a, p = epoca
+    volta = next(x for x in a.provas if x.etapas)
+    s = next(s for s in p.semanas if s.inicio <= volta.ultima_data < s.inicio + timedelta(days=7))
+    assert s.fase in ("recuperacao", "afinacao")
+    assert not [t for t in s.treinos if t.papel == "sessao_chave"]
+
+
+def test_validacao_etapas(cfg):
+    base = CENARIOS["epoca_provas_abcd"]
+    uma = Prova("V", date(2027, 6, 1), "A", etapas=(Etapa(date(2027, 6, 1), 2),))
+    with pytest.raises(PerfilInvalido, match="pelo menos 2 etapas"):
+        validar(_replace(base, provas=(uma,)), HOJE, cfg)
+    longe = Prova.por_etapas("V", "B", (Etapa(date(2027, 6, 1)), Etapa(date(2027, 7, 15))))
+    with pytest.raises(PerfilInvalido, match="mais de 30 dias"):
+        validar(_replace(base, provas=(longe,)), HOJE, cfg)
+    sobreposta = (Prova("X", date(2027, 6, 2), "C"),
+                  Prova.por_etapas("V", "A", (Etapa(date(2027, 6, 1)), Etapa(date(2027, 6, 2)))))
+    with pytest.raises(PerfilInvalido, match="mesmo dia"):
+        validar(_replace(base, provas=sobreposta), HOJE, cfg)

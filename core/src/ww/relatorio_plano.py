@@ -19,6 +19,14 @@ NOMES_FASE = {"base": "Base", "construcao": "Construção", "especifico": "Espec
               "recuperacao": "Recuperação", "afinacao": "Afinação"}
 
 
+def _prova_md(p) -> str:  # type: ignore[no-untyped-def]
+    if p.etapas:
+        et = ", ".join(f"{e.data:%d/%m}" + (f" {e.descricao}" if e.descricao else "") + (f" {e.duracao_h:g} h" if e.duracao_h else "")
+                       for e in p.etapas)
+        return f"**{p.prioridade}** {p.nome} — {len(p.etapas)} etapas ({et})"
+    return f"**{p.prioridade}** {p.nome} ({p.data:%d/%m/%Y}" + (f", {p.duracao_h:g} h" if p.duracao_h else "") + ")"
+
+
 def _perfil_md(a: Atleta, idade: int) -> list[str]:
     def v(x):
         return "—" if x is None else f"{x.valor:.0f}" + (" (estimado)" if x.estimado else "")
@@ -32,9 +40,7 @@ def _perfil_md(a: Atleta, idade: int) -> list[str]:
         f"- Disponibilidade: {disp}" + (f"; dia longo: {DIAS[a.dia_longo]}" if a.dia_longo is not None else ""),
         f"- Equipamento: {eq}",
         f"- FTP {v(a.ftp)} W · FC limiar {v(a.fc_limiar)} · FC máx. {v(a.fc_max)} · FC repouso {v(a.fc_repouso)}",
-    ] + ([f"- Provas: " + "; ".join(f"**{p.prioridade}** {p.nome} ({p.data:%d/%m/%Y}"
-                                    + (f", {p.duracao_h:g} h" if p.duracao_h else "") + ")" for p in a.provas)]
-         if a.provas else [])
+    ] + ([f"- Provas: " + "; ".join(_prova_md(p) for p in a.provas)] if a.provas else [])
 
 
 def plano_md(a: Atleta, p: Plano, cfg: Config, *, detalhe_semanas: tuple[int, ...]) -> list[str]:

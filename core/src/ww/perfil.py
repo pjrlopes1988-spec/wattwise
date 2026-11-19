@@ -57,12 +57,38 @@ class Objetivo:
 
 
 @dataclass(frozen=True)
+class Etapa:
+    """Um dia de uma prova por etapas (D-062)."""
+    data: date
+    duracao_h: float | None = None
+    descricao: str = ""                # ex.: "CR 20 km", "montanha"
+
+
+@dataclass(frozen=True)
 class Prova:
-    """Prova do calendário do atleta, com prioridade A (mais importante) a D (D-060)."""
+    """Prova do calendário do atleta, com prioridade A (mais importante) a D (D-060).
+
+    Prova de um dia: `data` (+ `duracao_h`). Prova por etapas: `etapas` (≥ 2, cada uma com a sua
+    data e duração; os dias entre etapas são de descanso) — `data` é a da 1.ª etapa (D-062).
+    """
     nome: str
     data: date
     prioridade: Prioridade
     duracao_h: float | None = None     # estimada pelo atleta; sem ela usa-se o valor por defeito
+    etapas: tuple[Etapa, ...] = ()
+
+    @classmethod
+    def por_etapas(cls, nome: str, prioridade: Prioridade, etapas: tuple[Etapa, ...]) -> "Prova":
+        ordenadas = tuple(sorted(etapas, key=lambda e: e.data))
+        return cls(nome, ordenadas[0].data, prioridade, etapas=ordenadas)
+
+    def dias(self) -> tuple[Etapa, ...]:
+        """Os dias de prova (uma etapa por dia; prova de um dia = uma etapa)."""
+        return self.etapas or (Etapa(self.data, self.duracao_h),)
+
+    @property
+    def ultima_data(self) -> date:
+        return self.dias()[-1].data
 
 
 @dataclass(frozen=True)
@@ -124,7 +150,7 @@ def validar(a: Atleta, hoje: date, cfg: Config) -> None:
             erros.append("objetivo 'prova' sem data")
         elif a.objetivo.data_prova <= hoje:
             erros.append("a data da prova já passou")
-    datas_provas = [p.data for p in a.provas]
+    datas_provas = [e.data for p in a.provas for e in p.dias()]
     for p in a.provas:
         if p.prioridade not in PRIORIDADES:
             erros.append(f"prova '{p.nome}': prioridade tem de ser A, B, C ou D")
@@ -134,8 +160,20 @@ def validar(a: Atleta, hoje: date, cfg: Config) -> None:
             erros.append("prova sem nome")
         if p.duracao_h is not None and not 0.25 <= p.duracao_h <= 24:
             erros.append(f"prova '{p.nome}': duração entre 15 min e 24 h")
+        if p.etapas:
+            datas_e = [e.data for e in p.etapas]
+            if len(p.etapas) < 2:
+                erros.append(f"prova '{p.nome}': uma prova por etapas tem pelo menos 2 etapas")
+            if datas_e != sorted(datas_e) or len(set(datas_e)) != len(datas_e):
+                erros.append(f"prova '{p.nome}': etapas em dias diferentes e por ordem")
+            if p.data != datas_e[0]:
+                erros.append(f"prova '{p.nome}': a data da prova é a da 1.ª etapa")
+            if (datas_e[-1] - datas_e[0]).days + 1 > cfg.provas.etapas_max_dias:
+                erros.append(f"prova '{p.nome}': mais de {cfg.provas.etapas_max_dias} dias entre a 1.ª e a última etapa")
+            if any(e.duracao_h is not None and not 0.25 <= e.duracao_h <= 24 for e in p.etapas):
+                erros.append(f"prova '{p.nome}': duração de cada etapa entre 15 min e 24 h")
     if len(set(datas_provas)) != len(datas_provas):
-        erros.append("duas provas no mesmo dia")
+        erros.append("duas provas (ou etapas) no mesmo dia")
     if a.ciclo is not None and a.ciclo not in ("3+1", "2+1"):
         erros.append("ciclo tem de ser 3+1 ou 2+1")
     fl, fm, fr = a.fc_limiar, a.fc_max, a.fc_repouso
