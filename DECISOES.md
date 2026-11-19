@@ -270,3 +270,26 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - 6 atletas fictícios em `core/tests/cenarios.py` (iniciante sem potenciómetro, intermédio com prova a 16 semanas, avançado com tudo, competição XCO com prova a 8 semanas, pouca disponibilidade, juvenil de 14 anos). Regras de segurança verificadas por testes em todos.
 - Relatório para validação: `docs/cenarios_fase2.md` (`python -m ww.relatorio_plano`).
 - **Estado:** Aguarda validação do Paulo (critério da Fase 2).
+
+### D-048 — Biblioteca de treinos do Paulo (importada de ZWO, 19/11/2026)
+- 21 ficheiros ZWO exportados do Intervals.icu (autor no ficheiro: "Paulo reis"): **10 de bicicleta** importados para `config/treinos_paulo.yaml` (6 de força em cadência baixa, 4 Express ≤ 30 min); **11 de força e mobilidade fora da bicicleta** guardados em `config/complementares_paulo.yaml` (ainda não usados: o MVP só planeia ciclismo).
+- Conversor `python -m ww.zwo` (Warmup, Cooldown, Ramp, SteadyState, IntervalsT, FreeRide, MaxEffort, cadência). Carga das rampas exata: média de IF² = (a² + ab + b²) / 3. XML com DOCTYPE/ENTITY recusado.
+- **Tipo e dificuldade são propostas automáticas** (tipo pela zona dominante do trabalho; "força" se ≥ 50% do trabalho em cadência ≤ 70 rpm; dificuldade pelos minutos de trabalho). **O Paulo confirma/corrige** em `config/treinos_paulo.yaml`.
+- Os treinos do Paulo têm prioridade sobre os provisórios, à mesma dificuldade.
+- Só entram treinos criados pelo Paulo (nada de planos comprados ou de outras plataformas).
+- **Estado:** Provisória.
+
+### D-049 — Alta intensidade pelo conteúdo do treino
+- Conta como alta intensidade (regra dos 2 dias seguidos): tipos limiar, VO2máx, anaeróbio, teste e prova, **e qualquer treino com ≥ 5 min a ≥ 95% do FTP ou ≥ 1 min a ≥ 120%**. Ex.: "Torque ao Limiar 10×1" e "Arranques de Força" são de força mas contam como alta intensidade.
+- **Estado:** Provisória.
+
+### D-050 — Nomes de marca dos treinos (pedido do Paulo, 19/11/2026)
+- Todos os treinos têm um nome ibérico (PT/ES) cuja família indica o tipo: **rios** (resistência/recuperação), **serras** (tempo/sweet spot), **subidas míticas** (limiar), **ventos** (VO2máx/anaeróbio), **castelos** (força), **faróis** (testes). Ex.: "Angliru · Limiar 2 × 20 min".
+- Ficheiro `config/nomes_treinos.yaml` (editável); o nome técnico fica como subtítulo. Um teste garante que todos os treinos têm nome e que não há nomes repetidos.
+- **Estado:** Provisória (o Paulo pode mudar qualquer nome). Nomes de lugares geográficos; confirmar com jurista ao registar a marca.
+
+### D-051 — Ajustes do plano após leitura dos cenários
+- Treinos curtos (ex.: Express) só quando o dia é curto: o treino escolhido tem de ocupar pelo menos ¾ do tempo disponível (até 45 min).
+- Nas semanas de carga, a resistência concentra-se em menos dias, com pelo menos 60 min cada (em vez de muitas recuperações de 45 min).
+- O controlo da rampa passa a encurtar (ou retirar) os treinos dos 7 dias onde está o excesso, em vez do treino mais longo da semana. Antes, um caso encolhia uma semana inteira para 3,6 h sem resolver o excesso.
+- **Estado:** Provisória.

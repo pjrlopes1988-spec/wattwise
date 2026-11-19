@@ -13,6 +13,8 @@ from typing import Any
 import yaml
 
 CAMINHO_POR_DEFEITO = Path(__file__).resolve().parents[3] / "config" / "treinos.yaml"
+CAMINHO_PAULO = Path(__file__).resolve().parents[3] / "config" / "treinos_paulo.yaml"
+CAMINHO_NOMES = Path(__file__).resolve().parents[3] / "config" / "nomes_treinos.yaml"
 TIPOS = {"recuperacao", "resistencia", "tempo", "forca", "sweetspot", "limiar", "vo2max", "anaerobio", "teste"}
 
 
@@ -23,6 +25,7 @@ class Passo:
     pct_max: float
     cadencia: tuple[int, int] | None = None
     escala: bool = False
+    rampa: str | None = None     # "sobe" (pct_min → pct_max) ou "desce" (pct_max → pct_min)
 
     @property
     def pct_medio(self) -> float:
@@ -30,7 +33,10 @@ class Passo:
 
     @property
     def carga(self) -> float:
-        return self.segundos / 3600 * (self.pct_medio / 100) ** 2 * 100
+        a, b = self.pct_min / 100, self.pct_max / 100
+        # rampa linear: média de IF² = (a² + ab + b²) / 3; bloco com alvo [a, b]: usa o meio
+        if2 = (a * a + a * b + b * b) / 3 if self.rampa else ((a + b) / 2) ** 2
+        return self.segundos / 3600 * if2 * 100
 
 
 @dataclass(frozen=True)
@@ -42,6 +48,13 @@ class Treino:
     passos: tuple[Passo, ...]
     escalavel: bool = False
     so_sem_potencia: bool = False
+    descricao: str = ""
+    origem: str = "wattwise"      # "wattwise" (provisório) ou "paulo" (biblioteca do treinador)
+    subtitulo: str = ""           # descrição técnica curta (o `nome` é o nome de marca, D-050)
+
+    @property
+    def titulo(self) -> str:
+        return f"{self.nome} · {self.subtitulo}" if self.subtitulo else self.nome
 
     @property
     def segundos(self) -> int:
@@ -78,28 +91,51 @@ def _expandir(itens: list[dict[str, Any]]) -> list[Passo]:
             continue
         lo, hi = it["pct"]
         cad = tuple(it["cadencia"]) if "cadencia" in it else None
-        out.append(Passo(round(float(it["min"]) * 60), float(lo), float(hi), cad, bool(it.get("escala", False))))  # type: ignore[arg-type]
+        out.append(Passo(round(float(it["min"]) * 60), float(lo), float(hi), cad,  # type: ignore[arg-type]
+                         bool(it.get("escala", False)), it.get("rampa")))
     return out
 
 
-def carregar(caminho: Path | str = CAMINHO_POR_DEFEITO) -> dict[str, Treino]:
-    dados = yaml.safe_load(Path(caminho).read_text(encoding="utf-8"))
+def carregar(*caminhos: Path | str, nomes: Path | str | None = CAMINHO_NOMES) -> dict[str, Treino]:
+    """Lê uma ou mais bibliotecas. Por defeito: a provisória + a do Paulo (se existir).
+
+    Os nomes de marca (`config/nomes_treinos.yaml`) substituem o nome; o nome original
+    passa a subtítulo técnico.
+    """
+    caminhos_explicitos = bool(caminhos)
+    if not caminhos:
+        caminhos = tuple(c for c in (CAMINHO_POR_DEFEITO, CAMINHO_PAULO) if Path(c).exists())
+    marca: dict[str, str] = {}
+    if nomes is not None and Path(nomes).exists():
+        marca = yaml.safe_load(Path(nomes).read_text(encoding="utf-8")) or {}
+    dados: list[dict[str, Any]] = []
+    for c in caminhos:
+        dados += yaml.safe_load(Path(c).read_text(encoding="utf-8")) or []
     out: dict[str, Treino] = {}
     for d in dados:
         t = Treino(
             id=d["id"], nome=d["nome"], tipo=d["tipo"], dificuldade=int(d["dificuldade"]),
             passos=tuple(_expandir(d["passos"])), escalavel=bool(d.get("escalavel", False)),
             so_sem_potencia=bool(d.get("so_sem_potencia", False)),
+            descricao=d.get("descricao", ""), origem=d.get("origem", "wattwise"),
         )
+        if d["id"] in marca:
+            t = replace(t, nome=str(marca[d["id"]]), subtitulo=d["nome"])
         if t.id in out:
             raise ValueError(f"treino repetido: {t.id}")
         if t.tipo not in TIPOS:
             raise ValueError(f"{t.id}: tipo desconhecido '{t.tipo}'")
         if not 1 <= t.dificuldade <= 5:
             raise ValueError(f"{t.id}: dificuldade fora de 1–5")
-        if any(p.pct_min > p.pct_max or p.segundos <= 0 for p in t.passos):
+        if any(p.pct_min > p.pct_max or p.segundos <= 0 or p.rampa not in (None, "sobe", "desce") for p in t.passos):
             raise ValueError(f"{t.id}: passo inválido")
         if t.escalavel and not any(p.escala for p in t.passos):
             raise ValueError(f"{t.id}: escalável sem passo com 'escala'")
         out[t.id] = t
+    sem_uso = set(marca) - set(out)
+    if sem_uso and nomes is not None and not caminhos_explicitos:
+        raise ValueError(f"nomes de marca para treinos que não existem: {sorted(sem_uso)}")
+    repetidos = {n for n in marca.values() if list(marca.values()).count(n) > 1}
+    if repetidos:
+        raise ValueError(f"nomes de marca repetidos: {sorted(repetidos)}")
     return out

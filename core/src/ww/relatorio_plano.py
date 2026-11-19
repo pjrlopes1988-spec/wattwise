@@ -52,7 +52,7 @@ def plano_md(a: Atleta, p: Plano, cfg: Config, *, detalhe_semanas: tuple[int, ..
         out += ["", f"**Semana {s.numero} — {NOMES_FASE[s.fase]}** (a partir de {s.inicio:%d/%m/%Y})", ""]
         for t in s.treinos:
             alvo = " → ".join(resumir(t.treino.passos, **kw)) if t.papel != "prova" else "prova"
-            out.append(f"- **{DIAS[t.data.weekday()]} {t.data:%d/%m}** — {t.treino.nome} · {t.minutos} min · "
+            out.append(f"- **{DIAS[t.data.weekday()]} {t.data:%d/%m}** — {t.treino.titulo} · {t.minutos} min · "
                        f"carga {t.carga:.0f}{' · ALTA INTENSIDADE' if t.alta_intensidade else ''}  \n  {alvo}")
     return out
 

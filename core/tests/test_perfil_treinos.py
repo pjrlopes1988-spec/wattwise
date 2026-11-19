@@ -73,3 +73,12 @@ def test_biblioteca_carga_a_mao():
 def test_biblioteca_sem_erros():
     lib = carregar_lib()
     assert {"resistencia", "recuperacao", "teste_20min", "teste_fc_limiar_30min"} <= set(lib)
+
+
+def test_todos_os_treinos_tem_nome_de_marca():
+    lib = carregar_lib()
+    sem = [t.id for t in lib.values() if not t.subtitulo]
+    assert sem == [], f"treinos sem nome de marca em config/nomes_treinos.yaml: {sem}"
+    assert lib["limiar_2x20"].titulo == "Angliru · Limiar 2 × 20 min"
+    assert lib["paulo_torque_ao_limiar_10x1"].titulo == "Guimarães · Torque ao Limiar 10x1"
+    assert len({t.nome for t in lib.values()}) == len(lib)   # nomes únicos

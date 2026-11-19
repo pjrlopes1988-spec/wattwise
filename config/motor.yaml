@@ -161,7 +161,11 @@ plano:
   dias_descanso_min: {iniciante: 2, intermedio: 1, avancado: 1, competicao: 1}
   max_dias_alta_intensidade_seguidos: 2  # spec 7.3
   tipos_alta_intensidade: [limiar, vo2max, anaerobio, teste]
+  # ...e qualquer treino (ex.: força) com estes tempos de trabalho intenso (D-049)
+  alta_intensidade_s_acima_95pct: 300
+  alta_intensidade_s_acima_120pct: 60
   duracao_minima_sessao_chave_min: 45
   duracao_minima_treino_min: 30
   arredondar_min: 15
   fracao_carga_dia_longo: 0.4           # parte da carga de resistência que vai para o dia longo
+  duracao_minima_resistencia_min: 60    # em semanas de carga: menos treinos de resistência, mas de pelo menos 60 min (D-051)

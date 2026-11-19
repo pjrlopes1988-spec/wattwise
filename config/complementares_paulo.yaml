@@ -1,0 +1,68 @@
+# Treinos complementares do Paulo (fora da bicicleta), importados de ZWO.
+# Ainda não usados pelo plano: o MVP só planeia ciclismo (D-048).
+- nome: FM10 Mobilidade da Anca e Lombar
+  descricao: Rotina para a rigidez lombar e de anca típica de horas em cima da bicicleta. Combina movimentos suaves com alongamentos
+    mantidos. Se tens dor que irradia para a perna, consulta um profissional de saúde antes.
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: FM11 Prevenção de Lesões no Joelho
+  descricao: O joelho é a lesão por sobrecarga mais comum no ciclismo. Esta sessão fortalece o glúteo médio, o quadríceps
+    e o controlo do alinhamento do joelho. Não substitui uma boa afinação da bicicleta (altura do selim e calços).
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: 'FM1 Força 1: Adaptação Anatómica'
+  descricao: 'Prepara músculos, tendões e técnica para as cargas das fases seguintes. Cargas moderadas, controlo total do
+    movimento (tempo 3-1-1: 3 s a descer, 1 s pausa, 1 s a subir).'
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: 'FM2 Força 2: Força Máxima'
+  descricao: 'Fase com maior transferência para a bicicleta: cargas altas, poucas repetições e descansos completos. Sobe a
+    carga quando completas todas as séries com 1–2 repetições de reserva.'
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: 'FM3 Força 3: Conversão em Potência'
+  descricao: 'Transforma a força ganha em potência. Pares de contraste: uma série pesada seguida de saltos, com 90 seg entre
+    os dois. Qualidade acima de tudo: para a série se a velocidade cair.'
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: 'FM4 Força em Época: Manutenção'
+  descricao: Mantém a força sem gerar fadiga para os treinos de qualidade. Volume baixo, intensidade alta. Faz no mesmo dia
+    de um treino intenso de bicicleta (depois) ou num dia leve, e nunca nas 48 h antes de uma prova.
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: FM5 Core e Estabilidade
+  descricao: Um tronco estável transfere melhor a força das pernas para os pedais e protege a lombar em treinos longos e no
+    BTT. Circuito de 3 voltas, 40 seg de trabalho e 20 seg de pausa.
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: FM6 Mobilidade Pré-Pedalada
+  descricao: Rotina dinâmica para preparar anca, coluna e pernas antes de subir para a bicicleta ou antes da força. Movimentos
+    controlados, sem segurar posições.
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: FM7 Mobilidade Pós-Pedalada
+  descricao: 'Alongamentos mantidos para as zonas que a posição na bicicleta encurta: flexores da anca, isquiotibiais, glúteos
+    e peitoral. Respira devagar e não forces até à dor.'
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: FM8 Força em Casa
+  descricao: Para quem não tem acesso a ginásio ou está em viagem. Só precisas de uma cadeira, uma mochila com livros ou garrafas
+    de água e uma parede. Faz as séries perto da falha técnica, porque a carga é baixa.
+  tags:
+  - Força & Mobilidade
+  - Extra
+- nome: FM9 Força Específica BTT
+  descricao: O BTT exige mais do tronco, dos braços e da pega do que a estrada, e muita estabilidade lateral. Esta sessão
+    completa FM1–FM4 para atletas de XC, maratona e enduro.
+  tags:
+  - Força & Mobilidade
+  - Extra

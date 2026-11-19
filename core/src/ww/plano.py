@@ -154,9 +154,25 @@ def _escolher_treino(
     if mais_leve:          # afinação: manter o estímulo com a menor carga possível
         return min(cand, key=lambda t: (t.carga, t.dificuldade))
     ate_alvo = [t for t in cand if t.dificuldade <= dif_alvo]
+
+    def aproveita(t: Treino) -> bool:
+        # treinos curtos (ex.: Express) só quando o dia é curto (D-051)
+        return t.minutos >= min(45, 0.75 * minutos)
+
+    # a biblioteca do treinador tem prioridade sobre a provisória (D-048)
     if ate_alvo:
-        return max(ate_alvo, key=lambda t: (t.dificuldade, t.minutos))
-    return min(cand, key=lambda t: (t.dificuldade, t.minutos))
+        return max(ate_alvo, key=lambda t: (t.dificuldade, aproveita(t), t.origem == "paulo", t.minutos, t.id))
+    return min(cand, key=lambda t: (t.dificuldade, not aproveita(t), t.origem != "paulo", t.minutos, t.id))
+
+
+def alta_intensidade(t: Treino, cfg: Config) -> bool:
+    """Pelo tipo ou pelo conteúdo: ≥ 5 min a ≥ 95% do FTP ou ≥ 1 min a ≥ 120% (D-049)."""
+    c = cfg.plano
+    if t.tipo in c.tipos_alta_intensidade or t.tipo == "prova":
+        return True
+    acima95 = sum(p.segundos for p in t.passos if p.pct_medio >= 95 and not p.rampa)
+    acima120 = sum(p.segundos for p in t.passos if p.pct_medio >= 120 and not p.rampa)
+    return acima95 >= c.alta_intensidade_s_acima_95pct or acima120 >= c.alta_intensidade_s_acima_120pct
 
 
 def _sequencias_altas(dias_altos: set[date]) -> int:
@@ -332,8 +348,7 @@ def gerar(
                 if t is None:
                     notas.append(f"{d}: nenhum treino '{tipo}' cabe em {disp[d]} min; fica resistência")
                     continue
-                alta = t.tipo in c.tipos_alta_intensidade
-                treinos.append(TreinoPlaneado(d, t, papel, alta))
+                treinos.append(TreinoPlaneado(d, t, papel, alta_intensidade(t, cfg)))
 
             # --- resistência / recuperação com a carga que falta
             usados = {t.data for t in treinos}
@@ -362,6 +377,19 @@ def gerar(
                 if resto > 0.05 * alvo:
                     notas.append(f"carga limitada pela disponibilidade (faltam ~{resto:.0f})")
 
+            if fase in FASES_CARGA:
+                # menos treinos, mas com sentido: tirar o dia com menos carga e dá-la aos outros
+                minimo_r = c.duracao_minima_resistencia_min * carga_min_resist
+                while len(alocar) > 1:
+                    curtos_ = [d for d in alocar if alocar[d] < minimo_r and d != longo]
+                    if not curtos_:
+                        break
+                    tirar = min(curtos_, key=lambda d: (alocar[d], d))
+                    sobra = alocar.pop(tirar)
+                    for d in sorted(alocar, key=lambda d: -disp[d]):
+                        dar = min(sobra, cap[d] - alocar[d])
+                        alocar[d] += dar
+                        sobra -= dar
             for d, carga in sorted(alocar.items()):
                 minutos = min(disp[d], _arredondar_abaixo(carga / carga_min_resist, c.arredondar_min))
                 if minutos < c.duracao_minima_treino_min:
@@ -374,14 +402,16 @@ def gerar(
                     treinos.append(TreinoPlaneado(d, resist.com_duracao(minutos), "resistencia", False))
 
         # --- verificação da rampa (spec 7.3): encurtar resistência se a Condição subir demais
-        def simular(ts: list[TreinoPlaneado]) -> tuple[float, float, float, dict[date, float]]:
-            """Condição e fadiga no fim da semana e a maior subida em quaisquer 7 dias seguidos."""
+        def simular(ts: list[TreinoPlaneado]) -> tuple[float, float, float, dict[date, float], date]:
+            """Condição e fadiga no fim da semana, a maior subida em quaisquer 7 dias seguidos
+            e o dia em que essa subida acontece."""
             cs, a_ = ctl, atl
             por_dia: dict[date, float] = {}
             for t in ts:
                 por_dia[t.data] = por_dia.get(t.data, 0.0) + t.carga
             diaria: dict[date, float] = {}
             subida = 0.0
+            dia_max = seg
             for k in range(7):
                 d = seg + timedelta(days=k)
                 carga_d = por_dia.get(d, 0.0)
@@ -389,20 +419,26 @@ def gerar(
                 a_ += (carga_d - a_) * f_a
                 diaria[d] = cs
                 antes = condicao_dia.get(d - timedelta(days=7), diaria.get(d - timedelta(days=7), condicao_inicial))
-                subida = max(subida, cs - antes)
-            return cs, a_, subida, diaria
+                if cs - antes > subida:
+                    subida, dia_max = cs - antes, d
+            return cs, a_, subida, diaria, dia_max
 
-        ctl_fim, atl_fim, subida, diaria = simular(treinos)
+        ctl_fim, atl_fim, subida, diaria, dia_max = simular(treinos)
         while subida > rampa + 1e-9:
-            redutiveis = [t for t in treinos if t.papel in ("dia_longo", "resistencia", "recuperacao")
-                          and t.minutos - c.arredondar_min >= c.duracao_minima_treino_min]
-            if not redutiveis:
+            # só ajuda mexer nos treinos dos 7 dias que terminam no dia do excesso
+            janela = [t for t in treinos if t.papel in ("dia_longo", "resistencia", "recuperacao")
+                      and dia_max - timedelta(days=6) <= t.data <= dia_max]
+            if not janela:
                 notas.append("ATENÇÃO: rampa acima do limite sem treinos para encurtar")
                 break
-            mais_longo = max(redutiveis, key=lambda t: t.minutos)
-            novo = (resist if mais_longo.treino.id == "resistencia" else recup).com_duracao(mais_longo.minutos - c.arredondar_min)
-            treinos[treinos.index(mais_longo)] = replace(mais_longo, treino=novo)
-            ctl_fim, atl_fim, subida, diaria = simular(treinos)
+            alvo_t = max(janela, key=lambda t: (t.minutos, t.data))
+            novos_min = alvo_t.minutos - c.arredondar_min
+            if novos_min < c.duracao_minima_treino_min:
+                treinos.remove(alvo_t)          # passa a dia de descanso
+            else:
+                base_t = resist if alvo_t.treino.id == "resistencia" else recup
+                treinos[treinos.index(alvo_t)] = replace(alvo_t, treino=base_t.com_duracao(novos_min))
+            ctl_fim, atl_fim, subida, diaria, dia_max = simular(treinos)
             if "rampa: resistência encurtada" not in notas:
                 notas.append("rampa: resistência encurtada")
 

@@ -1,0 +1,55 @@
+# Nomes de marca dos treinos Wattwise (D-050). O Paulo pode mudar à vontade.
+# Na app aparece "Nome · descrição técnica" (ex.: "Angliru · Limiar 2 × 20 min").
+#
+# Famílias (o nome diz o tipo de treino):
+#   Rios           → resistência e recuperação
+#   Serras         → tempo e sweet spot
+#   Subidas míticas→ limiar
+#   Ventos         → VO2máx e anaeróbio
+#   Castelos       → força (cadência baixa)
+#   Faróis         → testes
+
+# --- Rios
+recuperacao: Mondego
+resistencia: Tejo
+paulo_express_z2_20: Guadiana
+
+# --- Serras
+tempo_2x15: Sintra
+tempo_3x10: Arrábida
+tempo_2x20: Gredos
+paulo_express_tempo_30: Montesinho
+sweetspot_2x12: Lousã
+sweetspot_3x10: Caramulo
+sweetspot_3x15: Montejunto
+sweetspot_2x30: Sierra Nevada
+paulo_express_sweet_spot_25_continuo: Peneda
+paulo_express_sweet_spot_30: Gerês
+
+# --- Subidas míticas
+limiar_4x6: Malhão
+limiar_3x8: Senhora da Graça
+limiar_4x8: Torre
+limiar_3x12: Lagos de Covadonga
+limiar_2x20: Angliru
+
+# --- Ventos
+vo2_ativacao: Brisa
+vo2_4x3: Nortada
+vo2_5x3: Levante
+vo2_5x4: Cierzo
+vo2_6x4: Tramontana
+anaerobio_8x30s: Suão
+
+# --- Castelos
+forca_5x5: Marvão
+paulo_contraste_de_cadencia_60: Monsaraz
+paulo_forca_longa_3x12: Óbidos
+paulo_forca_sweet_spot_5x6: Alcazaba
+paulo_forca_tempo_4x8: Peñafiel
+paulo_torque_ao_limiar_10x1: Guimarães
+paulo_arranques_de_forca_45: Almourol
+
+# --- Faróis
+teste_20min: Sagres
+teste_fc_limiar_30min: Finisterra

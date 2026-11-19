@@ -178,10 +178,13 @@ class Plano(_Base):
     dias_descanso_min: PorNivel
     max_dias_alta_intensidade_seguidos: int = Field(ge=1)
     tipos_alta_intensidade: list[str]
+    alta_intensidade_s_acima_95pct: int = Field(gt=0)
+    alta_intensidade_s_acima_120pct: int = Field(gt=0)
     duracao_minima_sessao_chave_min: int = Field(gt=0)
     duracao_minima_treino_min: int = Field(gt=0)
     arredondar_min: int = Field(gt=0)
     fracao_carga_dia_longo: float = Field(gt=0, lt=1)
+    duracao_minima_resistencia_min: int = Field(gt=0)
 
     _v = field_validator("rampa_condicao_semana", "dificuldade_max", "dias_descanso_min")(_todos_os_niveis)
 
