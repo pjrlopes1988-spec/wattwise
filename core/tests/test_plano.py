@@ -128,6 +128,7 @@ def test_progressao_comeca_pelo_nivel(cfg):
 
 # ------------------------------------------------------------------ indoor / outdoor (D-058, D-059)
 from dataclasses import replace as _replace  # noqa: E402
+from datetime import date  # noqa: E402
 
 from ww.perfil import Equipamento, ambientes, onde_treina  # noqa: E402
 from ww.plano import escolher, trocar_ambiente  # noqa: E402
@@ -206,3 +207,101 @@ def test_trocar_treino_para_indoor_e_outdoor(cfg):
     torque = TreinoPlaneado(d, LIB["paulo_torque_ao_limiar_10x1"], "sessao_chave", True, "indoor")
     out = trocar_ambiente(torque, "outdoor", LIB, cfg)
     assert out.treino.ambiente == "outdoor" and out.treino.tipo == "forca"
+
+
+# ------------------------------------------------------------------ provas A–D (D-060)
+from ww.perfil import Prova, PerfilInvalido, validar  # noqa: E402
+
+
+@pytest.fixture(scope="module")
+def epoca(cfg):
+    a = completar(CENARIOS["epoca_provas_abcd"], HOJE, cfg)
+    return a, gerar(a, LIB, cfg, inicio=INICIO)
+
+
+def test_todas_as_provas_no_plano_com_prioridade(epoca):
+    a, p = epoca
+    provas = {t.data: t for t in p.treinos() if t.papel == "prova"}
+    assert {d: t.prioridade for d, t in provas.items()} == {x.data: x.prioridade for x in a.provas}
+    assert p.fim == max(x.data for x in a.provas)
+
+
+def test_prova_A_com_afinacao_e_recuperacao_depois(epoca):
+    a, p = epoca
+    for x in a.provas:
+        if x.prioridade != "A":
+            continue
+        s = next(s for s in p.semanas if s.inicio <= x.data < s.inicio + timedelta(days=7))
+        assert s.fase == "afinacao"
+        seguinte = [t for t in p.semanas if t.numero == s.numero + 1]
+        if seguinte:
+            assert seguinte[0].fase == "recuperacao"
+
+
+def test_sem_intensidade_antes_e_dias_faceis_depois(epoca, cfg):
+    a, p = epoca
+    cp = cfg.provas
+    por_dia = {t.data: t for t in p.treinos()}
+    for x in a.provas:
+        for k in range(1, cp.dias_sem_intensidade_antes[x.prioridade] + 1):
+            t = por_dia.get(x.data - timedelta(days=k))
+            if t is not None:
+                assert t.papel in ("resistencia", "recuperacao", "ativacao"), (x.nome, t)
+                assert t.minutos <= cp.duracao_max_antes_min, (x.nome, t)
+        for k in range(1, cp.dias_faceis_depois[x.prioridade] + 1):
+            t = por_dia.get(x.data + timedelta(days=k))
+            if t is not None:
+                assert t.minutos <= 45 and not t.alta_intensidade, (x.nome, t)
+
+
+def test_ativacao_antes_da_prova_B(epoca):
+    a, p = epoca
+    por_dia = {t.data: t for t in p.treinos()}
+    for x in a.provas:
+        if x.prioridade == "B":
+            ativ = [por_dia.get(x.data - timedelta(days=k)) for k in (1, 2)]
+            assert any(t is not None and t.papel == "ativacao" for t in ativ), x.nome
+
+
+def test_provas_B_C_D_contam_como_sessao_chave(epoca, cfg):
+    a, p = epoca
+    for s in p.semanas:
+        provas = [t for t in s.treinos if t.papel == "prova" and t.prioridade in "BCD"]
+        if not provas or s.fase not in ("base", "construcao", "especifico"):
+            continue
+        normal = int(getattr(cfg.plano.sessoes_chave, s.fase)[p.nivel_regras])
+        chaves = [t for t in s.treinos if t.papel == "sessao_chave"]
+        assert len(chaves) <= max(0, normal - len(provas)), s.numero
+
+
+def test_semana_B_com_menos_carga(epoca, cfg):
+    a, p = epoca
+    for s in p.semanas:
+        if s.fase in ("base", "construcao", "especifico") and any(t.prioridade == "B" for t in s.treinos):
+            assert "mini-afinação para prova B" in s.notas
+
+
+def test_sem_provas_A_plano_segue_objetivo_e_encaixa_as_outras(cfg):
+    a = completar(_replace(CENARIOS["avancado_com_tudo_ftp"], provas=(
+        Prova("Granfondo B", date(2027, 1, 24), "B"), Prova("Prova C", date(2027, 3, 21), "C"))), HOJE, cfg)
+    p = gerar(a, LIB, cfg, inicio=INICIO)
+    assert "afinacao" not in [s.fase for s in p.semanas]
+    assert {t.prioridade for t in p.treinos() if t.papel == "prova"} == {"B", "C"}
+    assert p.fim >= date(2027, 3, 21)
+
+
+def test_validacao_das_provas(cfg):
+    base = CENARIOS["epoca_provas_abcd"]
+    with pytest.raises(PerfilInvalido, match="prioridade"):
+        validar(_replace(base, provas=(Prova("X", date(2027, 5, 1), "E"),)), HOJE, cfg)   # type: ignore[arg-type]
+    with pytest.raises(PerfilInvalido, match="mesmo dia"):
+        validar(_replace(base, provas=(Prova("X", date(2027, 5, 1), "A"), Prova("Y", date(2027, 5, 1), "C"))), HOJE, cfg)
+    with pytest.raises(PerfilInvalido, match="já passou"):
+        validar(_replace(base, provas=(Prova("X", date(2026, 1, 1), "A"),)), HOJE, cfg)
+
+
+def test_carga_da_prova_pela_duracao(cfg):
+    from ww.plano import _treino_prova
+    # 1 h → intensidade 0,95 → carga 1 × 0,95² × 100 = 90,25; 4 h → 0,76 → 4 × 0,5776 × 100 = 231
+    assert _treino_prova(Prova("CR", date(2027, 1, 1), "B", 1.0), cfg).carga == pytest.approx(90.25)
+    assert _treino_prova(Prova("GF", date(2027, 1, 1), "A", 4.0), cfg).carga == pytest.approx(231.04)

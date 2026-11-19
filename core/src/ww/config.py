@@ -193,6 +193,25 @@ class Indoor(_Base):
     duracao_max_min: int = Field(ge=30, le=600)
 
 
+class Provas(_Base):
+    semanas_recuperacao_apos_A: int = Field(ge=0, le=3)
+    fator_carga_semana_B: float = Field(gt=0, le=1)
+    dias_sem_intensidade_antes: dict[str, int]
+    dias_faceis_depois: dict[str, int]
+    duracao_max_antes_min: int = Field(ge=30)
+    conta_como_sessao_chave: dict[str, bool]
+    ativacao_antes: dict[str, bool]
+    duracao_por_defeito_h: float = Field(gt=0)
+    intensidade_por_duracao: list[tuple[float, float]]
+
+    @field_validator("dias_sem_intensidade_antes", "dias_faceis_depois", "conta_como_sessao_chave", "ativacao_antes")
+    @classmethod
+    def _abcd(cls, v: dict) -> dict:
+        if set(v) != {"A", "B", "C", "D"}:
+            raise ValueError("é preciso um valor para cada prioridade A, B, C e D")
+        return v
+
+
 class Qualidade(_Base):
     potencia_maxima_plausivel_w: float = Field(gt=0)
     fc_minima_plausivel: float = Field(gt=0)
@@ -238,6 +257,7 @@ class Config(_Base):
     perfil: Perfil
     plano: Plano
     indoor: Indoor
+    provas: Provas
     qualidade: Qualidade
     versao: str = ""
 

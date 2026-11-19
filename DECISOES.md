@@ -347,3 +347,16 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Interface (Fase 4): no "Hoje", as duas versões lado a lado com 🌳/🏠; a escolhida fica marcada.
 - Nota para a interface: no sweet spot (88–93%) a etiqueta de zona pode diferir entre versões (Z4 no intervalo, Z3 no alvo fixo de 90%), porque o sweet spot está na fronteira das zonas.
 - **Estado:** Aprovada (proposta do Paulo).
+
+### D-060 — Calendário de provas com prioridade A–D (pedido do Paulo, 19/11/2026)
+- O atleta regista as suas provas com prioridade **A** (objetivo da época) a **D** (prova-treino) e duração estimada. Um objetivo "prova" antigo, sem calendário, passa a ser uma prova A.
+- **A:** ciclo completo para cada A (base → construção → específico → afinação de 1–2 semanas, com ativação 1–2 dias antes); 1 semana de recuperação depois. Com várias A, um ciclo para cada uma; depois da última A, ciclos do objetivo geral.
+- **B:** mini-afinação: carga da semana × 0,8; 3 dias antes sem intensidade e com treinos ≤ 60 min; ativação (Brisa) 1–2 dias antes; dia seguinte só recuperação (≤ 45 min); sem dia longo nessa semana. Conta como sessão-chave.
+- **C:** 1 dia antes sem intensidade (≤ 60 min); conta como sessão-chave; sem afinação.
+- **D:** substitui um treino; conta como sessão-chave e para a carga; nada mais muda.
+- Sem provas A: o plano segue o objetivo geral (sem afinação) e encaixa as B/C/D; o horizonte cobre a última prova.
+- Carga estimada da prova = horas × IF² × 100, com IF pela duração (≤ 1 h 0,95; ≤ 2 h 0,88; ≤ 3 h 0,82; ≤ 5 h 0,76; mais 0,70). Sem duração: 2 h.
+- Provas contam como alta intensidade e entram na regra dos 2 dias seguidos. Validação: prioridade A–D, data futura, uma prova por dia, duração 15 min–24 h.
+- **Segurança:** se a rampa da Condição só puder ser cumprida mexendo numa sessão-chave (ex.: excesso numa janela de 7 dias que começa na semana anterior), a sessão-chave passa a uma versão mais leve do mesmo tipo (ou sai). Apanhado pelo novo cenário de época com provas A–D.
+- Todos os valores em `config/motor.yaml` → `provas`.
+- **Estado:** Provisória (o Paulo valida as regras de cada prioridade).

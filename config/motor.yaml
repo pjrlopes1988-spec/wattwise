@@ -173,3 +173,16 @@ plano:
 indoor:
   # Bibliotecas separadas indoor/outdoor; o atleta escolhe onde treina (D-058)
   duracao_max_min: 150      # treinos mais longos só existem na biblioteca outdoor
+
+provas:
+  # Provas com prioridade A (objetivo) a D (prova-treino) (D-060)
+  semanas_recuperacao_apos_A: 1
+  fator_carga_semana_B: 0.8          # mini-afinação: carga da semana da prova B
+  dias_sem_intensidade_antes: {A: 0, B: 3, C: 1, D: 0}   # A: a afinação já trata disto
+  dias_faceis_depois: {A: 2, B: 1, C: 0, D: 0}           # recuperação (≤ 45 min) ou descanso
+  duracao_max_antes_min: 60          # nos dias sem intensidade antes da prova: treinos curtos e fáceis
+  ativacao_antes: {A: false, B: true, C: false, D: false}   # ativação curta 1–2 dias antes (a A já a tem na afinação)
+  conta_como_sessao_chave: {A: true, B: true, C: true, D: true}
+  duracao_por_defeito_h: 2.0
+  # intensidade média estimada pela duração da prova (h → IF); carga = h × IF² × 100
+  intensidade_por_duracao: [[1.0, 0.95], [2.0, 0.88], [3.0, 0.82], [5.0, 0.76], [24.0, 0.70]]

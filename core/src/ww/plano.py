@@ -26,7 +26,8 @@ from typing import Literal
 
 from ww.config import Config
 from ww.metrics.load import fator
-from ww.perfil import Ambiente, Atleta, ambientes, nivel_regras, precisa_de_teste, tem_potencia
+from ww.perfil import (Ambiente, Atleta, Prova, ambientes, calendario_provas, nivel_regras, precisa_de_teste,
+                       tem_potencia)
 from ww.treinos import Passo, Treino, biblioteca
 
 Fase = Literal["base", "construcao", "especifico", "recuperacao", "afinacao"]
@@ -42,6 +43,7 @@ class TreinoPlaneado:
     ambiente: Ambiente = "outdoor"   # da versão principal; indoor = alvos fixos (D-058)
     alternativa: Treino | None = None   # a versão no outro ambiente, lado a lado no calendário (D-059)
     escolhido: bool = False             # o atleta já tocou numa das versões
+    prioridade: str | None = None       # só nas provas: A, B, C ou D (D-060)
 
     @property
     def minutos(self) -> int:
@@ -147,11 +149,35 @@ def _arredondar_abaixo(minutos: float, passo: int) -> int:
     return int(minutos // passo * passo)
 
 
-def _treino_prova(atleta: Atleta, cfg: Config) -> Treino:
-    # Carga prevista configurável; representada como um esforço a 90% do FTP
-    horas = cfg.plano.carga_prova_estimada / (0.9**2 * 100)
-    return Treino("prova", f"Prova{': ' + atleta.objetivo.nome_prova if atleta.objetivo.nome_prova else ''}",
-                  "prova", 5, (Passo(round(horas * 3600), 85, 95),))
+def _treino_prova(p: Prova, cfg: Config) -> Treino:
+    """A prova como um esforço com a intensidade típica para a sua duração (D-060)."""
+    cp = cfg.provas
+    horas = p.duracao_h if p.duracao_h is not None else cp.duracao_por_defeito_h
+    fi = next(i for h, i in cp.intensidade_por_duracao if horas <= h) if horas <= cp.intensidade_por_duracao[-1][0] \
+        else cp.intensidade_por_duracao[-1][1]
+    pct = fi * 100
+    return Treino(f"prova_{p.data.isoformat()}", f"Prova {p.prioridade}: {p.nome}", "prova", 5,
+                  (Passo(round(horas * 3600), pct - 5, pct + 5),))
+
+
+def fases_por_provas(n_sem: int, semanas_A: list[int], *, arranque_frio: bool, objetivo: str, cfg: Config) -> list[Fase]:
+    """Um ciclo completo para cada prova A (base/construção/específico/afinação); depois de cada A,
+    semana(s) de recuperação; depois da última A, ciclos do objetivo geral (D-060)."""
+    seq: list[Fase] = []
+    ini = 0
+    for k, wa in enumerate(sorted(set(semanas_A))):
+        if wa < ini:                       # A logo a seguir a outra A: só afinação nessa semana
+            seq[wa] = "afinacao"
+            continue
+        seq += fases(wa - ini + 1, prova=True, arranque_frio=arranque_frio and k == 0, objetivo="prova", cfg=cfg)
+        ini = wa + 1
+        r = min(cfg.provas.semanas_recuperacao_apos_A, n_sem - ini)
+        seq += ["recuperacao"] * r
+        ini += r
+    if n_sem > ini:
+        seq += fases(n_sem - ini, prova=False, arranque_frio=arranque_frio and not semanas_A,
+                     objetivo=objetivo if objetivo != "prova" else "ftp", cfg=cfg)
+    return seq[:n_sem]
 
 
 def _escolher_treino(
@@ -237,18 +263,32 @@ def gerar(
     c = cfg.plano
     nivel = nivel_regras(atleta, inicio, cfg)
     potencia = atleta.equipamento.potenciometro
-    prova = atleta.objetivo.data_prova if atleta.objetivo.tipo == "prova" else None
+    cp = cfg.provas
+    provas = tuple(p for p in calendario_provas(atleta) if p.data >= inicio)
     arranque_frio = condicao_inicial < 1.0
 
     seg0 = _segunda(inicio)
-    if prova:
-        n_sem = (_segunda(prova) - seg0).days // 7 + 1
-        fim = prova
+
+    def semana_de(d: date) -> int:
+        return (_segunda(d) - seg0).days // 7
+
+    semanas_A = [semana_de(p.data) for p in provas if p.prioridade == "A"]
+    if provas:
+        ate_ultima = semana_de(provas[-1].data) + 1
+        # com prova A o plano termina na última prova; sem A, pelo menos o horizonte normal
+        n_sem = ate_ultima if semanas_A else max(ate_ultima, c.horizonte_sem_prova_semanas)
+        fim = provas[-1].data if n_sem == ate_ultima else seg0 + timedelta(days=7 * n_sem - 1)
     else:
         n_sem = c.horizonte_sem_prova_semanas
         fim = seg0 + timedelta(days=7 * n_sem - 1)
-    seq = fases(n_sem, prova=prova is not None, arranque_frio=arranque_frio,
-                objetivo=atleta.objetivo.tipo, cfg=cfg)
+    seq = fases_por_provas(n_sem, semanas_A, arranque_frio=arranque_frio, objetivo=atleta.objetivo.tipo, cfg=cfg)
+
+    # dias sem intensidade antes das provas e dias fáceis depois (B e C; a A tem a afinação)
+    sem_intensidade: set[date] = set()
+    faceis: set[date] = set()
+    for p in provas:
+        sem_intensidade |= {p.data - timedelta(days=k) for k in range(1, cp.dias_sem_intensidade_antes[p.prioridade] + 1)}
+        faceis |= {p.data + timedelta(days=k) for k in range(1, cp.dias_faceis_depois[p.prioridade] + 1)}
 
     f_c = fator(cfg.carga_forma.constante_condicao_dias, cfg.carga_forma.fator_media)
     f_a = fator(cfg.carga_forma.constante_fadiga_dias, cfg.carga_forma.fator_media)
@@ -290,6 +330,8 @@ def gerar(
     ]
     if teste:
         registo.append(f"teste guiado de {'FTP' if teste == 'ftp' else 'FC limiar'} na 1.ª semana (valor estimado)")
+    for p in provas:
+        registo.append(f"prova {p.prioridade} ({p.data}): {p.nome}")
 
     ctl, atl = condicao_inicial, fadiga_inicial
     ultima_carga: float | None = None
@@ -306,23 +348,34 @@ def gerar(
         notas: list[str] = []
 
         # --- carga-alvo
+        datas_semana = [seg + timedelta(days=d) for d in range(7)]
+        provas_sem = [p for p in provas if p.data in datas_semana]
         if fase in FASES_CARGA:
             alvo = 7 * (ctl + rampa / k7)
+            if any(p.prioridade == "B" for p in provas_sem):
+                alvo *= cp.fator_carga_semana_B
+                notas.append("mini-afinação para prova B")
         else:
             ref = ultima_carga if ultima_carga is not None else 7 * (ctl + rampa / k7)
             alvo = ref * (c.fator_semana_recuperacao if fase == "recuperacao" else c.fator_afinacao)
 
         # --- dias disponíveis nesta semana
         datas = [seg + timedelta(days=d) for d in range(7)]
-        datas = [d for d in datas if d >= inicio and (prova is None or d <= prova)]
+        datas = [d for d in datas if inicio <= d <= fim]
         # indoor: o treino nunca passa da duração máxima no rolo (D-058)
         disp = {d: min(atleta.disponibilidade[d.weekday()],
                        cfg.indoor.duracao_max_min if amb(d) == "indoor" else 10**4) for d in datas
                 if atleta.disponibilidade[d.weekday()] >= c.duracao_minima_treino_min}
-        dia_prova = prova if prova is not None and prova in datas else None
-        if dia_prova is not None:
-            disp.pop(dia_prova, None)
-        max_treino = 7 - int(c.dias_descanso_min[nivel]) - (1 if dia_prova is not None else 0)  # a prova conta
+        dias_prova = {p.data: p for p in provas_sem}
+        prova_A = next((p for p in provas_sem if p.prioridade == "A"), None)
+        dia_prova = prova_A.data if prova_A is not None else None
+        for d in dias_prova:
+            disp.pop(d, None)
+        for d in faceis & set(disp):
+            disp[d] = min(disp[d], 45)          # dia a seguir à prova: só recuperação
+        for d in sem_intensidade & set(disp):
+            disp[d] = min(disp[d], cp.duracao_max_antes_min)   # véspera(s): curto e fácil
+        max_treino = 7 - int(c.dias_descanso_min[nivel]) - len(dias_prova)  # as provas contam
         if len(disp) > max_treino:
             longo_pref = atleta.dia_longo
             ordem = sorted(disp, key=lambda d: (d.weekday() == longo_pref, disp[d]))
@@ -331,20 +384,23 @@ def gerar(
             notas.append(f"{int(c.dias_descanso_min[nivel])} dia(s) de descanso mínimo")
 
         treinos: list[TreinoPlaneado] = []
-        if dia_prova is not None:
-            treinos.append(TreinoPlaneado(dia_prova, _treino_prova(atleta, cfg), "prova", True))
+        for p in provas_sem:
+            treinos.append(TreinoPlaneado(p.data, _treino_prova(p, cfg), "prova", True, "outdoor", prioridade=p.prioridade))
 
         if not disp:
             notas.append("sem dias disponíveis")
         else:
             longos = [d for d in disp if d.weekday() == atleta.dia_longo]
-            if dia_prova is not None:
-                longo = None      # semana da prova: sem treino longo
+            if dia_prova is not None or any(p.prioridade == "B" for p in provas_sem):
+                longo = None      # semana da prova A ou B: sem treino longo
             else:
                 longo = longos[0] if longos else max(disp, key=lambda d: (disp[d], d))
 
             # --- sessões-chave
             n_chave = int(getattr(c.sessoes_chave, fase)[nivel])
+            # provas B, C e D contam como sessão-chave dessa semana
+            n_chave = max(0, n_chave - sum(cp.conta_como_sessao_chave[p.prioridade] for p in provas_sem
+                                           if p.prioridade != "A"))
             com_teste = teste is not None and i == 0
             if com_teste:
                 n_chave = max(n_chave, 1)
@@ -358,7 +414,8 @@ def gerar(
                           and (not t.so_sem_potencia or not tem_pot(d))]
                 return max(c.duracao_minima_sessao_chave_min, min(curtos) if curtos else 10**4)
 
-            cand = [d for d in disp if d != longo and disp[d] >= minimo_dia(d)]
+            cand = [d for d in disp if d != longo and disp[d] >= minimo_dia(d)
+                    and d not in sem_intensidade and d not in faceis]
             if com_teste and len(cand) > 1:
                 # o teste não é o primeiro treino do plano: antes, pelo menos um treino fácil
                 cand = [d for d in cand if d != min(disp)]
@@ -367,10 +424,7 @@ def gerar(
             if fase == "afinacao" and dia_prova is not None:
                 # ativação o mais perto possível da prova (2 dias antes no máximo)
                 cand = [d for d in cand if 1 <= (dia_prova - d).days <= 2] or cand
-            if dia_prova is not None:
-                altos_ref = altos | {dia_prova}
-            else:
-                altos_ref = set(altos)
+            altos_ref = altos | set(dias_prova)
             dias_chave = _escolher_dias_chave(cand, n_chave, altos_ref, disp, c.max_dias_alta_intensidade_seguidos)
             if len(dias_chave) < n_chave:
                 notas.append(f"só {len(dias_chave)} de {n_chave} sessões-chave (disponibilidade/limite de dias seguidos)")
@@ -390,6 +444,19 @@ def gerar(
                     notas.append(f"{d}: nenhum treino '{tipo}' cabe em {disp[d]} min; fica resistência")
                     continue
                 treinos.append(TreinoPlaneado(d, t, papel, alta_intensidade(t, cfg), amb(d)))
+
+            # --- ativação 1–2 dias antes das provas que a pedem (ex.: B); não conta como sessão-chave
+            for p in provas_sem:
+                if not cp.ativacao_antes[p.prioridade]:
+                    continue
+                ocupados = {t.data for t in treinos}
+                for k in (1, 2):
+                    d = p.data - timedelta(days=k)
+                    if d in disp and d not in ocupados:
+                        ativ = _escolher_treino(libs[amb(d)], "vo2max", disp[d], 1, 5, tem_pot(d), mais_leve=True)
+                        if ativ is not None:
+                            treinos.append(TreinoPlaneado(d, ativ, "ativacao", alta_intensidade(ativ, cfg), amb(d)))
+                            break
 
             # --- resistência / recuperação com a carga que falta
             usados = {t.data for t in treinos}
@@ -418,9 +485,11 @@ def gerar(
                 if resto > 0.05 * alvo:
                     notas.append(f"carga limitada pela disponibilidade (faltam ~{resto:.0f})")
 
-            if fase in FASES_CARGA:
-                # menos treinos, mas com sentido: tirar o dia com menos carga e dá-la aos outros
-                minimo_r = c.duracao_minima_resistencia_min * carga_min_resist
+            # menos treinos, mas com sentido: tirar o dia com menos carga e dá-la aos outros
+            # (semanas de carga: ≥ 60 min de resistência; semanas leves: ≥ duração mínima de um treino)
+            minimo_r = (c.duracao_minima_resistencia_min if fase in FASES_CARGA else c.duracao_minima_treino_min) \
+                * carga_min_resist
+            if alocar:
                 while len(alocar) > 1:
                     curtos_ = [d for d in alocar if alocar[d] < minimo_r and d != longo]
                     if not curtos_:
@@ -471,8 +540,29 @@ def gerar(
             janela = [t for t in treinos if t.papel in ("dia_longo", "resistencia", "recuperacao")
                       and dia_max - timedelta(days=6) <= t.data <= dia_max]
             if not janela:
-                notas.append("ATENÇÃO: rampa acima do limite sem treinos para encurtar")
-                break
+                # sem resistência para encurtar: aliviar a sessão-chave mais pesada da janela
+                # (versão mais leve do mesmo tipo; se já for a mais leve, sai) — a segurança vem primeiro
+                chaves = [t for t in treinos if t.papel in ("sessao_chave", "teste")
+                          and dia_max - timedelta(days=6) <= t.data <= dia_max]
+                if not chaves:
+                    perto = [p for p in provas if dia_max - timedelta(days=6) <= p.data <= dia_max]
+                    notas.append("rampa acima do limite por causa da prova " + ", ".join(p.nome for p in perto)
+                                 if perto else "ATENÇÃO: rampa acima do limite sem treinos para ajustar")
+                    break
+                pesada = max(chaves, key=lambda t: (t.treino.carga, t.data))
+                mais_leves = [x for x in libs[amb(pesada.data)].values()
+                              if x.tipo == pesada.treino.tipo and x.carga < pesada.treino.carga - 1
+                              and (not x.so_sem_potencia or not tem_pot(pesada.data))]
+                if mais_leves:
+                    leve = max(mais_leves, key=lambda x: (x.carga, x.id))
+                    treinos[treinos.index(pesada)] = com_alternativa(
+                        replace(pesada, treino=leve, alternativa=None, alta_intensidade=alta_intensidade(leve, cfg)))
+                else:
+                    treinos.remove(pesada)
+                ctl_fim, atl_fim, subida, diaria, dia_max = simular(treinos)
+                if "rampa: sessão-chave aliviada" not in notas:
+                    notas.append("rampa: sessão-chave aliviada")
+                continue
             alvo_t = max(janela, key=lambda t: (t.minutos, t.data))
             novos_min = alvo_t.minutos - c.arredondar_min
             if novos_min < c.duracao_minima_treino_min:

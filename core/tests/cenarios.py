@@ -1,7 +1,7 @@
 """Atletas fictícios para testar o plano (spec 10.3). Sem dados de pessoas reais."""
 from datetime import date
 
-from ww.perfil import Atleta, Equipamento, Objetivo, Valor
+from ww.perfil import Atleta, Equipamento, Objetivo, Prova, Valor
 
 HOJE = date(2026, 11, 19)
 INICIO = date(2026, 11, 23)   # segunda-feira
@@ -28,6 +28,19 @@ CENARIOS = {
     "pouca_disponibilidade": Atleta(
         "Eduardo (fictício)", date(1975, 11, 30), "M", 82, "intermedio", "gravel", Objetivo("ftp"),
         (0, 0, 45, 0, 0, 90, 0), equipamento=Equipamento(potenciometro=True), ftp=Valor(230, "atleta")),
+    "epoca_provas_abcd": Atleta(
+        "Gonçalo (fictício)", date(1987, 4, 12), "M", 71, "avancado", "estrada", Objetivo("prova"),
+        (90, 90, 0, 90, 60, 210, 240), dia_longo=6,
+        equipamento=Equipamento(potenciometro=True, cinta_fc=True), ftp=Valor(290, "atleta"),
+        fc_limiar=Valor(168, "atleta"), fc_max=Valor(186, "atleta"), fc_repouso=Valor(46, "atleta"),
+        provas=(
+            Prova("Volta do clube", date(2026, 12, 13), "D", 2.0),
+            Prova("Clássica de inverno", date(2027, 1, 17), "C", 2.5),
+            Prova("Granfondo de preparação", date(2027, 2, 14), "B", 3.0),
+            Prova("Granfondo da Serra", date(2027, 3, 14), "A", 4.0),
+            Prova("Contrarrelógio regional", date(2027, 4, 11), "B", 1.0),
+            Prova("Volta ao Alentejo (etapa)", date(2027, 5, 23), "A", 3.5),
+        )),
     "juvenil_14_anos": Atleta(
         "Filipe (fictício)", date(2012, 5, 1), "M", 50, "competicao", "estrada", Objetivo("ftp"),
         (0, 75, 0, 75, 0, 150, 120), dia_longo=5, equipamento=Equipamento(potenciometro=True),

@@ -1,6 +1,6 @@
 # Wattwise — Planos dos cenários de teste (Fase 2)
 
-Gerado com a configuração `b51a556c8cd9` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
+Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
 
 **Como ler:** *Carga alvo* = a necessária para subir a Condição o máximo permitido para o nível; *Planeada* = o que cabe na disponibilidade; *Subida* = variação da Condição na semana (limite: iniciante 5, intermedio 6, avancado 7, competicao 8). Em todos os cenários, verificado por testes automáticos: disponibilidade respeitada, dias de descanso mínimos, nunca mais de 2 dias seguidos de alta intensidade, recuperação pelo menos a cada 4 semanas, subida da Condição dentro do limite em quaisquer 7 dias seguidos.
 
@@ -82,7 +82,7 @@ Gerado com a configuração `b51a556c8cd9` e a biblioteca provisória de 240 tre
 | 13 | 15/02 | Específico | 545 | 371 (8.4 h) | 41.6 | +2.3 | 3× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~194) |
 | 14 | 22/02 | Específico | 562 | 385 (8.5 h) | 43.9 | +2.3 | 3× resistencia, 1× vo2max, 1× limiar | carga limitada pela disponibilidade (faltam ~194) |
 | 15 | 01/03 | Afinação | 212 | 158 (4.7 h) | 40.7 | -3.2 | 3× recuperacao, 1× vo2max, 1× resistencia |  |
-| 16 | 08/03 | Afinação | 212 | 166 (3.4 h) | 38.2 | -2.5 | 3× recuperacao, 1× vo2max, 1× prova |  |
+| 16 | 08/03 | Afinação | 212 | 196 (3.2 h) | 39.0 | -1.7 | 1× recuperacao, 1× vo2max, 1× prova A |  |
 
 **Semana 1 — Base** (a partir de 23/11/2026)
 
@@ -122,20 +122,14 @@ Gerado com a configuração `b51a556c8cd9` e a biblioteca provisória de 240 tre
 
 **Semana 16 — Afinação** (a partir de 08/03/2027)
 
-- **segunda 08/03**
-  - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
-    30 min a 112–138 W (Z1)
 - **terça 09/03**
-  - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
-    30 min a 112–138 W (Z1)
-- **quinta 11/03**
   - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
     30 min a 112–138 W (Z1)
 - **sábado 13/03** · ALTA INTENSIDADE
   - 🌳 outdoor · Brisa · Ativação pré-prova 3 × 1 min · 42 min · carga 28  
     20 min a 138–175 W (Z2) → 3 × [1 min a 275–300 W (Z5); 3 min a 112–138 W (Z1)] → 10 min a 125–150 W (Z1)
 - **domingo 14/03** · ALTA INTENSIDADE
-  - 🌳 outdoor · Prova: Granfondo · 74 min · carga 100  
+  - 🌳 outdoor · Prova A: Granfondo · 120 min · carga 155  
     prova
 
 ---
@@ -238,7 +232,7 @@ Gerado com a configuração `b51a556c8cd9` e a biblioteca provisória de 240 tre
 | 5 | 21/12 | Específico | 530 | 412 (9.3 h) | 29.6 | +5.4 | 4× resistencia, 1× vo2max, 1× anaerobio | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~135) |
 | 6 | 28/12 | Específico | 568 | 408 (9.0 h) | 34.2 | +4.6 | 4× resistencia, 1× anaerobio, 1× vo2max | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~174) |
 | 7 | 04/01 | Específico | 600 | 437 (9.4 h) | 38.7 | +4.4 | 4× resistencia, 1× vo2max, 1× anaerobio | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~178) |
-| 8 | 11/01 | Afinação | 240 | 178 (3.9 h) | 36.8 | -1.9 | 4× recuperacao, 1× vo2max, 1× prova | 1 dia(s) de descanso mínimo |
+| 8 | 11/01 | Afinação | 240 | 235 (4.0 h) | 38.2 | -0.5 | 1× vo2max, 1× resistencia, 1× prova A | 1 dia(s) de descanso mínimo |
 
 **Semana 1 — Base** (a partir de 23/11/2026)
 
@@ -284,23 +278,14 @@ Gerado com a configuração `b51a556c8cd9` e a biblioteca provisória de 240 tre
 
 **Semana 8 — Afinação** (a partir de 11/01/2027)
 
-- **segunda 11/01**
-  - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
-    30 min a 108–132 W (Z1)
-- **terça 12/01**
-  - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
-    30 min a 108–132 W (Z1)
-- **quinta 14/01**
-  - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
-    30 min a 108–132 W (Z1)
 - **sexta 15/01** · ALTA INTENSIDADE
   - 🌳 outdoor · Brisa · Ativação pré-prova 3 × 1 min · 42 min · carga 28  
     20 min a 132–168 W (Z2) → 3 × [1 min a 264–288 W (Z5); 3 min a 108–132 W (Z1)] → 10 min a 120–144 W (Z1)
 - **sábado 16/01**
-  - 🌳 outdoor · Mondego · Recuperação ativa · 30 min · carga 12  
-    30 min a 108–132 W (Z1)
+  - 🌳 outdoor · Tejo · Resistência Z2 · 75 min · carga 51  
+    10 min a 120–144 W (Z1) → 55 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 - **domingo 17/01** · ALTA INTENSIDADE
-  - 🌳 outdoor · Prova: Taça XCO · 74 min · carga 100  
+  - 🌳 outdoor · Prova A: Taça XCO · 120 min · carga 155  
     prova
 
 ---
@@ -345,6 +330,163 @@ Gerado com a configuração `b51a556c8cd9` e a biblioteca provisória de 240 tre
 - **sábado 26/12**
   - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
     10 min a 115–138 W (Z1) → 70 min a 143–166 W (Z2) → 10 min a 115–138 W (Z1)
+
+---
+
+## Epoca provas abcd
+
+- **Gonçalo (fictício)**, 39 anos, M, 71 kg — nível **avancado**, estrada
+- Objetivo: prova
+- Disponibilidade: seg 90 min, ter 90 min, qui 90 min, sex 60 min, sáb 210 min, dom 240 min; dia longo: domingo
+- Equipamento: potenciómetro, cinta FC
+- FTP 290 W · FC limiar 168 · FC máx. 186 · FC repouso 46
+- Provas: **D** Volta do clube (13/12/2026, 2 h); **C** Clássica de inverno (17/01/2027, 2.5 h); **B** Granfondo de preparação (14/02/2027, 3 h); **A** Granfondo da Serra (14/03/2027, 4 h); **B** Contrarrelógio regional (11/04/2027, 1 h); **A** Volta ao Alentejo (etapa) (23/05/2027, 3.5 h)
+
+| Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 23/11 | Base | 316 | 294 (6.8 h) | 6.8 | +6.8 | 3× resistencia, 1× tempo | rampa: resistência encurtada |
+| 2 | 30/11 | Base | 363 | 262 (6.1 h) | 11.9 | +5.0 | 3× resistencia, 1× forca | rampa: resistência encurtada |
+| 3 | 07/12 | Base | 399 | 376 (7.2 h) | 18.7 | +6.9 | 3× resistencia, 1× prova D | rampa: resistência encurtada |
+| 4 | 14/12 | Recuperação | 226 | 134 (3.8 h) | 19.0 | +0.2 | 3× recuperacao, 1× resistencia | rampa: resistência encurtada |
+| 5 | 21/12 | Construção | 449 | 433 (9.6 h) | 25.8 | +6.8 | 4× resistencia, 1× sweetspot, 1× limiar | rampa: resistência encurtada |
+| 6 | 28/12 | Construção | 496 | 483 (10.4 h) | 32.7 | +6.9 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~33) |
+| 7 | 04/01 | Construção | 545 | 498 (10.6 h) | 38.9 | +6.2 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~60); rampa: sessão-chave aliviada |
+| 8 | 11/01 | Recuperação | 299 | 293 (5.5 h) | 39.6 | +0.7 | 2× resistencia, 1× prova C |  |
+| 9 | 18/01 | Construção | 593 | 456 (10.1 h) | 43.7 | +4.2 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~156) |
+| 10 | 25/01 | Construção | 622 | 483 (10.4 h) | 47.9 | +4.1 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~158) |
+| 11 | 01/02 | Específico | 651 | 447 (10.0 h) | 50.6 | +2.7 | 4× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~223) |
+| 12 | 08/02 | Recuperação | 268 | 249 (4.5 h) | 48.6 | -2.0 | 1× recuperacao, 1× vo2max, 1× prova B |  |
+| 13 | 15/02 | Específico | 656 | 385 (8.5 h) | 49.9 | +1.3 | 3× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~258) |
+| 14 | 22/02 | Específico | 665 | 471 (10.1 h) | 52.8 | +2.9 | 4× resistencia, 1× vo2max, 1× limiar | carga limitada pela disponibilidade (faltam ~213) |
+| 15 | 01/03 | Afinação | 259 | 200 (6.0 h) | 49.2 | -3.6 | 4× recuperacao, 1× vo2max, 1× resistencia |  |
+| 16 | 08/03 | Afinação | 259 | 259 (4.7 h) | 47.7 | -1.5 | 1× vo2max, 1× prova A |  |
+| 17 | 15/03 | Recuperação | 282 | 212 (6.5 h) | 45.2 | -2.5 | 5× recuperacao, 1× resistencia |  |
+| 18 | 22/03 | Construção | 632 | 456 (10.1 h) | 48.5 | +3.3 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~195) |
+| 19 | 29/03 | Construção | 655 | 483 (10.4 h) | 51.8 | +3.4 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~192) |
+| 20 | 05/04 | Construção | 543 | 346 (6.5 h) | 51.5 | -0.4 | 3× resistencia, 1× limiar, 1× vo2max, 1× prova B | mini-afinação para prova B; carga limitada pela disponibilidade (faltam ~199) |
+| 21 | 12/04 | Recuperação | 208 | 147 (4.5 h) | 46.9 | -4.6 | 5× recuperacao, 1× resistencia |  |
+| 22 | 19/04 | Específico | 644 | 447 (10.0 h) | 49.8 | +2.9 | 4× resistencia, 1× vo2max, 1× limiar | carga limitada pela disponibilidade (faltam ~216) |
+| 23 | 26/04 | Específico | 664 | 471 (10.1 h) | 52.7 | +2.9 | 4× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~213) |
+| 24 | 03/05 | Específico | 684 | 497 (10.5 h) | 55.7 | +3.1 | 4× resistencia, 1× vo2max, 1× limiar | carga limitada pela disponibilidade (faltam ~207) |
+| 25 | 10/05 | Recuperação | 298 | 212 (6.5 h) | 52.0 | -3.8 | 5× recuperacao, 1× resistencia |  |
+| 26 | 17/05 | Afinação | 273 | 271 (5.2 h) | 50.3 | -1.7 | 1× vo2max, 1× resistencia, 1× prova A |  |
+
+**Semana 1 — Base** (a partir de 23/11/2026)
+
+- **quinta 26/11**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sexta 27/11**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 60 min · carga 40  
+    10 min a 145–174 W (Z1) → 40 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sábado 28/11**
+  - 🌳 outdoor · Arrábida · Tempo 3 × 10 min · 65 min · carga 50  
+    12 min em rampa 130→203 W → 3 × [10 min a 220–246 W (Z3); 5 min a 145–174 W (Z1)] → 8 min em rampa 174→130 W
+- **domingo 29/11**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 195 min · carga 141  
+    10 min a 145–174 W (Z1) → 175 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+
+**Semana 3 — Base** (a partir de 07/12/2026)
+
+- **quinta 10/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sexta 11/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 60 min · carga 40  
+    10 min a 145–174 W (Z1) → 40 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sábado 12/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 165 min · carga 119  
+    10 min a 145–174 W (Z1) → 145 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **domingo 13/12** · ALTA INTENSIDADE
+  - 🌳 outdoor · Prova D: Volta do clube · 120 min · carga 155  
+    prova
+
+**Semana 5 — Construção** (a partir de 21/12/2026)
+
+- **segunda 21/12**
+  - 🌳 outdoor · Caramulo · Sweet spot 3 × 10 min · 65 min · carga 59  
+    12 min em rampa 130→203 W → 3 × [10 min a 255–270 W (Z4); 5 min a 145–174 W (Z1)] → 8 min em rampa 174→130 W
+- **terça 22/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **quinta 24/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sexta 25/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 60 min · carga 40  
+    10 min a 145–174 W (Z1) → 40 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sábado 26/12** · ALTA INTENSIDADE
+  - 🌳 outdoor · Malhão · Limiar 4 × 6 min · 60 min · carga 57  
+    12 min em rampa 130→203 W → 4 × [6 min a 276–296 W (Z4); 4 min a 145–174 W (Z1)] → 8 min em rampa 174→130 W
+- **domingo 27/12**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 210 min · carga 152  
+    10 min a 145–174 W (Z1) → 190 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+
+**Semana 8 — Recuperação** (a partir de 11/01/2027)
+
+- **terça 12/01**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **quinta 14/01**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **domingo 17/01** · ALTA INTENSIDADE
+  - 🌳 outdoor · Prova C: Clássica de inverno · 150 min · carga 168  
+    prova
+
+**Semana 12 — Recuperação** (a partir de 08/02/2027)
+
+- **terça 09/02**
+  - 🌳 outdoor · Mondego · Recuperação ativa · 45 min · carga 19  
+    45 min a 130–160 W (Z1)
+- **sábado 13/02** · ALTA INTENSIDADE
+  - 🌳 outdoor · Brisa · Ativação pré-prova 3 × 1 min · 42 min · carga 28  
+    20 min a 160–203 W (Z2) → 3 × [1 min a 319–348 W (Z5); 3 min a 130–160 W (Z1)] → 10 min a 145–174 W (Z1)
+- **domingo 14/02** · ALTA INTENSIDADE
+  - 🌳 outdoor · Prova B: Granfondo de preparação · 180 min · carga 202  
+    prova
+
+**Semana 16 — Afinação** (a partir de 08/03/2027)
+
+- **sexta 12/03** · ALTA INTENSIDADE
+  - 🌳 outdoor · Brisa · Ativação pré-prova 3 × 1 min · 42 min · carga 28  
+    20 min a 160–203 W (Z2) → 3 × [1 min a 319–348 W (Z5); 3 min a 130–160 W (Z1)] → 10 min a 145–174 W (Z1)
+- **domingo 14/03** · ALTA INTENSIDADE
+  - 🌳 outdoor · Prova A: Granfondo da Serra · 240 min · carga 231  
+    prova
+
+**Semana 20 — Construção** (a partir de 05/04/2027)
+
+- **segunda 05/04**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 90 min · carga 62  
+    10 min a 145–174 W (Z1) → 70 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **terça 06/04** · ALTA INTENSIDADE
+  - 🌳 outdoor · Bola del Mundo · Limiar 4 × 10 min · 80 min · carga 85  
+    12 min em rampa 130→203 W → 4 × [10 min a 276–296 W (Z4); 5 min a 145–174 W (Z1)] → 8 min em rampa 174→130 W
+- **quinta 08/04**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 60 min · carga 40  
+    10 min a 145–174 W (Z1) → 40 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sexta 09/04**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 60 min · carga 40  
+    10 min a 145–174 W (Z1) → 40 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **sábado 10/04** · ALTA INTENSIDADE
+  - 🌳 outdoor · Brisa · Ativação pré-prova 3 × 1 min · 42 min · carga 28  
+    20 min a 160–203 W (Z2) → 3 × [1 min a 319–348 W (Z5); 3 min a 130–160 W (Z1)] → 10 min a 145–174 W (Z1)
+- **domingo 11/04** · ALTA INTENSIDADE
+  - 🌳 outdoor · Prova B: Contrarrelógio regional · 60 min · carga 90  
+    prova
+
+**Semana 26 — Afinação** (a partir de 17/05/2027)
+
+- **sexta 21/05** · ALTA INTENSIDADE
+  - 🌳 outdoor · Brisa · Ativação pré-prova 3 × 1 min · 42 min · carga 28  
+    20 min a 160–203 W (Z2) → 3 × [1 min a 319–348 W (Z5); 3 min a 130–160 W (Z1)] → 10 min a 145–174 W (Z1)
+- **sábado 22/05**
+  - 🌳 outdoor · Tejo · Resistência Z2 · 60 min · carga 40  
+    10 min a 145–174 W (Z1) → 40 min a 180–209 W (Z2) → 10 min a 145–174 W (Z1)
+- **domingo 23/05** · ALTA INTENSIDADE
+  - 🌳 outdoor · Prova A: Volta ao Alentejo (etapa) · 210 min · carga 202  
+    prova
 
 ---
 

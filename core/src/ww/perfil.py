@@ -22,6 +22,14 @@ TipoObjetivo = Literal["prova", "ftp", "peso", "resistencia"]
 Fonte = Literal["atleta", "dispositivo", "teste", "estimado"]
 Ambiente = Literal["indoor", "outdoor"]
 OndeTreina = Literal["outdoor", "indoor", "ambos"]
+Prioridade = Literal["A", "B", "C", "D"]
+
+PRIORIDADES = {
+    "A": "objetivo principal da época",
+    "B": "importante",
+    "C": "preparação",
+    "D": "prova-treino",
+}
 
 DIAS = ("segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo")
 
@@ -45,6 +53,15 @@ class Objetivo:
     tipo: TipoObjetivo
     data_prova: date | None = None
     nome_prova: str = ""
+
+
+@dataclass(frozen=True)
+class Prova:
+    """Prova do calendário do atleta, com prioridade A (mais importante) a D (D-060)."""
+    nome: str
+    data: date
+    prioridade: Prioridade
+    duracao_h: float | None = None     # estimada pelo atleta; sem ela usa-se o valor por defeito
 
 
 @dataclass(frozen=True)
@@ -76,6 +93,7 @@ class Atleta:
     consentimento_responsavel: bool = False   # obrigatório abaixo da idade de consentimento próprio
     # "Onde vais treinar?" — pergunta da configuração inicial (D-059); None = sugestão pelo equipamento
     onde_treina: OndeTreina | None = None
+    provas: tuple[Prova, ...] = ()     # calendário de provas A–D (D-060)
 
     def idade(self, em: date) -> int:
         d = self.data_nascimento
@@ -99,11 +117,23 @@ def validar(a: Atleta, hoje: date, cfg: Config) -> None:
         erros.append(f"é preciso pelo menos um dia com {cfg.plano.duracao_minima_treino_min} min")
     if a.dia_longo is not None and (not 0 <= a.dia_longo <= 6 or a.disponibilidade[a.dia_longo] == 0):
         erros.append("o dia longo tem de ser um dia com disponibilidade")
-    if a.objetivo.tipo == "prova":
+    if a.objetivo.tipo == "prova" and not a.provas:
         if a.objetivo.data_prova is None:
             erros.append("objetivo 'prova' sem data")
         elif a.objetivo.data_prova <= hoje:
             erros.append("a data da prova já passou")
+    datas_provas = [p.data for p in a.provas]
+    for p in a.provas:
+        if p.prioridade not in PRIORIDADES:
+            erros.append(f"prova '{p.nome}': prioridade tem de ser A, B, C ou D")
+        if p.data <= hoje:
+            erros.append(f"prova '{p.nome}': a data já passou")
+        if not p.nome.strip():
+            erros.append("prova sem nome")
+        if p.duracao_h is not None and not 0.25 <= p.duracao_h <= 24:
+            erros.append(f"prova '{p.nome}': duração entre 15 min e 24 h")
+    if len(set(datas_provas)) != len(datas_provas):
+        erros.append("duas provas no mesmo dia")
     fl, fm, fr = a.fc_limiar, a.fc_max, a.fc_repouso
     if fl and fm and fl.valor >= fm.valor:
         erros.append("FC limiar tem de ser inferior à FC máxima")
@@ -160,3 +190,12 @@ def ambientes(a: Atleta) -> tuple[Ambiente, ...]:
 def tem_potencia(a: Atleta, ambiente: Ambiente) -> bool:
     """Alvos em watts: com potenciómetro, ou no rolo inteligente (que mede a potência)."""
     return a.equipamento.potenciometro or (ambiente == "indoor" and a.equipamento.rolo_inteligente)
+
+
+def calendario_provas(a: Atleta) -> tuple[Prova, ...]:
+    """Provas por data. Compatibilidade: um objetivo 'prova' sem calendário vira uma prova A."""
+    if a.provas:
+        return tuple(sorted(a.provas, key=lambda p: p.data))
+    if a.objetivo.tipo == "prova" and a.objetivo.data_prova:
+        return (Prova(a.objetivo.nome_prova or "Prova", a.objetivo.data_prova, "A"),)
+    return ()

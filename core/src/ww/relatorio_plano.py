@@ -32,14 +32,16 @@ def _perfil_md(a: Atleta, idade: int) -> list[str]:
         f"- Disponibilidade: {disp}" + (f"; dia longo: {DIAS[a.dia_longo]}" if a.dia_longo is not None else ""),
         f"- Equipamento: {eq}",
         f"- FTP {v(a.ftp)} W · FC limiar {v(a.fc_limiar)} · FC máx. {v(a.fc_max)} · FC repouso {v(a.fc_repouso)}",
-    ]
+    ] + ([f"- Provas: " + "; ".join(f"**{p.prioridade}** {p.nome} ({p.data:%d/%m/%Y}"
+                                    + (f", {p.duracao_h:g} h" if p.duracao_h else "") + ")" for p in a.provas)]
+         if a.provas else [])
 
 
 def plano_md(a: Atleta, p: Plano, cfg: Config, *, detalhe_semanas: tuple[int, ...]) -> list[str]:
     out = ["", "| Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |",
            "|---|---|---|---|---|---|---|---|---|"]
     for s in p.semanas:
-        tipos = Counter(t.treino.tipo for t in s.treinos)
+        tipos = Counter(t.treino.tipo if t.papel != "prova" else f"prova {t.prioridade}" for t in s.treinos)
         resumo = ", ".join(f"{n}× {t}" for t, n in tipos.most_common())
         horas = sum(t.minutos for t in s.treinos) / 60
         out.append(f"| {s.numero} | {s.inicio:%d/%m} | {NOMES_FASE[s.fase]} | {s.carga_alvo:.0f} | "
@@ -80,7 +82,8 @@ def gerar_relatorio(cenarios: dict[str, Atleta], hoje, inicio, cfg: Config) -> s
     for nome, a0 in cenarios.items():
         a = completar(a0, hoje, cfg)
         p = gerar(a, lib, cfg, inicio=inicio)
-        detalhe = (1, 5) + ((len(p.semanas),) if a.objetivo.tipo == "prova" else ())
+        semanas_prova = tuple(s.numero for s in p.semanas if any(t.papel == "prova" for t in s.treinos))
+        detalhe = (1, 5) + semanas_prova
         out += ["", "---", "", f"## {nome.replace('_', ' ').capitalize()}", ""] + _perfil_md(a, a.idade(hoje))
         if p.nivel_regras != a.nivel:
             out.append(f"- Regras de treino usadas: **{p.nivel_regras}** (menor de idade)")
