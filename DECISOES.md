@@ -293,3 +293,8 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Nas semanas de carga, a resistência concentra-se em menos dias, com pelo menos 60 min cada (em vez de muitas recuperações de 45 min).
 - O controlo da rampa passa a encurtar (ou retirar) os treinos dos 7 dias onde está o excesso, em vez do treino mais longo da semana. Antes, um caso encolhia uma semana inteira para 3,6 h sem resolver o excesso.
 - **Estado:** Provisória.
+
+### D-052 — Treinos de outras plataformas não entram na biblioteca
+- **Contexto (19/11/2026):** recebido um zip com 1 548 ficheiros ERG do catálogo do TrainerRoad (nomes de montanhas com nível de progressão, descrições traduzidas), exportados da conta do Paulo.
+- **Decisão:** não importados e cópia local apagada. Conteúdo de concorrentes (TrainerRoad, Zwift, planos comprados, etc.) não entra na biblioteca da Wattwise, nem renomeado nem alterado. Estruturas genéricas de intervalos (ex.: 5 × 4 min a 110%) podem ser usadas quando descritas pelo Paulo e criadas de raiz.
+- **Estado:** Aprovada (regra de propriedade intelectual; confirmar com jurista).
