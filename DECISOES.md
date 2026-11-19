@@ -436,3 +436,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Explicações** (`ww.explicacao`): textos-modelo PT-PT a partir do registo, só com os números do registo; são a explicação por defeito e a reserva do LLM (spec 7.5). O LLM fica atrás de interruptor até parecer jurídico (D-016).
 - **Por fazer nesta fase:** autenticação (Fase 6), app React Native/Expo, funcionamento offline, painel interno.
 - **Estado:** Provisória.
+
+### D-073 — App do atleta (Expo)
+- `mobile/` em Expo + React Native + TypeScript (um código para iPhone, Android e web). Ecrãs: Hoje, Manhã, Semana, Progresso, Perfil, FTP e zonas — segundo o protótipo aprovado (D-072).
+- Funciona sem rede com o último plano guardado (cache local); a escolha indoor/outdoor fica no telemóvel se não houver rede.
+- Enquanto não existe o registo inicial (onboarding), a app cria um **atleta de demonstração** no servidor de desenvolvimento.
+- Por fazer: registo inicial, adicionar provas na app, ecrã Atividade, modo escuro, sincronização offline dos envios, autenticação (Fase 6).
+- **Estado:** Provisória.

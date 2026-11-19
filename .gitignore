@@ -8,3 +8,6 @@ __pycache__/
 # Ficheiros FIT reais (dados pessoais) ficam fora do repositório até decisão do Paulo (D-036)
 core/tests/fixtures/fit/*.fit
 Wattwise_biblioteca_*.zip
+
+# base de dados local de desenvolvimento
+backend/wattwise_dev.db

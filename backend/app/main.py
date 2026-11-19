@@ -36,11 +36,16 @@ from ww.treinos import Treino, carregar as carregar_lib
 VERSAO_CONSENTIMENTO = "1.0"
 
 
-def criar_app(url_bd: str = "sqlite:///:memory:", cfg: Config | None = None) -> FastAPI:
+def criar_app(url_bd: str = "sqlite:///:memory:", cfg: Config | None = None,
+              origens: tuple[str, ...] = ("http://localhost:8081", "http://127.0.0.1:8081")) -> FastAPI:
+    from fastapi.middleware.cors import CORSMiddleware
+
     cfg = cfg or carregar_cfg()
     lib = carregar_lib()
     Sessao = criar_sessoes(url_bd)
     app = FastAPI(title="Wattwise API", version="0.1.0")
+    # só para a versão web da app em desenvolvimento; a app nativa não precisa de CORS
+    app.add_middleware(CORSMiddleware, allow_origins=list(origens), allow_methods=["*"], allow_headers=["*"])
 
     def bd():  # type: ignore[no-untyped-def]
         with Sessao() as s:
@@ -425,4 +430,4 @@ def criar_app(url_bd: str = "sqlite:///:memory:", cfg: Config | None = None) -> 
     return app
 
 
-app = criar_app()
+app = criar_app(__import__("os").environ.get("WATTWISE_BD", "sqlite:///./wattwise_dev.db"))
