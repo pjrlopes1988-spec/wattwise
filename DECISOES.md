@@ -338,3 +338,12 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Exportação: cada treino sai tal como está na sua biblioteca (indoor com alvos fixos; outdoor com intervalos).
 - **Incidente corrigido:** um script de edição falhou a meio e esvaziou `test_exportar.py`; durante alguns minutos os testes de exportação "passavam" sem correr. Recuperado do Git; as edições passaram a escrever o ficheiro só depois de todas as substituições terem sucesso.
 - **Estado:** Provisória.
+
+### D-059 — Dois treinos lado a lado no calendário; "Onde vais treinar?" no perfil (Paulo, 19/11/2026)
+- **Substitui** a escolha de ambiente por dia da semana de D-058 (e a regra "indoor seg–sex com rolo").
+- Pergunta na configuração inicial: **"Onde vais treinar?"** — *Só outdoor* / *Só indoor* / *Indoor e outdoor*. Sugestão pelo equipamento: com rolo inteligente "Indoor e outdoor"; sem rolo "Só outdoor".
+- **Indoor e outdoor:** cada dia tem as duas versões lado a lado (a mesma sessão da biblioteca outdoor e da indoor; se não existir, a mais parecida; indoor no máximo 150 min). O atleta toca numa e essa fica escolhida (`escolher`). **Só indoor / só outdoor:** uma versão. A prova é sempre só outdoor.
+- **Segurança:** antes da escolha, a carga do dia é a da versão mais pesada e a alta intensidade conta se qualquer das versões o for (opção mais conservadora, spec 7.1); os limites (rampa, dias seguidos) ficam garantidos qualquer que seja a escolha.
+- Interface (Fase 4): no "Hoje", as duas versões lado a lado com 🌳/🏠; a escolhida fica marcada.
+- Nota para a interface: no sweet spot (88–93%) a etiqueta de zona pode diferir entre versões (Z4 no intervalo, Z3 no alvo fixo de 90%), porque o sweet spot está na fronteira das zonas.
+- **Estado:** Aprovada (proposta do Paulo).

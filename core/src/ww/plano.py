@@ -26,7 +26,7 @@ from typing import Literal
 
 from ww.config import Config
 from ww.metrics.load import fator
-from ww.perfil import Ambiente, Atleta, ambiente_do_dia, nivel_regras, precisa_de_teste, tem_potencia
+from ww.perfil import Ambiente, Atleta, ambientes, nivel_regras, precisa_de_teste, tem_potencia
 from ww.treinos import Passo, Treino, biblioteca
 
 Fase = Literal["base", "construcao", "especifico", "recuperacao", "afinacao"]
@@ -38,8 +38,10 @@ class TreinoPlaneado:
     data: date
     treino: Treino
     papel: str           # sessao_chave, teste, dia_longo, resistencia, recuperacao, prova
-    alta_intensidade: bool
-    ambiente: Ambiente = "outdoor"   # indoor: alvos fixos (D-058)
+    alta_intensidade: bool           # se QUALQUER das versões for de alta intensidade (D-059)
+    ambiente: Ambiente = "outdoor"   # da versão principal; indoor = alvos fixos (D-058)
+    alternativa: Treino | None = None   # a versão no outro ambiente, lado a lado no calendário (D-059)
+    escolhido: bool = False             # o atleta já tocou numa das versões
 
     @property
     def minutos(self) -> int:
@@ -47,7 +49,16 @@ class TreinoPlaneado:
 
     @property
     def carga(self) -> float:
+        """Antes da escolha: a versão mais pesada (opção mais conservadora, spec 7.1)."""
+        if self.alternativa is not None and not self.escolhido:
+            return max(self.treino.carga, self.alternativa.carga)
         return self.treino.carga
+
+    def opcoes(self) -> dict[str, Treino]:
+        out = {self.ambiente: self.treino}
+        if self.alternativa is not None:
+            out[self.alternativa.ambiente] = self.alternativa
+        return out
 
 
 @dataclass(frozen=True)
@@ -249,8 +260,20 @@ def gerar(
     def tem_pot(d: date) -> bool:
         return tem_potencia(atleta, amb(d))
 
+    versoes = ambientes(atleta)
+    principal: Ambiente = versoes[0]
+    outro: Ambiente | None = versoes[1] if len(versoes) > 1 else None
+
     def amb(d: date) -> Ambiente:
-        return ambiente_do_dia(atleta, d.weekday())
+        return principal
+
+    def com_alternativa(tp: TreinoPlaneado) -> TreinoPlaneado:
+        """Junta a versão do outro ambiente (exceto na prova)."""
+        if outro is None or tp.papel == "prova":
+            return tp
+        sem = replace(tp, alternativa=None)
+        alt = trocar_ambiente(sem, outro, lib, cfg).treino
+        return replace(tp, alternativa=alt, alta_intensidade=tp.alta_intensidade or alta_intensidade(alt, cfg))
 
     def resist(d: date) -> Treino:
         return lib["resistencia_indoor" if amb(d) == "indoor" else "resistencia"]
@@ -441,6 +464,7 @@ def gerar(
                     subida, dia_max = cs - antes, d
             return cs, a_, subida, diaria, dia_max
 
+        treinos = [com_alternativa(t) for t in treinos]
         ctl_fim, atl_fim, subida, diaria, dia_max = simular(treinos)
         while subida > rampa + 1e-9:
             # só ajuda mexer nos treinos dos 7 dias que terminam no dia do excesso
@@ -455,7 +479,7 @@ def gerar(
                 treinos.remove(alvo_t)          # passa a dia de descanso
             else:
                 base_t = resist(alvo_t.data) if alvo_t.treino.base == "resistencia" else recup(alvo_t.data)
-                treinos[treinos.index(alvo_t)] = replace(alvo_t, treino=base_t.com_duracao(novos_min))
+                treinos[treinos.index(alvo_t)] = com_alternativa(replace(alvo_t, treino=base_t.com_duracao(novos_min)))
             ctl_fim, atl_fim, subida, diaria, dia_max = simular(treinos)
             if "rampa: resistência encurtada" not in notas:
                 notas.append("rampa: resistência encurtada")
@@ -496,3 +520,13 @@ def trocar_ambiente(tp: TreinoPlaneado, ambiente: Ambiente, lib: dict[str, Trein
         if novo is None:
             raise ValueError(f"não há treino {t.tipo} equivalente para {ambiente}")
     return replace(tp, treino=novo, ambiente=ambiente, alta_intensidade=alta_intensidade(novo, cfg))
+
+
+def escolher(tp: TreinoPlaneado, ambiente: Ambiente, cfg: Config) -> TreinoPlaneado:
+    """O atleta toca numa das versões do dia: essa fica escolhida (D-059)."""
+    opcoes = tp.opcoes()
+    if ambiente not in opcoes:
+        raise ValueError(f"não há versão {ambiente} para este treino")
+    t = opcoes[ambiente]
+    return replace(tp, treino=t, ambiente=ambiente, alternativa=None, escolhido=True,
+                   alta_intensidade=alta_intensidade(t, cfg) or tp.papel == "prova")

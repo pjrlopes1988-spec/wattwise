@@ -126,32 +126,58 @@ def test_progressao_comeca_pelo_nivel(cfg):
     assert min(t.treino.dificuldade for t in s.treinos if t.papel == "sessao_chave") >= 2
 
 
-# ------------------------------------------------------------------ indoor / outdoor (D-058)
+# ------------------------------------------------------------------ indoor / outdoor (D-058, D-059)
 from dataclasses import replace as _replace  # noqa: E402
 
-from ww.perfil import Equipamento  # noqa: E402
-from ww.plano import trocar_ambiente  # noqa: E402
+from ww.perfil import Equipamento, ambientes, onde_treina  # noqa: E402
+from ww.plano import escolher, trocar_ambiente  # noqa: E402
 
 
-def test_rolo_inteligente_dias_de_semana_indoor_com_alvos_fixos(cfg):
-    a = completar(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg)       # tem rolo inteligente
+def test_onde_treina_sugerido_pelo_equipamento():
+    assert onde_treina(CENARIOS["avancado_com_tudo_ftp"]) == "ambos"            # tem rolo inteligente
+    assert onde_treina(CENARIOS["intermedio_prova_16_semanas"]) == "outdoor"     # sem rolo
+    a = _replace(CENARIOS["avancado_com_tudo_ftp"], onde_treina="indoor")
+    assert ambientes(a) == ("indoor",)
+
+
+def test_ambos_dois_treinos_lado_a_lado(cfg):
+    a = completar(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg)
     p = gerar(a, LIB, cfg, inicio=INICIO)
     for t in p.treinos():
-        esperado = "indoor" if t.data.weekday() < 5 else "outdoor"
-        assert t.ambiente == esperado, t
-        assert t.treino.ambiente == esperado, t.treino.id
-        if t.ambiente == "indoor":
-            assert all(x.pct_min == x.pct_max for x in t.treino.passos if not x.rampa), t.treino.id
-            assert t.minutos <= cfg.indoor.duracao_max_min
+        assert t.papel == "prova" or set(t.opcoes()) == {"outdoor", "indoor"}, t
+        o, i = t.opcoes()["outdoor"], t.opcoes().get("indoor")
+        assert o.ambiente == "outdoor" and i.ambiente == "indoor"
+        assert all(x.pct_min == x.pct_max for x in i.passos if not x.rampa), i.id
+        assert i.minutos <= cfg.indoor.duracao_max_min
+        assert i.tipo == o.tipo
+        # antes da escolha conta a versão mais pesada (segurança)
+        assert t.carga == pytest.approx(max(o.carga, i.carga))
 
 
-def test_atleta_escolhe_o_ambiente_de_cada_dia(cfg):
+def test_so_outdoor_sem_alternativa(cfg):
     a = completar(CENARIOS["intermedio_prova_16_semanas"], HOJE, cfg)
-    a = _replace(a, ambiente=("indoor", "indoor", "outdoor", "indoor", "outdoor", "outdoor", "outdoor"))
+    p = gerar(a, LIB, cfg, inicio=INICIO)
+    assert all(t.alternativa is None and t.ambiente == "outdoor" for t in p.treinos())
+
+
+def test_so_indoor(cfg):
+    a = completar(_replace(CENARIOS["avancado_com_tudo_ftp"], onde_treina="indoor"), HOJE, cfg)
     p = gerar(a, LIB, cfg, inicio=INICIO)
     for t in p.treinos():
-        if t.papel != "prova":
-            assert t.ambiente == a.ambiente[t.data.weekday()]
+        assert t.alternativa is None and t.ambiente == "indoor" and t.treino.ambiente == "indoor"
+        assert t.minutos <= cfg.indoor.duracao_max_min
+
+
+def test_escolher_uma_versao(cfg):
+    a = completar(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg)
+    p = gerar(a, LIB, cfg, inicio=INICIO)
+    t = next(t for t in p.treinos() if t.papel == "dia_longo")
+    ind = escolher(t, "indoor", cfg)
+    assert ind.escolhido and ind.ambiente == "indoor" and ind.alternativa is None
+    assert ind.carga == pytest.approx(t.opcoes()["indoor"].carga)
+    assert escolher(t, "outdoor", cfg).treino == t.opcoes()["outdoor"]
+    with pytest.raises(ValueError):
+        escolher(ind, "outdoor", cfg)      # depois de escolhido, só fica essa versão
 
 
 def test_rolo_sem_potenciometro_da_watts_indoor(cfg):

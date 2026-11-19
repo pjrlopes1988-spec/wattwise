@@ -21,6 +21,7 @@ Disciplina = Literal["estrada", "gravel", "btt_xco", "btt_maratona", "contrarrel
 TipoObjetivo = Literal["prova", "ftp", "peso", "resistencia"]
 Fonte = Literal["atleta", "dispositivo", "teste", "estimado"]
 Ambiente = Literal["indoor", "outdoor"]
+OndeTreina = Literal["outdoor", "indoor", "ambos"]
 
 DIAS = ("segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo")
 
@@ -73,8 +74,8 @@ class Atleta:
     altura_cm: float | None = None
     anos_treino_estruturado: int | None = None
     consentimento_responsavel: bool = False   # obrigatório abaixo da idade de consentimento próprio
-    # onde treina em cada dia (0 = segunda … 6 = domingo); None = regra por defeito (D-058)
-    ambiente: tuple[Ambiente, Ambiente, Ambiente, Ambiente, Ambiente, Ambiente, Ambiente] | None = None
+    # "Onde vais treinar?" — pergunta da configuração inicial (D-059); None = sugestão pelo equipamento
+    onde_treina: OndeTreina | None = None
 
     def idade(self, em: date) -> int:
         d = self.data_nascimento
@@ -143,14 +144,17 @@ def nivel_regras(a: Atleta, hoje: date, cfg: Config) -> Nivel:
     return "iniciante" if a.idade(hoje) < cfg.perfil.idade_adulto else a.nivel
 
 
-def ambiente_do_dia(a: Atleta, dia_semana: int) -> Ambiente:
-    """Indoor ou outdoor. Sem indicação do atleta: com rolo inteligente, indoor de segunda a sexta
-    e outdoor ao fim de semana; sem rolo, outdoor (D-058)."""
-    if a.ambiente is not None:
-        return a.ambiente[dia_semana]
-    if a.equipamento.rolo_inteligente:
-        return "indoor" if dia_semana < 5 else "outdoor"
-    return "outdoor"
+def onde_treina(a: Atleta) -> OndeTreina:
+    """Resposta do atleta ou, sem resposta, a sugestão pelo equipamento: com rolo inteligente
+    "ambos", sem rolo "outdoor" (D-059)."""
+    if a.onde_treina is not None:
+        return a.onde_treina
+    return "ambos" if a.equipamento.rolo_inteligente else "outdoor"
+
+
+def ambientes(a: Atleta) -> tuple[Ambiente, ...]:
+    """Versões a mostrar no calendário: a principal primeiro."""
+    return {"outdoor": ("outdoor",), "indoor": ("indoor",), "ambos": ("outdoor", "indoor")}[onde_treina(a)]  # type: ignore[return-value]
 
 
 def tem_potencia(a: Atleta, ambiente: Ambiente) -> bool:
