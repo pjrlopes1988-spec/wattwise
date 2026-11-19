@@ -18,6 +18,12 @@ z2_progressivo_90: Zêzere
 z2_longo_tempo: Douro
 z2_longo_sweetspot: Guadalquivir
 paulo_express_z2_20: Guadiana
+recuperacao_60: Sado
+recuperacao_pernas_soltas: Vouga
+z2_2h: Tâmega
+z2_2h30_sprints: Cávado
+z2_cadencia_baixa: Côa
+z2_longo_5h: Ebro
 
 # --- Serras (tempo)
 tempo_2x15: Sintra
@@ -28,6 +34,9 @@ tempo_3x15: Alvão
 tempo_2x30: Guadarrama
 tempo_60: Sierra Morena
 paulo_express_tempo_30: Montesinho
+tempo_4x10: Bussaco
+tempo_progressivo_3x15: Malcata
+tempo_45: Moncayo
 
 # --- Serras (sweet spot)
 sweetspot_2x12: Lousã
@@ -40,6 +49,10 @@ sweetspot_4x15: Gata
 sweetspot_2x30: Sierra Nevada
 paulo_express_sweet_spot_25_continuo: Peneda
 paulo_express_sweet_spot_30: Gerês
+sweetspot_5x8: Ossa
+sweetspot_com_picos: Montseny
+sweetspot_progressivo_2x20: Grazalema
+sweetspot_3x20: Peña de Francia
 
 # --- Subidas míticas (limiar)
 limiar_3x8: Fóia
@@ -51,6 +64,11 @@ limiar_2x15: Navacerrada
 limiar_4x10: Bola del Mundo
 limiar_2x20: Angliru
 limiar_sobe_desce: Senhora da Graça
+limiar_5x5: Trevim
+limiar_2x12: Lagoa Comprida
+limiar_3x15: Ézaro
+limiar_sobe_desce_2x12: La Camperona
+limiar_30: Valdelinares
 
 # --- Ventos (VO2máx)
 vo2_ativacao: Brisa
@@ -63,12 +81,22 @@ vo2_5x5: Vendaval
 vo2_piramide: Galerno
 vo2_30_30: Terral
 vo2_40_20: Ábrego
+vo2_8x2: Barlavento
+vo2_4x4: Sotavento
+vo2_15_15: Gregal
+vo2_arranque_5x4: Mestral
+vo2_3x6: Siroco
 
 # --- Ventos (anaeróbio)
 sprints_6x15s: Garbí
 anaerobio_8x30s: Suão
 anaerobio_6x45s: Xaloc
 anaerobio_2x5x1: Ventania
+sprints_10x10s: Solano
+anaerobio_6x1: Migjorn
+anaerobio_10x30s: Bochorno
+anaerobio_20_10: Matacabras
+anaerobio_5x2: Galerna
 
 # --- Castelos (força)
 forca_5x5: Marvão
@@ -80,6 +108,9 @@ paulo_forca_sweet_spot_5x6: Alcazaba
 paulo_forca_tempo_4x8: Peñafiel
 paulo_torque_ao_limiar_10x1: Guimarães
 paulo_arranques_de_forca_45: Almourol
+forca_arranques_8x20s: Belver
+forca_tempo_2x20: Sabugal
+forca_limiar_4x5: Peñíscola
 
 # --- Faróis (testes)
 teste_20min: Sagres

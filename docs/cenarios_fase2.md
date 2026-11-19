@@ -1,6 +1,6 @@
 # Wattwise — Planos dos cenários de teste (Fase 2)
 
-Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
+Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 91 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
 
 **Como ler:** *Carga alvo* = a necessária para subir a Condição o máximo permitido para o nível; *Planeada* = o que cabe na disponibilidade; *Subida* = variação da Condição na semana (limite: iniciante 5, intermedio 6, avancado 7, competicao 8). Em todos os cenários, verificado por testes automáticos: disponibilidade respeitada, dias de descanso mínimos, nunca mais de 2 dias seguidos de alta intensidade, recuperação pelo menos a cada 4 semanas, subida da Condição dentro do limite em quaisquer 7 dias seguidos.
 
@@ -71,12 +71,12 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 | 8 | 11/01 | Recuperação | 254 | 182 (5.5 h) | 33.2 | -1.1 | 4× recuperacao, 1× resistencia |  |
 | 9 | 18/01 | Construção | 503 | 404 (8.9 h) | 37.2 | +4.0 | 3× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~118) |
 | 10 | 25/01 | Construção | 531 | 420 (8.9 h) | 41.0 | +3.8 | 3× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~128) |
-| 11 | 01/02 | Específico | 558 | 397 (8.7 h) | 43.6 | +2.6 | 3× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~180) |
-| 12 | 08/02 | Recuperação | 238 | 171 (5.2 h) | 40.8 | -2.8 | 4× recuperacao, 1× resistencia |  |
-| 13 | 15/02 | Específico | 556 | 397 (8.7 h) | 43.4 | +2.6 | 3× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~179) |
-| 14 | 22/02 | Específico | 574 | 402 (8.6 h) | 45.8 | +2.4 | 3× resistencia, 1× vo2max, 1× limiar | carga limitada pela disponibilidade (faltam ~189) |
-| 15 | 01/03 | Afinação | 221 | 158 (4.7 h) | 42.3 | -3.5 | 3× recuperacao, 1× vo2max, 1× resistencia |  |
-| 16 | 08/03 | Afinação | 221 | 185 (4.2 h) | 40.0 | -2.3 | 3× recuperacao, 1× vo2max, 1× prova |  |
+| 11 | 01/02 | Específico | 558 | 410 (8.9 h) | 43.9 | +2.9 | 3× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~168) |
+| 12 | 08/02 | Recuperação | 246 | 171 (5.2 h) | 41.0 | -2.9 | 4× recuperacao, 1× resistencia |  |
+| 13 | 15/02 | Específico | 558 | 410 (8.9 h) | 43.9 | +2.9 | 3× resistencia, 1× limiar, 1× vo2max | carga limitada pela disponibilidade (faltam ~168) |
+| 14 | 22/02 | Específico | 578 | 402 (8.6 h) | 46.2 | +2.3 | 3× resistencia, 1× vo2max, 1× limiar | carga limitada pela disponibilidade (faltam ~193) |
+| 15 | 01/03 | Afinação | 221 | 158 (4.7 h) | 42.7 | -3.6 | 3× recuperacao, 1× vo2max, 1× resistencia |  |
+| 16 | 08/03 | Afinação | 221 | 185 (4.2 h) | 40.3 | -2.4 | 3× recuperacao, 1× vo2max, 1× prova |  |
 
 **Semana 1 — Base** (a partir de 23/11/2026)
 
@@ -99,8 +99,8 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
   10 min a 125–150 W (Z1) → 70 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 - **quinta 24/12** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 125–150 W (Z1) → 70 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
-- **sábado 26/12** — Malhão · Limiar 4 × 6 min · 60 min · carga 57 · ALTA INTENSIDADE  
-  12 min em rampa 112→175 W → 4 × [6 min a 238–255 W (Z4); 4 min a 125–150 W (Z1)] → 8 min em rampa 150→112 W
+- **sábado 26/12** — Trevim · Limiar 5 × 5 min · 60 min · carga 58 · ALTA INTENSIDADE  
+  12 min em rampa 112→175 W → 5 × [5 min a 238–250 W (Z4); 3 min a 125–150 W (Z1)] → 8 min em rampa 150→112 W
 - **domingo 27/12** — Tejo · Resistência Z2 · 210 min · carga 152  
   10 min a 125–150 W (Z1) → 190 min a 155–180 W (Z2) → 10 min a 125–150 W (Z1)
 
@@ -129,29 +129,29 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 23/11 | Base | 316 | 299 (6.9 h) | 6.8 | +6.8 | 3× resistencia, 1× tempo | rampa: resistência encurtada |
-| 2 | 30/11 | Base | 363 | 291 (6.8 h) | 12.3 | +5.6 | 4× resistencia, 1× forca | rampa: resistência encurtada |
-| 3 | 07/12 | Base | 402 | 381 (8.4 h) | 19.0 | +6.7 | 5× resistencia, 1× sweetspot |  |
-| 4 | 14/12 | Recuperação | 229 | 159 (4.8 h) | 19.7 | +0.6 | 5× recuperacao, 1× resistencia |  |
-| 5 | 21/12 | Construção | 453 | 449 (9.7 h) | 26.6 | +7.0 | 4× resistencia, 1× sweetspot, 1× limiar | rampa: resistência encurtada |
-| 6 | 28/12 | Construção | 502 | 473 (10.0 h) | 33.1 | +6.5 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~47) |
-| 7 | 04/01 | Construção | 547 | 472 (10.0 h) | 38.5 | +5.4 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~92) |
-| 8 | 11/01 | Recuperação | 283 | 212 (6.5 h) | 37.4 | -1.2 | 5× recuperacao, 1× resistencia |  |
-| 9 | 18/01 | Construção | 577 | 460 (9.9 h) | 41.8 | +4.5 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~134) |
-| 10 | 25/01 | Construção | 609 | 473 (10.0 h) | 45.9 | +4.1 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~153) |
-| 11 | 01/02 | Construção | 637 | 472 (10.0 h) | 49.4 | +3.4 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~182) |
-| 12 | 08/02 | Recuperação | 283 | 212 (6.5 h) | 46.5 | -2.9 | 5× recuperacao, 1× resistencia |  |
+| 1 | 23/11 | Base | 316 | 305 (7.0 h) | 7.0 | +7.0 | 3× resistencia, 1× tempo | rampa: resistência encurtada |
+| 2 | 30/11 | Base | 365 | 262 (6.1 h) | 11.9 | +4.9 | 3× resistencia, 1× forca | rampa: resistência encurtada |
+| 3 | 07/12 | Base | 399 | 381 (8.4 h) | 18.7 | +6.8 | 5× resistencia, 1× sweetspot |  |
+| 4 | 14/12 | Recuperação | 229 | 159 (4.8 h) | 19.4 | +0.7 | 5× recuperacao, 1× resistencia |  |
+| 5 | 21/12 | Construção | 451 | 438 (9.4 h) | 26.1 | +6.8 | 4× resistencia, 1× sweetspot, 1× limiar | rampa: resistência encurtada |
+| 6 | 28/12 | Construção | 499 | 473 (10.0 h) | 32.7 | +6.5 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~43) |
+| 7 | 04/01 | Construção | 544 | 479 (10.1 h) | 38.3 | +5.7 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~83) |
+| 8 | 11/01 | Recuperação | 287 | 212 (6.5 h) | 37.2 | -1.1 | 5× recuperacao, 1× resistencia |  |
+| 9 | 18/01 | Construção | 576 | 460 (9.9 h) | 41.7 | +4.5 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~133) |
+| 10 | 25/01 | Construção | 608 | 473 (10.0 h) | 45.8 | +4.1 | 4× resistencia, 1× limiar, 1× sweetspot | carga limitada pela disponibilidade (faltam ~152) |
+| 11 | 01/02 | Construção | 636 | 479 (10.1 h) | 49.4 | +3.6 | 4× resistencia, 1× sweetspot, 1× limiar | carga limitada pela disponibilidade (faltam ~175) |
+| 12 | 08/02 | Recuperação | 287 | 212 (6.5 h) | 46.6 | -2.9 | 5× recuperacao, 1× resistencia |  |
 
 **Semana 1 — Base** (a partir de 23/11/2026)
 
-- **terça 24/11** — Tejo · Resistência Z2 · 90 min · carga 62  
-  10 min a 155–186 W (Z1) → 70 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
+- **quarta 25/11** — Tejo · Resistência Z2 · 60 min · carga 40  
+  10 min a 155–186 W (Z1) → 40 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
 - **quinta 26/11** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 155–186 W (Z1) → 70 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
-- **sábado 28/11** — Tejo · Resistência Z2 · 165 min · carga 119  
-  10 min a 155–186 W (Z1) → 145 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
-- **domingo 29/11** — Marão · Tempo 3 × 12 min · 68 min · carga 55  
-  12 min em rampa 140→217 W → 3 × [12 min a 236–264 W (Z3); 4 min a 155–186 W (Z1)] → 8 min em rampa 186→140 W
+- **sábado 28/11** — Tejo · Resistência Z2 · 195 min · carga 141  
+  10 min a 155–186 W (Z1) → 175 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
+- **domingo 29/11** — Bussaco · Tempo 4 × 10 min · 76 min · carga 62  
+  12 min em rampa 140→217 W → 4 × [10 min a 236–264 W (Z3); 4 min a 155–186 W (Z1)] → 8 min em rampa 186→140 W
 
 **Semana 5 — Construção** (a partir de 21/12/2026)
 
@@ -163,8 +163,8 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
   10 min a 155–186 W (Z1) → 40 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
 - **quinta 24/12** — Tejo · Resistência Z2 · 90 min · carga 62  
   10 min a 155–186 W (Z1) → 70 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
-- **sábado 26/12** — Tejo · Resistência Z2 · 195 min · carga 141  
-  10 min a 155–186 W (Z1) → 175 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
+- **sábado 26/12** — Tejo · Resistência Z2 · 180 min · carga 130  
+  10 min a 155–186 W (Z1) → 160 min a 192–223 W (Z2) → 10 min a 155–186 W (Z1)
 - **domingo 27/12** — Torre · Limiar 4 × 8 min · 68 min · carga 70 · ALTA INTENSIDADE  
   12 min em rampa 140→217 W → 4 × [8 min a 294–316 W (Z4); 4 min a 155–186 W (Z1)] → 8 min em rampa 186→140 W
 
@@ -180,14 +180,14 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
-| 1 | 23/11 | Base | 361 | 345 (8.1 h) | 7.7 | +7.7 | 5× resistencia, 1× tempo | 1 dia(s) de descanso mínimo; rampa: resistência encurtada |
+| 1 | 23/11 | Base | 361 | 346 (8.1 h) | 7.8 | +7.8 | 5× resistencia, 1× tempo | 1 dia(s) de descanso mínimo; rampa: resistência encurtada |
 | 2 | 30/11 | Base | 415 | 387 (9.0 h) | 15.2 | +7.5 | 5× resistencia, 1× forca | 1 dia(s) de descanso mínimo; rampa: resistência encurtada |
-| 3 | 07/12 | Base | 467 | 443 (9.8 h) | 22.8 | +7.6 | 5× resistencia, 1× sweetspot | 1 dia(s) de descanso mínimo; rampa: resistência encurtada |
-| 4 | 14/12 | Recuperação | 266 | 201 (6.2 h) | 23.9 | +1.1 | 5× recuperacao, 1× resistencia | 1 dia(s) de descanso mínimo |
-| 5 | 21/12 | Específico | 528 | 412 (9.3 h) | 29.3 | +5.5 | 4× resistencia, 1× vo2max, 1× anaerobio | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~133) |
-| 6 | 28/12 | Específico | 566 | 417 (9.2 h) | 34.2 | +4.8 | 4× resistencia, 1× anaerobio, 1× vo2max | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~164) |
-| 7 | 04/01 | Específico | 600 | 416 (9.2 h) | 38.2 | +4.0 | 4× resistencia, 1× vo2max, 1× anaerobio | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~198) |
-| 8 | 11/01 | Afinação | 229 | 178 (3.9 h) | 36.3 | -1.8 | 4× recuperacao, 1× vo2max, 1× prova | 1 dia(s) de descanso mínimo |
+| 3 | 07/12 | Base | 467 | 446 (9.8 h) | 22.9 | +7.6 | 5× resistencia, 1× sweetspot | 1 dia(s) de descanso mínimo; rampa: resistência encurtada |
+| 4 | 14/12 | Recuperação | 267 | 201 (6.2 h) | 23.9 | +1.1 | 5× recuperacao, 1× resistencia | 1 dia(s) de descanso mínimo |
+| 5 | 21/12 | Específico | 528 | 412 (9.3 h) | 29.4 | +5.5 | 4× resistencia, 1× vo2max, 1× anaerobio | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~133) |
+| 6 | 28/12 | Específico | 567 | 417 (9.2 h) | 34.2 | +4.8 | 4× resistencia, 1× anaerobio, 1× vo2max | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~164) |
+| 7 | 04/01 | Específico | 600 | 410 (9.0 h) | 38.0 | +3.8 | 4× resistencia, 1× vo2max, 1× anaerobio | 1 dia(s) de descanso mínimo; carga limitada pela disponibilidade (faltam ~205) |
+| 8 | 11/01 | Afinação | 225 | 178 (3.9 h) | 36.3 | -1.8 | 4× recuperacao, 1× vo2max, 1× prova | 1 dia(s) de descanso mínimo |
 
 **Semana 1 — Base** (a partir de 23/11/2026)
 
@@ -199,8 +199,8 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
   10 min a 120–144 W (Z1) → 55 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 - **sexta 27/11** — Tejo · Resistência Z2 · 60 min · carga 40  
   10 min a 120–144 W (Z1) → 40 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
-- **sábado 28/11** — Alvão · Tempo 3 × 15 min · 80 min · carga 67  
-  12 min em rampa 108→168 W → 3 × [15 min a 182–204 W (Z3); 5 min a 120–144 W (Z1)] → 8 min em rampa 144→108 W
+- **sábado 28/11** — Malcata · Tempo progressivo 3 × 15 min · 80 min · carga 68  
+  12 min em rampa 108→168 W → 5 min a 182–190 W (Z3) → 5 min a 192–199 W (Z3) → 5 min a 202–209 W (Z3) → 5 min a 120–144 W (Z1) → 5 min a 182–190 W (Z3) → 5 min a 192–199 W (Z3) → 5 min a 202–209 W (Z3) → 5 min a 120–144 W (Z1) → 5 min a 182–190 W (Z3) → 5 min a 192–199 W (Z3) → 5 min a 202–209 W (Z3) → 5 min a 120–144 W (Z1) → 8 min em rampa 144→108 W
 - **domingo 29/11** — Tejo · Resistência Z2 · 120 min · carga 85  
   10 min a 120–144 W (Z1) → 100 min a 149–173 W (Z2) → 10 min a 120–144 W (Z1)
 
@@ -247,7 +247,7 @@ Gerado com a configuração `c2cd9cb41035` e a biblioteca provisória de 60 trei
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
 | 1 | 23/11 | Base | 271 | 89 (2.0 h) | 2.0 | +2.0 | 1× tempo, 1× resistencia | carga limitada pela disponibilidade (faltam ~184) |
-| 2 | 30/11 | Base | 285 | 91 (2.2 h) | 3.8 | +1.8 | 1× forca, 1× resistencia | carga limitada pela disponibilidade (faltam ~196) |
+| 2 | 30/11 | Base | 285 | 92 (2.2 h) | 3.8 | +1.8 | 1× forca, 1× resistencia | carga limitada pela disponibilidade (faltam ~195) |
 | 3 | 07/12 | Base | 297 | 92 (2.0 h) | 5.3 | +1.5 | 1× sweetspot, 1× resistencia | carga limitada pela disponibilidade (faltam ~207) |
 | 4 | 14/12 | Recuperação | 55 | 31 (1.2 h) | 5.2 | -0.1 | 2× recuperacao |  |
 | 5 | 21/12 | Construção | 307 | 92 (2.0 h) | 6.5 | +1.3 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~217) |

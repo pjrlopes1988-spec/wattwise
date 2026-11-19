@@ -1066,4 +1066,604 @@
     pct:
     - 45
     - 55
+- id: recuperacao_60
+  nome: Recuperação 60 min
+  tipo: recuperacao
+  dificuldade: 1
+  descricao: Uma hora muito leve. Para o dia seguinte a uma prova ou a um bloco duro.
+  passos:
+  - min: 60
+    pct:
+    - 45
+    - 55
+- id: recuperacao_pernas_soltas
+  nome: Pernas soltas 40 min
+  tipo: recuperacao
+  dificuldade: 1
+  descricao: Recuperação com quatro acelerações de cadência sem força. Solta as pernas depois de esforços duros.
+  passos:
+  - min: 10
+    pct:
+    - 45
+    - 55
+  - repetir: 4
+    passos:
+    - min: 0.5
+      pct:
+      - 50
+      - 55
+      cadencia:
+      - 110
+      - 120
+    - min: 4.5
+      pct:
+      - 45
+      - 55
+  - min: 10
+    pct:
+    - 45
+    - 55
+- id: z2_2h
+  nome: Z2 2 h
+  tipo: resistencia
+  dificuldade: 2
+  descricao: Duas horas a ritmo de conversa. O treino de base mais importante da semana.
+  passos:
+  - *id003
+  - min: 97
+    pct:
+    - 62
+    - 72
+  - *id002
+- id: z2_2h30_sprints
+  nome: Z2 2 h 30 com sprints
+  tipo: resistencia
+  dificuldade: 3
+  descricao: Duas horas e meia em Z2 com um sprint de 10 s a cada 20 min, para não perder a explosão.
+  passos:
+  - *id003
+  - repetir: 6
+    passos:
+    - min: 20
+      pct:
+      - 62
+      - 72
+    - min: 0.16666666666666666
+      pct:
+      - 150
+      - 200
+    - min: 0.8333333333333334
+      pct:
+      - 55
+      - 65
+  - min: 9
+    pct:
+    - 62
+    - 72
+  - *id002
+- id: z2_cadencia_baixa
+  nome: Z2 com força 90 min
+  tipo: resistencia
+  dificuldade: 2
+  descricao: Z2 com quatro blocos de 5 min a cadência baixa, ainda em Z2. Força sem intensidade.
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 10
+      pct:
+      - 62
+      - 72
+    - min: 5
+      pct:
+      - 65
+      - 72
+      cadencia:
+      - 60
+      - 65
+  - min: 10
+    pct:
+    - 62
+    - 72
+  - *id002
+- id: z2_longo_5h
+  nome: Z2 longo 5 h
+  tipo: resistencia
+  dificuldade: 5
+  descricao: Cinco horas em Z2. Só para quem prepara provas de mais de 5 h (maratona BTT, ultra). Comer e beber sempre.
+  passos:
+  - *id003
+  - min: 270
+    pct:
+    - 60
+    - 70
+  - *id002
+- id: tempo_4x10
+  nome: Tempo 4 × 10 min
+  tipo: tempo
+  dificuldade: 2
+  descricao: Quatro blocos de 10 min a tempo com recuperações curtas.
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 10
+      pct:
+      - 76
+      - 85
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: tempo_progressivo_3x15
+  nome: Tempo progressivo 3 × 15 min
+  tipo: tempo
+  dificuldade: 3
+  descricao: Cada bloco de 15 min sobe de ritmo de 5 em 5 min, do tempo baixo ao alto. Ensina a acabar forte.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 5
+      pct:
+      - 76
+      - 79
+    - min: 5
+      pct:
+      - 80
+      - 83
+    - min: 5
+      pct:
+      - 84
+      - 87
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: tempo_45
+  nome: Tempo contínuo 45 min
+  tipo: tempo
+  dificuldade: 4
+  descricao: 45 minutos seguidos a tempo. Concentração e ritmo constante.
+  passos:
+  - *id003
+  - min: 45
+    pct:
+    - 76
+    - 85
+  - *id002
+- id: sweetspot_5x8
+  nome: Sweet spot 5 × 8 min
+  tipo: sweetspot
+  dificuldade: 2
+  descricao: Cinco blocos de 8 min a sweet spot. Boa porta de entrada para blocos mais longos.
+  passos:
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 8
+      pct:
+      - 88
+      - 93
+    - min: 3
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_com_picos
+  nome: Sweet spot com acelerações 3 × 12 min
+  tipo: sweetspot
+  dificuldade: 3
+  descricao: Blocos de sweet spot com uma aceleração de 10 s a cada 2 min. Simula mudanças de ritmo no pelotão.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - repetir: 6
+      passos:
+      - min: 1.8333333333333333
+        pct:
+        - 88
+        - 92
+      - min: 0.16666666666666666
+        pct:
+        - 130
+        - 150
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_progressivo_2x20
+  nome: Sweet spot progressivo 2 × 20 min
+  tipo: sweetspot
+  dificuldade: 4
+  descricao: 'Dois blocos de 20 min: os primeiros 10 no sweet spot baixo, os últimos 10 no alto.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 10
+      pct:
+      - 88
+      - 90
+    - min: 10
+      pct:
+      - 92
+      - 94
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_3x20
+  nome: Sweet spot 3 × 20 min
+  tipo: sweetspot
+  dificuldade: 5
+  descricao: 'Uma hora de sweet spot em três blocos. Muito exigente: só com boa base.'
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 20
+      pct:
+      - 88
+      - 93
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_5x5
+  nome: Limiar 5 × 5 min
+  tipo: limiar
+  dificuldade: 1
+  descricao: Cinco blocos curtos ao limiar. Primeiro contacto com o ritmo de limiar.
+  passos:
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 5
+      pct:
+      - 95
+      - 100
+    - min: 3
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_2x12
+  nome: Limiar 2 × 12 min
+  tipo: limiar
+  dificuldade: 2
+  descricao: Dois blocos de 12 min ao limiar.
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 12
+      pct:
+      - 95
+      - 102
+    - min: 6
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_3x15
+  nome: Limiar 3 × 15 min
+  tipo: limiar
+  dificuldade: 4
+  descricao: 45 minutos ao limiar em três blocos. Treino-chave de fim de construção.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 15
+      pct:
+      - 95
+      - 100
+    - min: 6
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_sobe_desce_2x12
+  nome: Limiar sobe e desce 2 × 12 min
+  tipo: limiar
+  dificuldade: 5
+  descricao: 'Blocos de 12 min com 1 min acima do limiar a cada 3. Duro: treina a recuperação sob esforço.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - repetir: 4
+      passos:
+      - min: 2
+        pct:
+        - 95
+        - 97
+      - min: 1
+        pct:
+        - 108
+        - 112
+    - min: 6
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_30
+  nome: Limiar contínuo 30 min
+  tipo: limiar
+  dificuldade: 5
+  descricao: Meia hora seguida ao limiar. Ensaio de contrarrelógio.
+  passos:
+  - *id003
+  - min: 30
+    pct:
+    - 95
+    - 100
+  - *id002
+- id: vo2_8x2
+  nome: VO2máx 8 × 2 min
+  tipo: vo2max
+  dificuldade: 1
+  descricao: Oito esforços de 2 min com recuperação igual. Introdução ao trabalho de VO2máx.
+  passos:
+  - *id001
+  - repetir: 8
+    passos:
+    - min: 2
+      pct:
+      - 110
+      - 120
+    - min: 2
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_4x4
+  nome: VO2máx 4 × 4 min
+  tipo: vo2max
+  dificuldade: 2
+  descricao: 'Quatro esforços de 4 min: o formato clássico para subir a potência aeróbia máxima.'
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 4
+      pct:
+      - 106
+      - 115
+    - min: 4
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_15_15
+  nome: VO2máx 2 × 12 × 15/15 s
+  tipo: vo2max
+  dificuldade: 2
+  descricao: Duas séries de 12 × (15 s forte / 15 s leve). Muito tempo perto do VO2máx com pouca acidez.
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - repetir: 12
+      passos:
+      - min: 0.25
+        pct:
+        - 120
+        - 130
+      - min: 0.25
+        pct:
+        - 45
+        - 55
+    - min: 6
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_arranque_5x4
+  nome: VO2máx com arranque 5 × 4 min
+  tipo: vo2max
+  dificuldade: 4
+  descricao: Cada esforço começa com 30 s muito fortes e depois estabiliza acima do limiar. Leva o coração ao máximo mais
+    cedo.
+  passos:
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 0.5
+      pct:
+      - 130
+      - 140
+    - min: 3.5
+      pct:
+      - 106
+      - 112
+    - min: 4
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_3x6
+  nome: VO2máx 3 × 6 min
+  tipo: vo2max
+  dificuldade: 5
+  descricao: Três esforços longos acima do limiar. Muito exigente física e mentalmente.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 6
+      pct:
+      - 105
+      - 110
+    - min: 5
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: sprints_10x10s
+  nome: Sprints 10 × 10 s
+  tipo: anaerobio
+  dificuldade: 1
+  descricao: Dez sprints curtíssimos, sentado e de pé, com recuperação completa. Velocidade pura.
+  passos:
+  - *id001
+  - repetir: 10
+    passos:
+    - min: 0.16666666666666666
+      pct:
+      - 170
+      - 220
+    - min: 2.8333333333333335
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: anaerobio_6x1
+  nome: Anaeróbio 6 × 1 min
+  tipo: anaerobio
+  dificuldade: 3
+  descricao: Seis esforços de 1 min muito fortes com recuperação longa.
+  passos:
+  - *id001
+  - repetir: 6
+    passos:
+    - min: 1
+      pct:
+      - 120
+      - 130
+    - min: 4
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: anaerobio_10x30s
+  nome: Anaeróbio 10 × 30 s
+  tipo: anaerobio
+  dificuldade: 3
+  descricao: Dez esforços de 30 s com recuperação curta. Repetir ataques.
+  passos:
+  - *id001
+  - repetir: 10
+    passos:
+    - min: 0.5
+      pct:
+      - 130
+      - 150
+    - min: 2.5
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: anaerobio_20_10
+  nome: Anaeróbio 2 × 8 × 20/10 s
+  tipo: anaerobio
+  dificuldade: 4
+  descricao: Duas séries de 8 × (20 s máximo / 10 s parado). Muito curto e muito duro.
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - repetir: 8
+      passos:
+      - min: 0.3333333333333333
+        pct:
+        - 140
+        - 160
+      - min: 0.16666666666666666
+        pct:
+        - 40
+        - 50
+    - min: 8
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: anaerobio_5x2
+  nome: Anaeróbio 5 × 2 min
+  tipo: anaerobio
+  dificuldade: 5
+  descricao: Cinco esforços de 2 min bem acima do VO2máx. Para provas com subidas curtas e duras.
+  passos:
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 2
+      pct:
+      - 118
+      - 125
+    - min: 4
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: forca_arranques_8x20s
+  nome: Arranques 8 × 20 s em cadência baixa
+  tipo: forca
+  dificuldade: 2
+  descricao: Oito arranques de 20 s a partir de cadência muito baixa, sentado. Força explosiva.
+  passos:
+  - *id001
+  - repetir: 8
+    passos:
+    - min: 0.3333333333333333
+      pct:
+      - 140
+      - 160
+      cadencia:
+      - 40
+      - 60
+    - min: 2.6666666666666665
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: forca_tempo_2x20
+  nome: Força a tempo 2 × 20 min
+  tipo: forca
+  dificuldade: 3
+  descricao: Dois blocos longos a tempo e cadência baixa. Resistência de força para subidas longas.
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 20
+      pct:
+      - 78
+      - 85
+      cadencia:
+      - 55
+      - 65
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: forca_limiar_4x5
+  nome: Força ao limiar 4 × 5 min
+  tipo: forca
+  dificuldade: 4
+  descricao: 'Quatro blocos ao limiar com cadência de 50–60 rpm. Exigente para os joelhos: só com boa base de força.'
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 5
+      pct:
+      - 95
+      - 100
+      cadencia:
+      - 50
+      - 60
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
 

@@ -305,3 +305,8 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Página de revisão: `docs/biblioteca.md` (`python -m ww.relatorio_biblioteca`).
 - Os Z2 longos (Douro, Guadalquivir) ainda não são escolhidos pelo plano (o dia longo usa o Tejo escalável); fica para quando o Paulo validar a biblioteca.
 - **Estado:** Provisória — o Paulo revê e acrescenta as pastas dele.
+
+### D-054 — Biblioteca original alargada (81 originais + 10 do Paulo = 91)
+- O Paulo pediu treinos "semelhantes" ao catálogo do TrainerRoad. Não se usou esse catálogo como modelo (seria cópia indireta; D-052) — os ficheiros já tinham sido apagados. Em vez disso, a biblioteca original foi alargada a partir de formatos clássicos de treino (15/15, 30/30, 40/20, 20/10, pirâmides, sobe e desce, progressivos, sprints, força em cadência baixa, Z2 longos com variações).
+- Por tipo: recuperação 4, resistência 10, tempo 11, sweet spot 14, limiar 14, VO2máx 15, anaeróbio 9, força 12, testes 2. Níveis 1–5 cobertos em quase todos os tipos.
+- **Estado:** Provisória — o Paulo revê em `docs/biblioteca.md`.
