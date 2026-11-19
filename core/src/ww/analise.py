@@ -1,6 +1,7 @@
 """Análise completa de uma atividade: qualidade → métricas → carga com fonte registada.
 
-Prioridade da carga (spec 6.2): potência → FC (HRSS) → RPE × duração.
+Prioridade da carga (spec 6.2): potência → FC (modelo personalizado, se aceite; senão HRSS)
+→ RPE × duração.
 Cada valor sai com a sua origem; as estimativas ficam marcadas.
 """
 
@@ -14,10 +15,11 @@ import numpy as np
 from ww.config import Config
 from ww.metrics import hr as m_hr
 from ww.metrics import power as m_pot
+from ww.metrics.fc_personalizado import ModeloFC
 from ww.quality.clean import Relatorio, limpar
 from ww.stream import Serie
 
-FonteCarga = Literal["potencia", "fc", "rpe", "nenhuma"]
+FonteCarga = Literal["potencia", "fc_personalizado", "fc", "rpe", "nenhuma"]
 
 
 @dataclass(frozen=True)
@@ -29,6 +31,7 @@ class Fisiologia:
     fc_max: float | None = None
     fc_repouso: float | None = None
     estimados: frozenset[str] = frozenset()
+    modelo_fc: ModeloFC | None = None   # só se o ajuste foi aceite (ww.metrics.fc_personalizado)
 
 
 @dataclass(frozen=True)
@@ -69,6 +72,11 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
         carga = m_pot.carga_potencia(limpa.duracao_s, npw, fis.ftp)
         fonte = "potencia"
         estimada = "ftp" in fis.estimados
+    elif tem_f and fis.modelo_fc is not None and fis.fc_limiar:
+        zonas = m_pot.tempo_em_zonas(f, fis.fc_limiar, cfg.frequencia_cardiaca.zonas_friel_limites_pct)
+        carga = fis.modelo_fc.carga(zonas)
+        fonte = "fc_personalizado"
+        estimada = "fc_limiar" in fis.estimados
     elif tem_f and fis.fc_repouso and fis.fc_limiar and fis.fc_max:
         b = cfg.frequencia_cardiaca.hrss_b_masculino if fis.sexo == "M" else cfg.frequencia_cardiaca.hrss_b_feminino
         carga = m_hr.carga_fc(f, fc_repouso=fis.fc_repouso, fc_limiar=fis.fc_limiar, fc_max=fis.fc_max, b=b)

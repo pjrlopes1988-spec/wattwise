@@ -90,7 +90,15 @@ def test_historico_decai_sem_esforcos_novos(cfg):
 # ------------------------------------------------------------- perfil do atleta
 
 def _curva_completa(cp, w, pmax, dias_atras=5, aid="c"):
-    return [esf(aid, dias_atras, d, p_modelo(d, cp, w, pmax)) for d in (5, 15, 60, 180, 300, 600, 1200, 1800)]
+    # esforços curtos, médios e longos em 3 atividades diferentes
+    duracoes = (5, 15, 60, 180, 300, 600, 1200, 1800)
+    return [esf(f"{aid}{i % 3}", dias_atras, d, p_modelo(d, cp, w, pmax)) for i, d in enumerate(duracoes)]
+
+
+def test_perfil_de_uma_so_atividade_usa_populacao(cfg):
+    duracoes = (5, 15, 60, 180, 300, 600, 1200, 1800)
+    uma = [esf("so_uma", 5, d, p_modelo(d, 260, 22000, 1150)) for d in duracoes]
+    assert perfil_anaerobio(uma, HOJE, PESO, cfg).origem == "populacao"
 
 
 def test_perfil_do_atleta_quando_ha_curva_completa(cfg):

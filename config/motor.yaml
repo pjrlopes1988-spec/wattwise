@@ -50,6 +50,7 @@ eftp:
   # W' e Pmax do próprio atleta: ajuste de 3 parâmetros aos melhores esforços desta janela
   janela_perfil_dias: 90
   w_linha_plausivel_j: [5000, 40000]   # fora disto usa-se a população
+  perfil_minimo_atividades: 3          # esforços de pelo menos 3 atividades diferentes
   # eFTP com histórico: sem esforços comparáveis, desce devagar (D-023). A VALIDAR.
   decaimento_carencia_dias: 28
   decaimento_pct_por_semana: 0.5
@@ -99,3 +100,14 @@ recuperacao:
   fcr_largura_faixa_dp: 1.0
   fcr_dias_elevada_alerta: 3         # dias seguidos elevada → sinal de alerta
   sono_curto_h: 6.0
+
+dados:
+  # Mesma atividade por duas vias (spec 5): início ± 2 min e duração semelhante (D-030)
+  dedup_inicio_tolerancia_s: 120
+  dedup_duracao_tolerancia_pct: 10
+
+modelo_fc_personalizado:
+  # Carga por FC aprendida com as atividades do atleta com potência e FC (spec 6.2) (D-031)
+  minimo_atividades: 20
+  r2_minimo: 0.8
+  janela_dias: 180

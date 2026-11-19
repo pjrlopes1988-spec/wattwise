@@ -81,6 +81,7 @@ class Eftp(_Base):
     duracoes_curva_s: list[int]
     janela_perfil_dias: int = Field(gt=0)
     w_linha_plausivel_j: tuple[float, float]
+    perfil_minimo_atividades: int = Field(ge=1)
     decaimento_carencia_dias: int = Field(ge=0)
     decaimento_pct_por_semana: float = Field(ge=0, lt=10)
     subida_sem_confirmacao_max_pct: float = Field(ge=0)
@@ -98,6 +99,17 @@ class Recuperacao(_Base):
     fcr_largura_faixa_dp: float = Field(gt=0)
     fcr_dias_elevada_alerta: int = Field(ge=1)
     sono_curto_h: float = Field(gt=0)
+
+
+class Dados(_Base):
+    dedup_inicio_tolerancia_s: int = Field(ge=0)
+    dedup_duracao_tolerancia_pct: float = Field(ge=0)
+
+
+class ModeloFCPersonalizado(_Base):
+    minimo_atividades: int = Field(ge=5)
+    r2_minimo: float = Field(gt=0, le=1)
+    janela_dias: int = Field(gt=0)
 
 
 class Qualidade(_Base):
@@ -138,6 +150,8 @@ class Config(_Base):
     recuperacao: Recuperacao
     intervalos: Intervalos
     seiler: Seiler
+    dados: Dados
+    modelo_fc_personalizado: ModeloFCPersonalizado
     qualidade: Qualidade
     versao: str = ""
 

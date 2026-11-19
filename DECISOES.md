@@ -163,3 +163,20 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Decisão:** trabalho = potência suavizada (média centrada de 10 s) ≥ 88% do FTP, ou, sem potência, FC ≥ 92% da FC limiar. Quedas ≤ 10 s juntam-se ao mesmo intervalo; intervalos < 30 s ignorados; pontas acertadas no sinal original. HRRc = FC no fim − FC 60 s depois.
 - **Limitação:** sprints curtos (< 30 s) e intervalos em Z3 (sweet spot abaixo de 88%) não são detetados com estes valores; podem precisar de uma segunda passagem com limiares próprios.
 - **Estado:** Provisória.
+
+### D-030 — Deduplicação
+- **Decisão:** duplicado = início a ± 2 min e duração a ± 10%. Guardam-se os dois ficheiros; a atividade principal é a que tem potência → FC → melhor qualidade → origem (dispositivo > app > manual) → chegou primeiro.
+- **Estado:** Provisória.
+
+### D-031 — Modelo de carga por FC personalizado
+- **Decisão:** regressão sem constante e com coeficientes ≥ 0 (carga por hora em cada zona de FC de Friel), ajustada às atividades do atleta com potência e FC dos últimos 180 dias. Só é usada com ≥ 20 atividades, R² ≥ 0,8 e coeficientes a subir com a zona (tolerância 5%). Caso contrário usa-se o HRSS.
+- **Estado:** Provisória.
+
+### D-032 — W′/Pmax do próprio atleta exigem 3 atividades
+- **Contexto:** num teste, uma única sessão de intervalos (não máxima) bastou para a app ajustar um W′ "do atleta" de 33,7 kJ — pouco credível.
+- **Decisão:** o perfil anaeróbio do atleta só é usado se os melhores esforços vierem de pelo menos 3 atividades diferentes; caso contrário, valores de população.
+- **Estado:** Provisória.
+
+### D-033 — Relatório de validação cruzada
+- `python -m ww.relatorio analisar PASTA --ftp … --sexo … --peso … --saida validacao.csv` gera um CSV (';' e vírgula decimal) com os valores da Wattwise e colunas `iv_*` vazias para os valores do Intervals.icu; `python -m ww.relatorio comparar validacao.csv` lista as diferenças acima de 5%.
+- **Estado:** Provisória.

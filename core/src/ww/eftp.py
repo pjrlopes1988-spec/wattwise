@@ -103,7 +103,12 @@ def _ajuste_3p(env: dict[int, EsforcoMax], cfg: Config) -> ModeloPC | None:
 def perfil_anaerobio(esforcos: Sequence[EsforcoMax], hoje: date, peso_kg: float, cfg: Config) -> PerfilAnaerobio:
     """W′ e Pmax do atleta (janela recente) ou, se não houver dados que cheguem, da população."""
     janela = [e for e in _validos(esforcos, hoje) if (hoje - e.data).days <= cfg.eftp.janela_perfil_dias]
-    m = _ajuste_3p(envolvente(janela), cfg)
+    env = envolvente(janela)
+    # Uma só sessão (ex.: intervalos não máximos) dá W′ pouco fiável: exigir várias atividades
+    if len({e.atividade_id for e in env.values()}) < cfg.eftp.perfil_minimo_atividades:
+        m = None
+    else:
+        m = _ajuste_3p(env, cfg)
     if m is not None and m.pmax is not None:
         return PerfilAnaerobio(m.w_linha, m.pmax, "atleta")
     pop = cfg.modelo_potencia_critica.populacao
