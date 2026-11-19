@@ -1,278 +1,1069 @@
-# Biblioteca inicial de treinos — Wattwise (D-044)
-# PROVISÓRIA: o Paulo valida, corrige e acrescenta (spec 13).
-#
-# Cada treino: id, nome, tipo, dificuldade (1–5) e passos.
-# Passo: {min: duração, pct: [mín, máx] em % do FTP, cadencia: [mín, máx] (opcional)}
-# Bloco repetido: {repetir: N, passos: [...]}
-# Treinos de resistência/recuperação com "escalavel: true": o passo marcado com
-# "escala: true" estica ou encolhe para caber no tempo pedido pelo plano.
-#
-# Tipos: recuperacao, resistencia, tempo, forca, sweetspot, limiar, vo2max, anaerobio, teste
-
+# Biblioteca ORIGINAL da Wattwise (D-053) — gerada por core/tools/gerar_biblioteca.py.
+# Estruturas genéricas de treino escritas de raiz; nada copiado de outras plataformas (D-052).
+# O Paulo revê e ajusta. Nomes de marca em config/nomes_treinos.yaml.
+# Passo: {min, pct: [mín, máx] em % do FTP, cadencia, rampa: sobe|desce, escala}
 - id: recuperacao
   nome: Recuperação ativa
   tipo: recuperacao
   dificuldade: 1
   escalavel: true
+  descricao: Pedalar muito leve, cadência solta. Ajuda a recuperar sem acrescentar cansaço.
   passos:
-    - {min: 30, pct: [45, 55], escala: true}
-
+  - min: 30
+    pct:
+    - 45
+    - 55
+    escala: true
+- id: recuperacao_cadencia
+  nome: Recuperação com cadência 45 min
+  tipo: recuperacao
+  dificuldade: 1
+  descricao: Recuperação leve com 5 minutos soltos a cadência alta, para manter a pedalada fluida.
+  passos:
+  - min: 15
+    pct:
+    - 45
+    - 55
+  - repetir: 5
+    passos:
+    - min: 1
+      pct:
+      - 50
+      - 55
+      cadencia:
+      - 100
+      - 110
+    - min: 3
+      pct:
+      - 45
+      - 55
+  - min: 10
+    pct:
+    - 45
+    - 55
 - id: resistencia
   nome: Resistência Z2
   tipo: resistencia
   dificuldade: 1
   escalavel: true
+  descricao: 'Ritmo de conversa, constante. A base de tudo: mais capacidade aeróbia e melhor uso das gorduras.'
   passos:
-    - {min: 10, pct: [50, 60]}
-    - {min: 40, pct: [62, 72], escala: true}
-    - {min: 10, pct: [50, 60]}
-
+  - min: 10
+    pct:
+    - 50
+    - 60
+  - min: 40
+    pct:
+    - 62
+    - 72
+    escala: true
+  - min: 10
+    pct:
+    - 50
+    - 60
+- id: z2_cadencia_90
+  nome: Z2 com cadência 90 min
+  tipo: resistencia
+  dificuldade: 2
+  descricao: Z2 com um minuto de cadência alta a cada 10, para trabalhar a eficiência da pedalada sem cansar.
+  passos:
+  - &id001
+    min: 12
+    pct:
+    - 45
+    - 70
+    rampa: sobe
+  - repetir: 6
+    passos:
+    - min: 9
+      pct:
+      - 62
+      - 72
+    - min: 1
+      pct:
+      - 62
+      - 70
+      cadencia:
+      - 105
+      - 115
+  - min: 12
+    pct:
+    - 60
+    - 70
+  - &id002
+    min: 8
+    pct:
+    - 45
+    - 60
+    rampa: desce
+- id: z2_progressivo_90
+  nome: Z2 progressivo 90 min
+  tipo: resistencia
+  dificuldade: 2
+  descricao: Começa calmo e vai subindo dentro da Z2. Ensina a gerir o esforço numa volta longa.
+  passos:
+  - *id001
+  - min: 25
+    pct:
+    - 60
+    - 65
+  - min: 25
+    pct:
+    - 65
+    - 70
+  - min: 20
+    pct:
+    - 70
+    - 75
+  - *id002
+- id: z2_longo_tempo
+  nome: Z2 longo 3 h com tempo no fim
+  tipo: resistencia
+  dificuldade: 3
+  descricao: Três horas em Z2 com três blocos de tempo já cansado, como no final de uma prova longa.
+  passos:
+  - &id003
+    min: 15
+    pct:
+    - 45
+    - 70
+    rampa: sobe
+  - min: 120
+    pct:
+    - 62
+    - 72
+  - repetir: 3
+    passos:
+    - min: 10
+      pct:
+      - 76
+      - 85
+    - min: 5
+      pct:
+      - 60
+      - 65
+  - min: 5
+    pct:
+    - 55
+    - 65
+  - *id002
+- id: z2_longo_sweetspot
+  nome: Z2 longo 4 h com sweet spot
+  tipo: resistencia
+  dificuldade: 4
+  descricao: Volta longa com dois blocos de sweet spot a meio. Para provas longas (gran fondo, maratona BTT).
+  passos:
+  - *id003
+  - min: 60
+    pct:
+    - 62
+    - 72
+  - repetir: 2
+    passos:
+    - min: 15
+      pct:
+      - 88
+      - 92
+    - min: 10
+      pct:
+      - 60
+      - 68
+  - min: 90
+    pct:
+    - 62
+    - 72
+  - min: 12
+    pct:
+    - 55
+    - 65
+  - *id002
+- id: tempo_2x15
+  nome: Tempo 2 × 15 min
+  tipo: tempo
+  dificuldade: 1
+  descricao: '2 blocos de 15 min a ritmo de tempo (76–85% do FTP): esforço firme mas sustentável, respiração controlada. Melhora
+    a resistência a ritmos médios.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 15
+      pct:
+      - 76
+      - 85
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: tempo_3x10
   nome: Tempo 3 × 10 min
   tipo: tempo
   dificuldade: 2
+  descricao: '3 blocos de 10 min a ritmo de tempo (76–85% do FTP): esforço firme mas sustentável, respiração controlada. Melhora
+    a resistência a ritmos médios.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 3
-      passos:
-        - {min: 10, pct: [76, 85]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 10
+      pct:
+      - 76
+      - 85
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: tempo_3x12
+  nome: Tempo 3 × 12 min
+  tipo: tempo
+  dificuldade: 2
+  descricao: '3 blocos de 12 min a ritmo de tempo (76–85% do FTP): esforço firme mas sustentável, respiração controlada. Melhora
+    a resistência a ritmos médios.'
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 12
+      pct:
+      - 76
+      - 85
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: tempo_2x20
   nome: Tempo 2 × 20 min
   tipo: tempo
   dificuldade: 3
+  descricao: '2 blocos de 20 min a ritmo de tempo (76–85% do FTP): esforço firme mas sustentável, respiração controlada. Melhora
+    a resistência a ritmos médios.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 2
-      passos:
-        - {min: 20, pct: [76, 87]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
-- id: forca_5x5
-  nome: Força 5 × 5 min em cadência baixa
-  tipo: forca
-  dificuldade: 2
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 20
+      pct:
+      - 76
+      - 85
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: tempo_3x15
+  nome: Tempo 3 × 15 min
+  tipo: tempo
+  dificuldade: 3
+  descricao: '3 blocos de 15 min a ritmo de tempo (76–85% do FTP): esforço firme mas sustentável, respiração controlada. Melhora
+    a resistência a ritmos médios.'
   passos:
-    - {min: 10, pct: [55, 65]}
-    - repetir: 5
-      passos:
-        - {min: 5, pct: [78, 82], cadencia: [50, 60]}
-        - {min: 3, pct: [50, 60]}
-    - {min: 7, pct: [50, 60]}
-
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 15
+      pct:
+      - 76
+      - 85
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: tempo_2x30
+  nome: Tempo 2 × 30 min
+  tipo: tempo
+  dificuldade: 4
+  descricao: '2 blocos de 30 min a ritmo de tempo (76–85% do FTP): esforço firme mas sustentável, respiração controlada. Melhora
+    a resistência a ritmos médios.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 30
+      pct:
+      - 76
+      - 85
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: tempo_60
+  nome: Tempo contínuo 60 min
+  tipo: tempo
+  dificuldade: 5
+  descricao: Uma hora seguida a tempo. Exige concentração e boa alimentação durante o treino.
+  passos:
+  - *id003
+  - min: 60
+    pct:
+    - 76
+    - 85
+  - *id002
+- id: sweetspot_2x12
+  nome: Sweet spot 2 × 12 min
+  tipo: sweetspot
+  dificuldade: 1
+  descricao: '2 blocos de 12 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 12
+      pct:
+      - 88
+      - 93
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: sweetspot_3x10
   nome: Sweet spot 3 × 10 min
   tipo: sweetspot
   dificuldade: 2
+  descricao: '3 blocos de 10 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 3
-      passos:
-        - {min: 10, pct: [88, 93]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 10
+      pct:
+      - 88
+      - 93
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_4x10
+  nome: Sweet spot 4 × 10 min
+  tipo: sweetspot
+  dificuldade: 2
+  descricao: '4 blocos de 10 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 10
+      pct:
+      - 88
+      - 93
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_3x12
+  nome: Sweet spot 3 × 12 min
+  tipo: sweetspot
+  dificuldade: 3
+  descricao: '3 blocos de 12 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 12
+      pct:
+      - 88
+      - 93
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: sweetspot_3x15
   nome: Sweet spot 3 × 15 min
   tipo: sweetspot
   dificuldade: 3
+  descricao: '3 blocos de 15 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 3
-      passos:
-        - {min: 15, pct: [88, 93]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 15
+      pct:
+      - 88
+      - 93
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_2x20
+  nome: Sweet spot 2 × 20 min
+  tipo: sweetspot
+  dificuldade: 4
+  descricao: '2 blocos de 20 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 20
+      pct:
+      - 88
+      - 93
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: sweetspot_4x15
+  nome: Sweet spot 4 × 15 min
+  tipo: sweetspot
+  dificuldade: 4
+  descricao: '4 blocos de 15 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 15
+      pct:
+      - 88
+      - 93
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: sweetspot_2x30
   nome: Sweet spot 2 × 30 min
   tipo: sweetspot
-  dificuldade: 4
+  dificuldade: 5
+  descricao: '2 blocos de 30 min a sweet spot (88–93% do FTP), logo abaixo do limiar. Muito estímulo para pouco cansaço: sobe
+    o FTP de forma eficiente.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 2
-      passos:
-        - {min: 30, pct: [88, 93]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 30
+      pct:
+      - 88
+      - 93
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_3x8
+  nome: Limiar 3 × 8 min
+  tipo: limiar
+  dificuldade: 1
+  descricao: '3 blocos de 8 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 8
+      pct:
+      - 95
+      - 102
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: limiar_4x6
   nome: Limiar 4 × 6 min
   tipo: limiar
-  dificuldade: 2
+  dificuldade: 1
+  descricao: '4 blocos de 6 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 4
-      passos:
-        - {min: 6, pct: [95, 100]}
-        - {min: 4, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 6
+      pct:
+      - 95
+      - 102
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: limiar_4x8
   nome: Limiar 4 × 8 min
   tipo: limiar
-  dificuldade: 3
+  dificuldade: 2
+  descricao: '4 blocos de 8 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 4
-      passos:
-        - {min: 8, pct: [95, 102]}
-        - {min: 4, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 8
+      pct:
+      - 95
+      - 102
+    - min: 4
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_3x10
+  nome: Limiar 3 × 10 min
+  tipo: limiar
+  dificuldade: 2
+  descricao: '3 blocos de 10 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 10
+      pct:
+      - 95
+      - 102
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: limiar_3x12
   nome: Limiar 3 × 12 min
   tipo: limiar
-  dificuldade: 4
+  dificuldade: 3
+  descricao: '3 blocos de 12 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 3
-      passos:
-        - {min: 12, pct: [95, 102]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 12
+      pct:
+      - 95
+      - 102
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_2x15
+  nome: Limiar 2 × 15 min
+  tipo: limiar
+  dificuldade: 3
+  descricao: '2 blocos de 15 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 15
+      pct:
+      - 95
+      - 102
+    - min: 6
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_4x10
+  nome: Limiar 4 × 10 min
+  tipo: limiar
+  dificuldade: 4
+  descricao: '4 blocos de 10 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 10
+      pct:
+      - 95
+      - 102
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: limiar_2x20
   nome: Limiar 2 × 20 min
   tipo: limiar
   dificuldade: 5
+  descricao: '2 blocos de 20 min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. Treino-chave para subir
+    o FTP.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 2
-      passos:
-        - {min: 20, pct: [95, 100]}
-        - {min: 8, pct: [50, 60]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 2
+    passos:
+    - min: 20
+      pct:
+      - 95
+      - 102
+    - min: 8
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: limiar_sobe_desce
+  nome: Limiar sobe e desce 3 × 9 min
+  tipo: limiar
+  dificuldade: 4
+  descricao: Blocos de 9 min a alternar entre ligeiramente abaixo e acima do limiar. Ensina o corpo a recuperar em esforço,
+    como nas mudanças de ritmo de uma prova.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 1.5
+      pct:
+      - 93
+      - 95
+    - min: 1.5
+      pct:
+      - 105
+      - 108
+    - min: 1.5
+      pct:
+      - 93
+      - 95
+    - min: 1.5
+      pct:
+      - 105
+      - 108
+    - min: 1.5
+      pct:
+      - 93
+      - 95
+    - min: 1.5
+      pct:
+      - 105
+      - 108
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: vo2_4x3
+  nome: VO2máx 4 × 3 min
+  tipo: vo2max
+  dificuldade: 1
+  descricao: '4 esforços de 3 min a 106–115% do FTP, com recuperação igual. Duro: a respiração fica no máximo. Aumenta a potência
+    aeróbia máxima.'
+  passos:
+  - *id001
+  - repetir: 4
+    passos:
+    - min: 3
+      pct:
+      - 106
+      - 115
+    - min: 3
+      pct:
+      - 45
+      - 55
+  - *id002
 - id: vo2_5x3
   nome: VO2máx 5 × 3 min
   tipo: vo2max
   dificuldade: 2
+  descricao: '5 esforços de 3 min a 106–115% do FTP, com recuperação igual. Duro: a respiração fica no máximo. Aumenta a potência
+    aeróbia máxima.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 5
-      passos:
-        - {min: 3, pct: [106, 115]}
-        - {min: 3, pct: [45, 55]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 3
+      pct:
+      - 106
+      - 115
+    - min: 3
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_6x3
+  nome: VO2máx 6 × 3 min
+  tipo: vo2max
+  dificuldade: 2
+  descricao: '6 esforços de 3 min a 106–115% do FTP, com recuperação igual. Duro: a respiração fica no máximo. Aumenta a potência
+    aeróbia máxima.'
+  passos:
+  - *id001
+  - repetir: 6
+    passos:
+    - min: 3
+      pct:
+      - 106
+      - 115
+    - min: 3
+      pct:
+      - 45
+      - 55
+  - *id002
 - id: vo2_5x4
   nome: VO2máx 5 × 4 min
   tipo: vo2max
   dificuldade: 3
+  descricao: '5 esforços de 4 min a 106–118% do FTP, com recuperação igual. Duro: a respiração fica no máximo. Aumenta a potência
+    aeróbia máxima.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 5
-      passos:
-        - {min: 4, pct: [106, 118]}
-        - {min: 4, pct: [45, 55]}
-    - {min: 10, pct: [50, 60]}
-
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 4
+      pct:
+      - 106
+      - 118
+    - min: 4
+      pct:
+      - 45
+      - 55
+  - *id002
 - id: vo2_6x4
   nome: VO2máx 6 × 4 min
   tipo: vo2max
   dificuldade: 4
+  descricao: '6 esforços de 4 min a 108–120% do FTP, com recuperação igual. Duro: a respiração fica no máximo. Aumenta a potência
+    aeróbia máxima.'
   passos:
-    - {min: 15, pct: [55, 70]}
-    - repetir: 6
+  - *id001
+  - repetir: 6
+    passos:
+    - min: 4
+      pct:
+      - 108
+      - 120
+    - min: 4
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_5x5
+  nome: VO2máx 5 × 5 min
+  tipo: vo2max
+  dificuldade: 5
+  descricao: '5 esforços de 5 min a 106–115% do FTP, com recuperação igual. Duro: a respiração fica no máximo. Aumenta a potência
+    aeróbia máxima.'
+  passos:
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 5
+      pct:
+      - 106
+      - 115
+    - min: 5
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_piramide
+  nome: VO2máx pirâmide 2-3-4-3-2
+  tipo: vo2max
+  dificuldade: 3
+  descricao: Esforços de 2, 3, 4, 3 e 2 min acima do limiar. Variedade mental com o mesmo estímulo de VO2máx.
+  passos:
+  - *id001
+  - min: 2
+    pct:
+    - 110
+    - 120
+  - min: 2
+    pct:
+    - 45
+    - 55
+  - min: 3
+    pct:
+    - 108
+    - 115
+  - min: 3
+    pct:
+    - 45
+    - 55
+  - min: 4
+    pct:
+    - 106
+    - 112
+  - min: 4
+    pct:
+    - 45
+    - 55
+  - min: 3
+    pct:
+    - 108
+    - 115
+  - min: 3
+    pct:
+    - 45
+    - 55
+  - min: 2
+    pct:
+    - 110
+    - 120
+  - min: 5
+    pct:
+    - 45
+    - 55
+  - *id002
+- id: vo2_30_30
+  nome: VO2máx 3 × 8 × 30/30 s
+  tipo: vo2max
+  dificuldade: 3
+  descricao: Três séries de 8 × (30 s forte / 30 s leve). Acumula muito tempo perto do VO2máx com esforços curtos.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - repetir: 8
       passos:
-        - {min: 4, pct: [108, 120]}
-        - {min: 4, pct: [45, 55]}
-    - {min: 10, pct: [50, 60]}
-
+      - min: 0.5
+        pct:
+        - 115
+        - 125
+      - min: 0.5
+        pct:
+        - 45
+        - 55
+    - min: 5
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: vo2_40_20
+  nome: VO2máx 2 × 10 × 40/20 s
+  tipo: vo2max
+  dificuldade: 4
+  descricao: 'Duas séries de 10 × (40 s forte / 20 s leve). Recuperação curta: muito exigente.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - repetir: 10
+      passos:
+      - min: 0.6666666666666666
+        pct:
+        - 118
+        - 125
+      - min: 0.3333333333333333
+        pct:
+        - 45
+        - 55
+    - min: 6
+      pct:
+      - 45
+      - 55
+  - *id002
 - id: vo2_ativacao
   nome: Ativação pré-prova 3 × 1 min
   tipo: vo2max
   dificuldade: 1
+  descricao: 'Treino curto para a véspera da prova: acorda as pernas sem cansar.'
   passos:
-    - {min: 20, pct: [55, 70]}
-    - repetir: 3
-      passos:
-        - {min: 1, pct: [110, 120]}
-        - {min: 3, pct: [45, 55]}
-    - {min: 10, pct: [50, 60]}
-
+  - min: 20
+    pct:
+    - 55
+    - 70
+  - repetir: 3
+    passos:
+    - min: 1
+      pct:
+      - 110
+      - 120
+    - min: 3
+      pct:
+      - 45
+      - 55
+  - min: 10
+    pct:
+    - 50
+    - 60
+- id: sprints_6x15s
+  nome: Sprints 6 × 15 s
+  tipo: anaerobio
+  dificuldade: 1
+  descricao: Seis sprints de 15 s com recuperação longa. Potência e explosão, sem acumular cansaço.
+  passos:
+  - *id001
+  - repetir: 6
+    passos:
+    - min: 0.25
+      pct:
+      - 150
+      - 200
+    - min: 4.75
+      pct:
+      - 45
+      - 55
+  - *id002
 - id: anaerobio_8x30s
   nome: Anaeróbio 8 × 30 s
   tipo: anaerobio
-  dificuldade: 3
+  dificuldade: 2
+  descricao: Oito esforços de 30 s muito fortes. Treina a capacidade de ataque e de responder a mudanças de ritmo.
   passos:
-    - {min: 20, pct: [55, 70]}
-    - repetir: 8
+  - *id001
+  - repetir: 8
+    passos:
+    - min: 0.5
+      pct:
+      - 130
+      - 150
+    - min: 4.5
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: anaerobio_6x45s
+  nome: Anaeróbio 6 × 45 s
+  tipo: anaerobio
+  dificuldade: 3
+  descricao: Seis esforços de 45 s. Para provas com subidas curtas e muitas acelerações (XCO, critérios).
+  passos:
+  - *id001
+  - repetir: 6
+    passos:
+    - min: 0.75
+      pct:
+      - 125
+      - 140
+    - min: 4.25
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: anaerobio_2x5x1
+  nome: Anaeróbio 2 × 5 × 1 min
+  tipo: anaerobio
+  dificuldade: 4
+  descricao: 'Duas séries de 5 × 1 min muito forte. Muito exigente: só com boa base.'
+  passos:
+  - *id001
+  - repetir: 2
+    passos:
+    - repetir: 5
       passos:
-        - {min: 0.5, pct: [130, 150]}
-        - {min: 4.5, pct: [45, 55]}
-    - {min: 10, pct: [50, 60]}
-
+      - min: 1
+        pct:
+        - 120
+        - 130
+      - min: 2
+        pct:
+        - 45
+        - 55
+    - min: 6
+      pct:
+      - 45
+      - 55
+  - *id002
+- id: forca_5x5
+  nome: Força 5 × 5 min em cadência baixa
+  tipo: forca
+  dificuldade: 2
+  descricao: Cinco blocos de 5 min a tempo com cadência de 50–60 rpm, sentado. Força específica para subir.
+  passos:
+  - *id001
+  - repetir: 5
+    passos:
+    - min: 5
+      pct:
+      - 78
+      - 82
+      cadencia:
+      - 50
+      - 60
+    - min: 3
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: forca_3x10
+  nome: Força 3 × 10 min a 60 rpm
+  tipo: forca
+  dificuldade: 3
+  descricao: Três blocos de 10 min a cadência baixa. Tronco estável, força em todo o círculo da pedalada.
+  passos:
+  - *id001
+  - repetir: 3
+    passos:
+    - min: 10
+      pct:
+      - 80
+      - 85
+      cadencia:
+      - 55
+      - 65
+    - min: 5
+      pct:
+      - 50
+      - 60
+  - *id002
+- id: forca_subida_6x4
+  nome: Força em subida 6 × 4 min
+  tipo: forca
+  dificuldade: 4
+  descricao: Seis blocos de 4 min a sweet spot e cadência muito baixa, como numa subida inclinada.
+  passos:
+  - *id001
+  - repetir: 6
+    passos:
+    - min: 4
+      pct:
+      - 88
+      - 92
+      cadencia:
+      - 50
+      - 60
+    - min: 3
+      pct:
+      - 50
+      - 60
+  - *id002
 - id: teste_20min
   nome: Teste de FTP (20 min)
   tipo: teste
   dificuldade: 3
+  descricao: Teste de 20 min ao máximo sustentável. O FTP estimado é 95% da potência média dos 20 min.
   passos:
-    - {min: 20, pct: [55, 70]}
-    - {min: 5, pct: [105, 115]}
-    - {min: 10, pct: [50, 60]}
-    - {min: 20, pct: [100, 110]}
-    - {min: 10, pct: [45, 55]}
-
+  - min: 20
+    pct:
+    - 55
+    - 70
+  - min: 5
+    pct:
+    - 105
+    - 115
+  - min: 10
+    pct:
+    - 50
+    - 60
+  - min: 20
+    pct:
+    - 100
+    - 110
+  - min: 10
+    pct:
+    - 45
+    - 55
 - id: teste_fc_limiar_30min
   nome: Teste de FC limiar (30 min, sem potenciómetro)
   tipo: teste
   dificuldade: 3
   so_sem_potencia: true
+  descricao: 30 min ao máximo sustentável. A FC limiar é a FC média dos últimos 20 min.
   passos:
-    - {min: 15, pct: [55, 70]}
-    - {min: 30, pct: [95, 105]}
-    - {min: 10, pct: [45, 55]}
+  - min: 15
+    pct:
+    - 55
+    - 70
+  - min: 30
+    pct:
+    - 95
+    - 105
+  - min: 10
+    pct:
+    - 45
+    - 55
 
-# --- versões curtas (dias de semana com ~60 min)
-- id: sweetspot_2x12
-  nome: Sweet spot 2 × 12 min
-  tipo: sweetspot
-  dificuldade: 1
-  passos:
-    - {min: 12, pct: [55, 70]}
-    - repetir: 2
-      passos:
-        - {min: 12, pct: [88, 93]}
-        - {min: 4, pct: [50, 60]}
-    - {min: 8, pct: [50, 60]}
-
-- id: limiar_3x8
-  nome: Limiar 3 × 8 min
-  tipo: limiar
-  dificuldade: 2
-  passos:
-    - {min: 12, pct: [55, 70]}
-    - repetir: 3
-      passos:
-        - {min: 8, pct: [95, 100]}
-        - {min: 4, pct: [50, 60]}
-    - {min: 8, pct: [50, 60]}
-
-- id: tempo_2x15
-  nome: Tempo 2 × 15 min
-  tipo: tempo
-  dificuldade: 1
-  passos:
-    - {min: 12, pct: [55, 70]}
-    - repetir: 2
-      passos:
-        - {min: 15, pct: [76, 85]}
-        - {min: 5, pct: [50, 60]}
-    - {min: 3, pct: [50, 60]}
-
-- id: vo2_4x3
-  nome: VO2máx 4 × 3 min
-  tipo: vo2max
-  dificuldade: 1
-  passos:
-    - {min: 12, pct: [55, 70]}
-    - repetir: 4
-      passos:
-        - {min: 3, pct: [106, 115]}
-        - {min: 3, pct: [45, 55]}
-    - {min: 8, pct: [50, 60]}

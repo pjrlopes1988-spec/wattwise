@@ -298,3 +298,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Contexto (19/11/2026):** recebido um zip com 1 548 ficheiros ERG do catálogo do TrainerRoad (nomes de montanhas com nível de progressão, descrições traduzidas), exportados da conta do Paulo.
 - **Decisão:** não importados e cópia local apagada. Conteúdo de concorrentes (TrainerRoad, Zwift, planos comprados, etc.) não entra na biblioteca da Wattwise, nem renomeado nem alterado. Estruturas genéricas de intervalos (ex.: 5 × 4 min a 110%) podem ser usadas quando descritas pelo Paulo e criadas de raiz.
 - **Estado:** Aprovada (regra de propriedade intelectual; confirmar com jurista).
+
+### D-053 — Biblioteca original da Wattwise (substitui a provisória de D-044)
+- 50 treinos escritos de raiz a partir de estruturas genéricas de treino (conhecimento comum), gerados por `core/tools/gerar_biblioteca.py` para `config/treinos.yaml`: recuperação 2, resistência 5 (incl. Z2 longos com tempo/sweet spot), tempo 7, sweet spot 8, limiar 9 (incl. sobe e desce), VO2máx 10 (incl. pirâmide, 30/30, 40/20, ativação), anaeróbio 4, força 3, testes 2. Progressão de dificuldade 1–5 dentro de cada tipo. Descrições em PT-PT escritas para a app.
+- Com os 10 do Paulo: 60 treinos, todos com nome de marca (D-050).
+- Página de revisão: `docs/biblioteca.md` (`python -m ww.relatorio_biblioteca`).
+- Os Z2 longos (Douro, Guadalquivir) ainda não são escolhidos pelo plano (o dia longo usa o Tejo escalável); fica para quando o Paulo validar a biblioteca.
+- **Estado:** Provisória — o Paulo revê e acrescenta as pastas dele.

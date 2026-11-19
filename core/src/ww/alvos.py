@@ -18,9 +18,16 @@ RPE_POR_ZONA = {1: "2/10", 2: "3–4/10", 3: "5–6/10", 4: "7/10", 5: "8/10", 6
 
 def descrever(p: Passo, *, ftp: float | None, fc_limiar: float | None, potencia: bool, cfg: Config) -> str:
     z = zona(p.pct_medio, 100, cfg.potencia.zonas_coggan_limites_pct)
-    cad = f", cadência {p.cadencia[0]}–{p.cadencia[1]} rpm" if p.cadencia else ""
+    cad = ""
+    if p.cadencia:
+        lo_c, hi_c = p.cadencia
+        cad = f", cadência {lo_c} rpm" if lo_c == hi_c else f", cadência {lo_c}–{hi_c} rpm"
     if potencia and ftp:
-        return f"{round(ftp * p.pct_min / 100)}–{round(ftp * p.pct_max / 100)} W (Z{z}){cad}"
+        a, b = round(ftp * p.pct_min / 100), round(ftp * p.pct_max / 100)
+        if p.rampa:
+            ini, fim = (a, b) if p.rampa == "sobe" else (b, a)
+            return f"rampa {ini}→{fim} W{cad}"
+        return (f"{a} W" if a == b else f"{a}–{b} W") + f" (Z{z}){cad}"
     faixa = FC_POR_ZONA[z]
     if faixa is None or (z >= 5 and p.segundos < 180) or not fc_limiar:
         return f"esforço percebido {RPE_POR_ZONA[z]} (Z{z}){cad}"

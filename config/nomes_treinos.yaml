@@ -2,47 +2,78 @@
 # Na app aparece "Nome · descrição técnica" (ex.: "Angliru · Limiar 2 × 20 min").
 #
 # Famílias (o nome diz o tipo de treino):
-#   Rios           → resistência e recuperação
-#   Serras         → tempo e sweet spot
-#   Subidas míticas→ limiar
-#   Ventos         → VO2máx e anaeróbio
-#   Castelos       → força (cadência baixa)
-#   Faróis         → testes
+#   Rios            → resistência e recuperação
+#   Serras          → tempo e sweet spot
+#   Subidas míticas → limiar
+#   Ventos          → VO2máx e anaeróbio
+#   Castelos        → força (cadência baixa)
+#   Faróis          → testes
 
-# --- Rios
+# --- Rios (recuperação e resistência)
 recuperacao: Mondego
+recuperacao_cadencia: Lima
 resistencia: Tejo
+z2_cadencia_90: Minho
+z2_progressivo_90: Zêzere
+z2_longo_tempo: Douro
+z2_longo_sweetspot: Guadalquivir
 paulo_express_z2_20: Guadiana
 
-# --- Serras
+# --- Serras (tempo)
 tempo_2x15: Sintra
 tempo_3x10: Arrábida
+tempo_3x12: Marão
 tempo_2x20: Gredos
+tempo_3x15: Alvão
+tempo_2x30: Guadarrama
+tempo_60: Sierra Morena
 paulo_express_tempo_30: Montesinho
+
+# --- Serras (sweet spot)
 sweetspot_2x12: Lousã
 sweetspot_3x10: Caramulo
+sweetspot_4x10: Açor
+sweetspot_3x12: Monchique
 sweetspot_3x15: Montejunto
+sweetspot_2x20: Cazorla
+sweetspot_4x15: Gata
 sweetspot_2x30: Sierra Nevada
 paulo_express_sweet_spot_25_continuo: Peneda
 paulo_express_sweet_spot_30: Gerês
 
-# --- Subidas míticas
+# --- Subidas míticas (limiar)
+limiar_3x8: Fóia
 limiar_4x6: Malhão
-limiar_3x8: Senhora da Graça
 limiar_4x8: Torre
+limiar_3x10: Penhas Douradas
 limiar_3x12: Lagos de Covadonga
+limiar_2x15: Navacerrada
+limiar_4x10: Bola del Mundo
 limiar_2x20: Angliru
+limiar_sobe_desce: Senhora da Graça
 
-# --- Ventos
+# --- Ventos (VO2máx)
 vo2_ativacao: Brisa
 vo2_4x3: Nortada
 vo2_5x3: Levante
+vo2_6x3: Poniente
 vo2_5x4: Cierzo
 vo2_6x4: Tramontana
-anaerobio_8x30s: Suão
+vo2_5x5: Vendaval
+vo2_piramide: Galerno
+vo2_30_30: Terral
+vo2_40_20: Ábrego
 
-# --- Castelos
+# --- Ventos (anaeróbio)
+sprints_6x15s: Garbí
+anaerobio_8x30s: Suão
+anaerobio_6x45s: Xaloc
+anaerobio_2x5x1: Ventania
+
+# --- Castelos (força)
 forca_5x5: Marvão
+forca_3x10: Belmonte
+forca_subida_6x4: Loarre
 paulo_contraste_de_cadencia_60: Monsaraz
 paulo_forca_longa_3x12: Óbidos
 paulo_forca_sweet_spot_5x6: Alcazaba
@@ -50,6 +81,6 @@ paulo_forca_tempo_4x8: Peñafiel
 paulo_torque_ao_limiar_10x1: Guimarães
 paulo_arranques_de_forca_45: Almourol
 
-# --- Faróis
+# --- Faróis (testes)
 teste_20min: Sagres
 teste_fc_limiar_30min: Finisterra
