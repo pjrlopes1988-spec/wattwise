@@ -21,3 +21,9 @@ python -m ww.relatorio analisar pasta_com_fits --ftp 250 --lthr 165 --fcmax 190 
 # preencher as colunas iv_* com os valores do Intervals.icu e depois:
 python -m ww.relatorio comparar validacao.csv
 ```
+
+## Simulação de temporada (Fase 3)
+```bash
+pytest core/tests/test_simulacao.py
+python -m ww.relatorio_simulacao docs/simulacao_fase3.md
+```

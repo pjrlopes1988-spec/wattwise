@@ -220,6 +220,9 @@ class Motor(_Base):
     vfc_dias_abaixo_vermelho: int = Field(ge=1)
     frescura_pct_sinal: float
     frescura_pct_vermelho: float
+    frescura_condicao_minima_pct: float = Field(ge=0)
+    frescura_abs_sinal: float
+    frescura_abs_vermelho: float
     questionario_limiar_mau: int = Field(ge=1, le=5)
     humor_limiar_mau: int = Field(ge=1, le=5)
     sinais_para_vermelho: int = Field(ge=1)

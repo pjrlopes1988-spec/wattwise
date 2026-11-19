@@ -200,6 +200,11 @@ motor:
   vfc_dias_abaixo_vermelho: 3        # VFC (média 7 d) abaixo da faixa N dias seguidos → vermelho
   frescura_pct_sinal: -30            # frescura abaixo disto (zona de risco) → sinal
   frescura_pct_vermelho: -45         # "muito negativa" → vermelho
+  # Com a Condição baixa (início de plano) a % é instável (ex.: Condição 16, Fadiga 32 → −118%);
+  # abaixo deste valor o motor usa a frescura absoluta (D-066)
+  frescura_condicao_minima_pct: 30
+  frescura_abs_sinal: -25
+  frescura_abs_vermelho: -40
   questionario_limiar_mau: 4         # cansaço, dores musculares, stress (1–5): ≥ isto → sinal
   humor_limiar_mau: 2                # humor/motivação (1–5): ≤ isto → sinal
   sinais_para_vermelho: 2            # 2 ou mais sinais → vermelho

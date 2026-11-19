@@ -50,6 +50,8 @@ class SinaisDia:
     sono_h: float | None = None
     questionario: Questionario | None = None
     frescura_pct: float | None = None
+    frescura: float | None = None        # absoluta (Condição de ontem − Fadiga de ontem)
+    condicao: float | None = None
 
 
 @dataclass(frozen=True)
@@ -131,13 +133,20 @@ def avaliar(s: SinaisDia, anterior: EstadoAtleta, cfg: Config) -> tuple[Prontida
         if q.humor is not None and q.humor <= m.humor_limiar_mau:
             sinais.append(Sinal("humor", q.humor, m.humor_limiar_mau))
 
-    # Frescura (forma em %)
-    if s.frescura_pct is None:
+    # Frescura: em % com Condição suficiente; com Condição baixa a % é instável → absoluta (D-066)
+    usar_pct = s.frescura_pct is not None and (s.condicao is None or s.condicao >= m.frescura_condicao_minima_pct)
+    if usar_pct:
+        if s.frescura_pct < m.frescura_pct_vermelho:  # type: ignore[operator]
+            sinais.append(Sinal("frescura_muito_negativa", round(s.frescura_pct, 1), m.frescura_pct_vermelho, forte=True))  # type: ignore[arg-type]
+        elif s.frescura_pct < m.frescura_pct_sinal:  # type: ignore[operator]
+            sinais.append(Sinal("frescura_negativa", round(s.frescura_pct, 1), m.frescura_pct_sinal))  # type: ignore[arg-type]
+    elif s.frescura is not None:
+        if s.frescura < m.frescura_abs_vermelho:
+            sinais.append(Sinal("frescura_muito_negativa", round(s.frescura, 1), m.frescura_abs_vermelho, forte=True))
+        elif s.frescura < m.frescura_abs_sinal:
+            sinais.append(Sinal("frescura_negativa", round(s.frescura, 1), m.frescura_abs_sinal))
+    else:
         falta.append("frescura")
-    elif s.frescura_pct < m.frescura_pct_vermelho:
-        sinais.append(Sinal("frescura_muito_negativa", round(s.frescura_pct, 1), m.frescura_pct_vermelho, forte=True))
-    elif s.frescura_pct < m.frescura_pct_sinal:
-        sinais.append(Sinal("frescura_negativa", round(s.frescura_pct, 1), m.frescura_pct_sinal))
 
     if any(x.forte for x in sinais) or len(sinais) >= m.sinais_para_vermelho:
         estado: Estado = "vermelho"
@@ -238,8 +247,12 @@ def decidir(
         return dec(p.estado)
 
     if tp.papel == "prova":
+        # A prova é escolha do atleta: o motor recomenda; a app deixa "vou fazer na mesma" (D-067)
         if p.doente:
             regras.append("doenca_prova_desaconselhada")
+            final = None
+        elif p.estado == "vermelho":
+            regras.append("vermelho_prova_desaconselhada")
             final = None
         else:
             regras.append("prova_mantida" if p.estado == "verde" else "prova_mantida_com_alerta")
@@ -424,3 +437,36 @@ def reorganizar_semana(
             regras.append(f"resistencia_encurtada:{t.data.isoformat()}:-{cortar}min")
 
     return Reorganizacao(tuple(trs), tuple(regras))
+
+
+# ------------------------------------------------------------------ guarda da rampa (carga real)
+
+def guarda_rampa(
+    d: Decisao,
+    condicao_ontem: float,
+    condicao_ha_7_dias: float,
+    rampa: float,
+    lib: dict[str, Treino],
+    cfg: Config,
+) -> Decisao:
+    """Com a carga REAL dos dias anteriores, o treino de hoje não pode fazer a Condição subir mais
+    do que a rampa em 7 dias (spec 7.3). Se faria, passa a recuperação mais curta ou descanso.
+    A prova não é alterada (é a prova)."""
+    from ww.metrics.load import fator
+
+    t = d.treino_final
+    if t is None or t.papel == "prova":
+        return d
+    f = fator(cfg.carga_forma.constante_condicao_dias, cfg.carga_forma.fator_media)
+    carga_max = condicao_ha_7_dias + rampa - condicao_ontem
+    carga_max = condicao_ontem + carga_max / f          # carga máxima de hoje para não passar a rampa
+    if t.carga <= carga_max + 1e-9:
+        return d
+    rec = lib["recuperacao"]
+    por_min = rec.com_duracao(60).carga / 60
+    minutos = int(min(t.minutos, max(0.0, carga_max) / por_min) // cfg.plano.arredondar_min * cfg.plano.arredondar_min)
+    if minutos >= cfg.plano.duracao_minima_treino_min:
+        novo = _aplicar(t, lambda x: _recuperacao(x, minutos, lib), "recuperacao", cfg)
+    else:
+        novo = None
+    return replace(d, treino_final=novo, regras=d.regras + ("rampa_limite_reduz_treino",))

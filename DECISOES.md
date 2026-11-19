@@ -384,3 +384,29 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Planos dos cenários e biblioteca aprovados "para já". As decisões provisórias da Fase 2 (D-042 a D-063) mantêm-se e podem ser afinadas.
 - **Pendente para mais tarde:** biblioteca maior (mais treinos por tipo e nível), com treinos do Paulo quando os tiver.
 - Próximo: Fase 3 — motor de adaptação diária e limites de segurança (critério: simulação de temporada sem violações).
+
+## Fase 3 — motor de adaptação diária
+
+### D-065 — Prontidão e decisão diária (spec 7.3, 7.4)
+- **Sinais** (cada um conta 1; "fortes" = vermelho direto): VFC (média 7 d) abaixo da faixa (forte ao 3.º dia seguido); FC de repouso acima da faixa (forte com alerta sustentado); sono < 6 h; cansaço/dores/stress ≥ 4 (1–5); humor ≤ 2; frescura < −30% (forte < −45%); doença (forte, mantém-se até o atleta indicar melhoria); alarme (dor no peito, desmaio, palpitações, falta de ar anormal → **bloqueado**, procurar médico).
+- **Estado:** 0 sinais verde; 1 amarelo; ≥ 2 ou um forte vermelho. Dados em falta (sem VFC, a calibrar, sem questionário…) ficam no registo; decide-se com o que há.
+- **Ações:** verde mantém. Amarelo: sessão-chave → versão mais fácil do mesmo tipo (≤ 75% da carga) ou resistência; teste → adiado (resistência); resistência → 75% da duração. Vermelho → recuperação ativa 40 min. Doença com febre → descanso; sem febre → recuperação, nunca intensidade. Aplica-se às duas versões (indoor/outdoor).
+- **Registo de decisão** (spec 7.1) com entradas (sinais com valor e limiar), regras, treino original e final, versões; sem dados pessoais (vai para a auditoria e para o LLM).
+- **Estado:** Provisória (todos os limiares em `config/motor.yaml` → `motor`).
+
+### D-066 — Frescura com Condição baixa
+- **Problema encontrado na simulação:** no início do plano a frescura em % é instável (Condição 16, Fadiga 32 → −118%); o motor punha dias vermelhos em série e o atleta não construía condição (Condição 22 às 9 semanas).
+- **Decisão:** o motor só usa a frescura em % com Condição ≥ 30; abaixo usa a absoluta (sinal < −25, vermelho < −40). Resultado: 65% → 72% de dias verdes no avançado, Condição 46 às 26 semanas.
+- **Estado:** Provisória.
+
+### D-067 — Dia de prova com prontidão vermelha ou doença
+- A app **desaconselha** a prova (regra registada) mas a decisão é do atleta ("vou fazer na mesma"); a carga feita entra nas contas. Amarelo: prova mantida com alerta.
+- **A validar pelo Paulo:** comportamento para provas A.
+
+### D-068 — Semana, guarda da rampa e simulação
+- **Reorganização** (spec 7.4): treino-chave falhado não se acumula — o mais importante passa para um dia de resistência ainda por fazer, se não criar mais de 2 dias seguidos de intensidade; fica marcado "falhado" no histórico. Intensidade a mais (volta de grupo, treino acima do previsto) → a sessão intensa seguinte troca com um dia de resistência ou passa a resistência. Carga real dos últimos 7 dias > 115% do planeado → encurta-se a resistência que vem.
+- **Guarda da rampa:** antes de prescrever, o motor calcula com a carga REAL quanto a Condição subiria em 7 dias; se passar do limite do nível, o treino passa a recuperação mais curta ou descanso (a prova não é alterada).
+- **Depois da recuperação de uma prova A** (D-063): na semana marcada, sessões intensas só com prontidão verde; senão, recuperação.
+- **Simulação de temporada** (`ww.simulacao`, `core/tests/test_simulacao.py`): 7 cenários × 182 dias, comportamento realista; verificação dia a dia de todos os limites. **0 violações** em todos. Relatório: `docs/simulacao_fase3.md`.
+- **Limitação conhecida:** teste de FTP adiado por amarelo ainda não é remarcado automaticamente.
+- **Estado:** Provisória — a Fase 3 aguarda validação do Paulo.

@@ -145,6 +145,8 @@ def test_prova_desaconselhada_com_doenca_mantida_com_alerta(cfg):
     p1, _ = avaliar(bom(questionario=Questionario(doenca=True)), EstadoAtleta(), cfg)
     assert decidir(prova, p1, LIB, cfg).regras == ("doenca_prova_desaconselhada",)
     assert decidir(prova, _p(cfg, sono_h=5.0), LIB, cfg).regras == ("prova_mantida_com_alerta",)
+    d = decidir(prova, _p(cfg, frescura_pct=-50), LIB, cfg)
+    assert d.regras == ("vermelho_prova_desaconselhada",) and d.treino_final is None
 
 
 def test_alteracao_aplica_as_duas_versoes(cfg):
@@ -214,3 +216,14 @@ def test_carga_acima_do_previsto_encurta_resistencia(cfg):
     dom = {t.data: t for t in r.treinos}[date(2027, 1, 17)]
     assert dom.minutos < 180
     assert any(x.startswith("carga_acima_do_previsto") for x in r.regras)
+
+
+def test_frescura_com_condicao_baixa_usa_valor_absoluto(cfg):
+    # Condição 16, frescura −16 → −100% (instável): com Condição < 30 usa-se a absoluta (−16 ≥ −25 → sem sinal)
+    p, _ = avaliar(bom(frescura_pct=-100, frescura=-16, condicao=16), EstadoAtleta(), cfg)
+    assert p.estado == "verde"
+    p2, _ = avaliar(bom(frescura_pct=-200, frescura=-42, condicao=21), EstadoAtleta(), cfg)
+    assert p2.estado == "vermelho" and p2.sinais[0].codigo == "frescura_muito_negativa" and p2.sinais[0].valor == -42
+    # com Condição suficiente usa-se a %
+    p3, _ = avaliar(bom(frescura_pct=-35, frescura=-21, condicao=60), EstadoAtleta(), cfg)
+    assert p3.estado == "amarelo" and p3.sinais[0].codigo == "frescura_negativa"
