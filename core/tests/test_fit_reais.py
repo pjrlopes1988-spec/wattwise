@@ -140,3 +140,17 @@ def test_z3_cinco_intervalos_como_no_intervals(z3, cfg):
     for meu, (dur, pot) in zip(iv, intervals):
         assert abs(meu.duracao_s - dur) <= 10
         assert meu.potencia_media == pytest.approx(pot, rel=0.03)
+
+
+@precisa_z3
+@precisa_estrada
+def test_carga_fc_contra_o_intervals(z3, estrada, cfg):
+    # Intervals.icu (HRSS): 09/11 → 50; 14/11 → 118. Perfil: FC limiar 168, FC máx. 180.
+    # A FC de repouso configurada no Intervals (168) é impossível; um único valor real de
+    # ~42 bpm explica os dois treinos a ≤ 1,1% (D-041).
+    from ww.metrics.hr import carga_fc
+    b = cfg.frequencia_cardiaca.hrss_b_masculino
+    for serie, iv in ((z3, 50), (estrada, 118)):
+        limpa, _ = limpar(serie, cfg.qualidade, fc_max=180)
+        v = carga_fc(limpa.fc, fc_repouso=42, fc_limiar=168, fc_max=180, b=b)
+        assert v == pytest.approx(iv, rel=0.02)

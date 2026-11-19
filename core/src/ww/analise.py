@@ -51,6 +51,7 @@ class Resumo:
     curva: dict[int, float | None] | None
     fator_eficiencia: float | None
     versao_config: str
+    avisos: tuple[str, ...] = ()
 
 
 def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = None) -> Resumo:
@@ -65,6 +66,14 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
     pm = float(np.nansum(p)) / len(p) if tem_p else None
     npw = m_pot.potencia_normalizada(p, cfg.potencia.np_janela_s, mov) if tem_p else None
     fcm = float(np.nanmean(f)) if tem_f else None
+
+    avisos: list[str] = []
+    fc_ok = bool(fis.fc_repouso and fis.fc_limiar and fis.fc_max)
+    if fc_ok and not (fis.fc_repouso < fis.fc_limiar < fis.fc_max):  # type: ignore[operator]
+        # Ex. real: FC de repouso configurada igual à FC limiar (168). Não se calcula HRSS
+        # com valores impossíveis; avisa-se o atleta para corrigir o perfil (D-041).
+        fc_ok = False
+        avisos.append("perfil_fc_invalido")
 
     carga: float | None = None
     fonte: FonteCarga = "nenhuma"
@@ -81,7 +90,7 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
         carga = fis.modelo_fc.carga(zonas)
         fonte = "fc_personalizado"
         estimada = "fc_limiar" in fis.estimados
-    elif tem_f and fis.fc_repouso and fis.fc_limiar and fis.fc_max:
+    elif tem_f and fc_ok:
         b = cfg.frequencia_cardiaca.hrss_b_masculino if fis.sexo == "M" else cfg.frequencia_cardiaca.hrss_b_feminino
         carga = m_hr.carga_fc(f, fc_repouso=fis.fc_repouso, fc_limiar=fis.fc_limiar, fc_max=fis.fc_max, b=b)
         fonte = "fc"
@@ -107,4 +116,5 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
         curva=m_pot.curva_potencia(p, cfg.potencia.curva_duracoes_s) if tem_p else None,
         fator_eficiencia=m_hr.fator_eficiencia(npw, fcm) if npw is not None and fcm else None,
         versao_config=cfg.versao,
+        avisos=tuple(avisos),
     )

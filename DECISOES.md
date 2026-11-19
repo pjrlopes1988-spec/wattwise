@@ -229,3 +229,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Intervalos (substitui os limiares de D-029/D-035):** com entrada a 88% nenhum dos 5 blocos a ~270 W (80% do FTP) era detetado; o Intervals.icu deteta-os. Novos limiares: **entrada 76% do FTP (início da Z3), saída 70%**. Resultado: 5 intervalos, durações a ≤ 9 s e potências a ≤ 2,6% da tabela do Intervals.icu; o bloco de 12 min de 17/11 passa a 716 s (planeado 720 s). Numa volta de estrada (14/11) são detetados 24 esforços (sobretudo subidas).
 - **Pontas dos intervalos:** acertadas com o mínimo entre o segundo e a mediana dos 3 s à volta, para um pico isolado de ruído não esticar o intervalo.
 - **Estado:** Provisória.
+
+### D-041 — Carga por FC (HRSS) validada; perfil de FC impossível
+- **Perfil de FC do Paulo no Intervals.icu (19/11/2026):** FC limiar 168, FC máx. 180, "RH Mínimo" 168 (impossível: igual à FC limiar). FC de repouso real indicada pelo Paulo: **48 bpm**.
+- **Validação:** com FC limiar 168 e FC máx. 180 fixas, um único valor de repouso (~42 bpm) explica os dois treinos com FC: 09/11 → 49,9–50,6 vs. 50; 14/11 → 116,7–119,0 vs. 118 (≤ 1,1%). A fórmula (TRIMP de Banister normalizado, D-011) coincide com a do Intervals.icu; o Intervals estará a usar uma FC de repouso de outra origem (provavelmente bem-estar).
+- Com a FC de repouso real (48): 09/11 → 48,6 (−2,8%); 14/11 → 112,7 (−4,5%). Diferença explicada pelo valor de repouso, não pelo método. **A confirmar** depois de o Paulo corrigir o "RH Mínimo" no Intervals.icu.
+- **Correção na app:** um perfil com FC repouso ≥ FC limiar (ou FC limiar ≥ FC máx.) fazia a análise parar com erro. Agora não se calcula HRSS, a carga passa para o recurso seguinte (RPE) e a atividade leva o aviso `perfil_fc_invalido` para o atleta corrigir o perfil.
+- **Estado:** Provisória.

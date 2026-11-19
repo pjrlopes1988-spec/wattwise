@@ -36,3 +36,10 @@ def test_sem_dados_usa_rpe_marcado_estimado(cfg):
 def test_ftp_estimado_marca_carga_estimada(cfg):
     r = analisar(serie([200] * 600, [140] * 600), Fisiologia("M", ftp=200, estimados=frozenset({"ftp"})), cfg)
     assert r.carga_estimada
+
+
+def test_perfil_fc_impossivel_avisa_e_nao_rebenta(cfg):
+    # Caso real: FC de repouso configurada igual à FC limiar (168 / 168 / 180)
+    r = analisar(serie([np.nan] * 3600, [150] * 3600), Fisiologia("M", fc_limiar=168, fc_max=180, fc_repouso=168), cfg, rpe=6)
+    assert "perfil_fc_invalido" in r.avisos
+    assert r.fonte_carga == "rpe" and r.carga_estimada
