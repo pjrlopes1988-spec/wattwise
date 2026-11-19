@@ -1,6 +1,6 @@
 # Wattwise — Planos dos cenários de teste (Fase 2)
 
-Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
+Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
 
 **Como ler:** *Carga alvo* = a necessária para subir a Condição o máximo permitido para o nível; *Planeada* = o que cabe na disponibilidade; *Subida* = variação da Condição na semana (limite: iniciante 5, intermedio 6, avancado 7, competicao 8). Em todos os cenários, verificado por testes automáticos: disponibilidade respeitada, dias de descanso mínimos, nunca mais de 2 dias seguidos de alta intensidade, recuperação pelo menos a cada 4 semanas, subida da Condição dentro do limite em quaisquer 7 dias seguidos.
 
@@ -15,6 +15,7 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Disponibilidade: ter 60 min, qui 60 min, sáb 120 min; dia longo: sábado
 - Equipamento: cinta FC
 - FTP 107 (estimado) W · FC limiar 165 (estimado) · FC máx. 183 (estimado) · FC repouso 60 (estimado)
+- Ciclos: 3+1 (automático)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -64,6 +65,7 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Disponibilidade: seg 60 min, ter 90 min, qui 90 min, sáb 180 min, dom 240 min; dia longo: domingo
 - Equipamento: potenciómetro, cinta FC
 - FTP 250 W · FC limiar 165 · FC máx. 185 · FC repouso 50
+- Ciclos: 3+1 (automático)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -141,6 +143,7 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Disponibilidade: seg 90 min, ter 90 min, qua 60 min, qui 90 min, sáb 210 min, dom 180 min; dia longo: sábado
 - Equipamento: potenciómetro, cinta FC, rolo inteligente
 - FTP 310 W · FC limiar 170 · FC máx. 188 · FC repouso 45
+- Ciclos: 3+1 (automático)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -222,6 +225,7 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Disponibilidade: seg 90 min, ter 120 min, qua 60 min, qui 120 min, sex 60 min, sáb 180 min, dom 150 min; dia longo: domingo
 - Equipamento: potenciómetro, cinta FC
 - FTP 240 W · FC limiar 169 (estimado) · FC máx. 188 (estimado) · FC repouso 60 (estimado)
+- Ciclos: 3+1 (automático)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -297,21 +301,22 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Disponibilidade: qua 45 min, sáb 90 min
 - Equipamento: potenciómetro
 - FTP 230 W · FC limiar 156 (estimado) · FC máx. 173 (estimado) · FC repouso 60 (estimado)
+- Ciclos: 2+1 (automático)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
 | 1 | 23/11 | Base | 271 | 94 (2.2 h) | 2.1 | +2.1 | 1× tempo, 1× resistencia | carga limitada pela disponibilidade (faltam ~179) |
 | 2 | 30/11 | Base | 286 | 87 (2.2 h) | 3.8 | +1.7 | 1× forca, 1× resistencia | carga limitada pela disponibilidade (faltam ~201) |
-| 3 | 07/12 | Base | 297 | 101 (2.2 h) | 5.5 | +1.7 | 1× sweetspot, 1× resistencia | carga limitada pela disponibilidade (faltam ~199) |
-| 4 | 14/12 | Recuperação | 60 | 38 (1.5 h) | 5.5 | -0.0 | 2× recuperacao |  |
-| 5 | 21/12 | Construção | 309 | 101 (2.2 h) | 6.9 | +1.4 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~211) |
-| 6 | 28/12 | Construção | 319 | 100 (2.2 h) | 8.1 | +1.2 | 1× limiar, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~221) |
-| 7 | 04/01 | Construção | 327 | 101 (2.2 h) | 9.1 | +1.0 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~229) |
-| 8 | 11/01 | Recuperação | 60 | 38 (1.5 h) | 8.5 | -0.6 | 2× recuperacao |  |
-| 9 | 18/01 | Construção | 330 | 101 (2.2 h) | 9.5 | +0.9 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~232) |
-| 10 | 25/01 | Construção | 337 | 100 (2.2 h) | 10.3 | +0.8 | 1× limiar, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~239) |
-| 11 | 01/02 | Construção | 343 | 101 (2.2 h) | 11.0 | +0.7 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~244) |
-| 12 | 08/02 | Recuperação | 60 | 38 (1.5 h) | 10.1 | -0.9 | 2× recuperacao |  |
+| 3 | 07/12 | Recuperação | 52 | 31 (1.2 h) | 3.9 | +0.1 | 2× recuperacao |  |
+| 4 | 14/12 | Construção | 298 | 100 (2.2 h) | 5.6 | +1.7 | 1× limiar, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~200) |
+| 5 | 21/12 | Construção | 310 | 101 (2.2 h) | 7.0 | +1.4 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~211) |
+| 6 | 28/12 | Recuperação | 60 | 38 (1.5 h) | 6.7 | -0.2 | 2× recuperacao |  |
+| 7 | 04/01 | Construção | 318 | 101 (2.2 h) | 8.0 | +1.2 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~220) |
+| 8 | 11/01 | Construção | 326 | 100 (2.2 h) | 9.0 | +1.0 | 1× limiar, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~228) |
+| 9 | 18/01 | Recuperação | 60 | 38 (1.5 h) | 8.4 | -0.6 | 2× recuperacao |  |
+| 10 | 25/01 | Construção | 330 | 100 (2.2 h) | 9.4 | +1.0 | 1× limiar, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~232) |
+| 11 | 01/02 | Construção | 336 | 101 (2.2 h) | 10.2 | +0.8 | 1× sweetspot, 1× resistencia | só 1 de 2 sessões-chave (disponibilidade/limite de dias seguidos); carga limitada pela disponibilidade (faltam ~238) |
+| 12 | 08/02 | Recuperação | 60 | 38 (1.5 h) | 9.5 | -0.7 | 2× recuperacao |  |
 
 **Semana 1 — Base** (a partir de 23/11/2026)
 
@@ -341,6 +346,7 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro, cinta FC
 - FTP 290 W · FC limiar 168 · FC máx. 186 · FC repouso 46
 - Provas: **D** Volta do clube (13/12/2026, 2 h); **C** Clássica de inverno (17/01/2027, 2.5 h); **B** Granfondo de preparação (14/02/2027, 3 h); **A** Granfondo da Serra (14/03/2027, 4 h); **B** Contrarrelógio regional (11/04/2027, 1 h); **A** Volta ao Alentejo (etapa) (23/05/2027, 3.5 h)
+- Ciclos: 3+1 (automático)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -497,6 +503,7 @@ Gerado com a configuração `aff915efc0e9` e a biblioteca provisória de 240 tre
 - Disponibilidade: ter 75 min, qui 75 min, sáb 150 min, dom 120 min; dia longo: sábado
 - Equipamento: potenciómetro
 - FTP 190 W · FC limiar 178 (estimado) · FC máx. 198 (estimado) · FC repouso 60 (estimado)
+- Ciclos: 3+1 (automático)
 - Regras de treino usadas: **iniciante** (menor de idade)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |

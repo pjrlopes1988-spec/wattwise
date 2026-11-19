@@ -360,3 +360,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Segurança:** se a rampa da Condição só puder ser cumprida mexendo numa sessão-chave (ex.: excesso numa janela de 7 dias que começa na semana anterior), a sessão-chave passa a uma versão mais leve do mesmo tipo (ou sai). Apanhado pelo novo cenário de época com provas A–D.
 - Todos os valores em `config/motor.yaml` → `provas`.
 - **Estado:** Provisória (o Paulo valida as regras de cada prioridade).
+
+### D-061 — Ciclos 3+1 ou 2+1, à escolha do atleta (pedido do Paulo, 19/11/2026)
+- Pergunta no perfil: "Como queres organizar os ciclos?" — **Automático** (recomendado), **3 semanas de carga + 1 de recuperação**, **2 + 1**.
+- Automático: 2+1 a partir dos 50 anos (recuperação mais lenta), 3+1 abaixo (`perfil.idade_ciclo_2_1`, a validar).
+- 4+1 não é oferecido: a spec 7.3 obriga a recuperação pelo menos a cada 4 semanas.
+- Aplica-se a todas as fases e a todos os ciclos entre provas A. Na Fase 3, o motor poderá antecipar uma recuperação por sinais de cansaço/VFC, qualquer que seja o ciclo.
+- **Estado:** Aprovada (proposta do Paulo); idade do automático provisória.

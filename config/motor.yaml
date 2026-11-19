@@ -127,6 +127,8 @@ perfil:
   fator_ftp_feminino: 0.88
   fc_limiar_fator_fc_max: 0.90     # FC limiar ≈ 90% da FC máxima
   fc_repouso_estimada: 60
+  # Ciclo "automático": 2+1 a partir desta idade (recuperação mais lenta), 3+1 abaixo (D-061)
+  idade_ciclo_2_1: 50
 
 plano:
   # Subida máxima da Condição por semana (spec 7.3) (D-043)

@@ -27,7 +27,7 @@ from typing import Literal
 from ww.config import Config
 from ww.metrics.load import fator
 from ww.perfil import (Ambiente, Atleta, Prova, ambientes, calendario_provas, nivel_regras, precisa_de_teste,
-                       tem_potencia)
+                       semanas_de_carga, tem_potencia)
 from ww.treinos import Passo, Treino, biblioteca
 
 Fase = Literal["base", "construcao", "especifico", "recuperacao", "afinacao"]
@@ -108,8 +108,10 @@ class PlanoImpossivel(ValueError):
 
 # ------------------------------------------------------------------ fases
 
-def fases(n_semanas: int, *, prova: bool, arranque_frio: bool, objetivo: str, cfg: Config) -> list[Fase]:
+def fases(n_semanas: int, *, prova: bool, arranque_frio: bool, objetivo: str, cfg: Config,
+          semanas_carga: int | None = None) -> list[Fase]:
     c = cfg.plano
+    por_ciclo = semanas_carga if semanas_carga is not None else c.semanas_carga_por_ciclo
     base_frio = c.semanas_base_arranque_frio if arranque_frio else 0
     seq: list[Fase]
     if prova:
@@ -129,7 +131,7 @@ def fases(n_semanas: int, *, prova: bool, arranque_frio: bool, objetivo: str, cf
     seguidas = 0
     for i, f in enumerate(seq):
         if f in FASES_CARGA:
-            if seguidas == c.semanas_carga_por_ciclo:
+            if seguidas == por_ciclo:
                 seq[i] = "recuperacao"
                 seguidas = 0
             else:
@@ -160,7 +162,8 @@ def _treino_prova(p: Prova, cfg: Config) -> Treino:
                   (Passo(round(horas * 3600), pct - 5, pct + 5),))
 
 
-def fases_por_provas(n_sem: int, semanas_A: list[int], *, arranque_frio: bool, objetivo: str, cfg: Config) -> list[Fase]:
+def fases_por_provas(n_sem: int, semanas_A: list[int], *, arranque_frio: bool, objetivo: str, cfg: Config,
+                     semanas_carga: int | None = None) -> list[Fase]:
     """Um ciclo completo para cada prova A (base/construção/específico/afinação); depois de cada A,
     semana(s) de recuperação; depois da última A, ciclos do objetivo geral (D-060)."""
     seq: list[Fase] = []
@@ -169,14 +172,15 @@ def fases_por_provas(n_sem: int, semanas_A: list[int], *, arranque_frio: bool, o
         if wa < ini:                       # A logo a seguir a outra A: só afinação nessa semana
             seq[wa] = "afinacao"
             continue
-        seq += fases(wa - ini + 1, prova=True, arranque_frio=arranque_frio and k == 0, objetivo="prova", cfg=cfg)
+        seq += fases(wa - ini + 1, prova=True, arranque_frio=arranque_frio and k == 0, objetivo="prova", cfg=cfg,
+                     semanas_carga=semanas_carga)
         ini = wa + 1
         r = min(cfg.provas.semanas_recuperacao_apos_A, n_sem - ini)
         seq += ["recuperacao"] * r
         ini += r
     if n_sem > ini:
         seq += fases(n_sem - ini, prova=False, arranque_frio=arranque_frio and not semanas_A,
-                     objetivo=objetivo if objetivo != "prova" else "ftp", cfg=cfg)
+                     objetivo=objetivo if objetivo != "prova" else "ftp", cfg=cfg, semanas_carga=semanas_carga)
     return seq[:n_sem]
 
 
@@ -281,7 +285,9 @@ def gerar(
     else:
         n_sem = c.horizonte_sem_prova_semanas
         fim = seg0 + timedelta(days=7 * n_sem - 1)
-    seq = fases_por_provas(n_sem, semanas_A, arranque_frio=arranque_frio, objetivo=atleta.objetivo.tipo, cfg=cfg)
+    carga_por_ciclo = semanas_de_carga(atleta, inicio, cfg)
+    seq = fases_por_provas(n_sem, semanas_A, arranque_frio=arranque_frio, objetivo=atleta.objetivo.tipo, cfg=cfg,
+                           semanas_carga=carga_por_ciclo)
 
     # dias sem intensidade antes das provas e dias fáceis depois (B e C; a A tem a afinação)
     sem_intensidade: set[date] = set()
@@ -326,6 +332,7 @@ def gerar(
     teste = precisa_de_teste(atleta)
     registo: list[str] = [
         f"nível usado nas regras: {nivel}" + (" (menor de idade)" if nivel != atleta.nivel else ""),
+        f"ciclos {carga_por_ciclo}+1" + (" (automático pela idade)" if atleta.ciclo == "auto" else " (escolha do atleta)"),
         f"{n_sem} semanas, fases: {', '.join(seq)}",
     ]
     if teste:

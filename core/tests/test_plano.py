@@ -305,3 +305,35 @@ def test_carga_da_prova_pela_duracao(cfg):
     # 1 h → intensidade 0,95 → carga 1 × 0,95² × 100 = 90,25; 4 h → 0,76 → 4 × 0,5776 × 100 = 231
     assert _treino_prova(Prova("CR", date(2027, 1, 1), "B", 1.0), cfg).carga == pytest.approx(90.25)
     assert _treino_prova(Prova("GF", date(2027, 1, 1), "A", 4.0), cfg).carga == pytest.approx(231.04)
+
+
+# ------------------------------------------------------------------ ciclos 3+1 / 2+1 (D-061)
+from ww.perfil import semanas_de_carga  # noqa: E402
+
+
+def _max_seguidas(p):
+    m = n = 0
+    for s in p.semanas:
+        n = n + 1 if s.fase in ("base", "construcao", "especifico") else 0
+        m = max(m, n)
+    return m
+
+
+def test_ciclo_escolhido_pelo_atleta(cfg):
+    base = CENARIOS["avancado_com_tudo_ftp"]                  # 46 anos
+    for ciclo, esperado in (("3+1", 3), ("2+1", 2)):
+        a = completar(_replace(base, ciclo=ciclo), HOJE, cfg)
+        p = gerar(a, LIB, cfg, inicio=INICIO)
+        assert _max_seguidas(p) == esperado, ciclo
+
+
+def test_ciclo_automatico_pela_idade(cfg):
+    assert semanas_de_carga(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg) == 3          # 46 anos
+    assert semanas_de_carga(CENARIOS["pouca_disponibilidade"], HOJE, cfg) == 2          # 50 anos
+    assert semanas_de_carga(_replace(CENARIOS["pouca_disponibilidade"], ciclo="3+1"), HOJE, cfg) == 3
+
+
+def test_fases_2_mais_1_a_mao(cfg):
+    from ww.plano import fases
+    assert fases(9, prova=False, arranque_frio=False, objetivo="ftp", cfg=cfg, semanas_carga=2) == \
+        ["construcao", "construcao", "recuperacao"] * 3

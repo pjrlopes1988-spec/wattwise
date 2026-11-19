@@ -133,6 +133,7 @@ class Perfil(_Base):
     fator_ftp_feminino: float = Field(gt=0.5, le=1.0)
     fc_limiar_fator_fc_max: float = Field(gt=0.7, lt=1.0)
     fc_repouso_estimada: float = Field(gt=30, lt=100)
+    idade_ciclo_2_1: int = Field(ge=18)
 
     _v = field_validator("ftp_w_kg_estimado")(_todos_os_niveis)
 

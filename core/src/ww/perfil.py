@@ -23,6 +23,7 @@ Fonte = Literal["atleta", "dispositivo", "teste", "estimado"]
 Ambiente = Literal["indoor", "outdoor"]
 OndeTreina = Literal["outdoor", "indoor", "ambos"]
 Prioridade = Literal["A", "B", "C", "D"]
+Ciclo = Literal["auto", "3+1", "2+1"]
 
 PRIORIDADES = {
     "A": "objetivo principal da época",
@@ -94,6 +95,7 @@ class Atleta:
     # "Onde vais treinar?" — pergunta da configuração inicial (D-059); None = sugestão pelo equipamento
     onde_treina: OndeTreina | None = None
     provas: tuple[Prova, ...] = ()     # calendário de provas A–D (D-060)
+    ciclo: Ciclo = "auto"              # semanas de carga + recuperação (D-061)
 
     def idade(self, em: date) -> int:
         d = self.data_nascimento
@@ -134,6 +136,8 @@ def validar(a: Atleta, hoje: date, cfg: Config) -> None:
             erros.append(f"prova '{p.nome}': duração entre 15 min e 24 h")
     if len(set(datas_provas)) != len(datas_provas):
         erros.append("duas provas no mesmo dia")
+    if a.ciclo not in ("auto", "3+1", "2+1"):
+        erros.append("ciclo tem de ser automático, 3+1 ou 2+1")
     fl, fm, fr = a.fc_limiar, a.fc_max, a.fc_repouso
     if fl and fm and fl.valor >= fm.valor:
         erros.append("FC limiar tem de ser inferior à FC máxima")
@@ -199,3 +203,13 @@ def calendario_provas(a: Atleta) -> tuple[Prova, ...]:
     if a.objetivo.tipo == "prova" and a.objetivo.data_prova:
         return (Prova(a.objetivo.nome_prova or "Prova", a.objetivo.data_prova, "A"),)
     return ()
+
+
+def semanas_de_carga(a: Atleta, hoje: date, cfg: Config) -> int:
+    """Semanas de carga antes de cada semana de recuperação: escolha do atleta ou, em automático,
+    2 a partir da idade configurada (recuperação mais lenta) e 3 abaixo (D-061)."""
+    if a.ciclo == "3+1":
+        return 3
+    if a.ciclo == "2+1":
+        return 2
+    return 2 if a.idade(hoje) >= cfg.perfil.idade_ciclo_2_1 else 3
