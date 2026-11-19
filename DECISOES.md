@@ -215,3 +215,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Uma atividade vinda da Strava não tem ficheiro original (como previsto).
 - O desacoplamento que o Intervals.icu mostra para sessões de intervalos (25–51%) não tem significado fisiológico; na app só se calcula em esforços contínuos em Z2 (spec 6.2).
 - **Estado:** Informação.
+
+### D-039 — Potência média e 2.º ficheiro real (estrada, 14/11/2026)
+- **Decisão:** potência média = soma da potência ÷ tempo total, com segundos sem dados a 0 W (como o Intervals.icu; 175,2 vs. 175 W).
+- **Resultado (Wahoo ELEMNT ROAM + Quarq + cinta, 2 h 48 min, FTP ≈ 340):** média +0,1%, potência ponderada +0,2%, intensidade +0,2%, carga +0,6%, FC média +0,2%, melhores 5 s / 1 / 5 / 20 / 60 min entre 0,0% e +0,3%. Qualidade 0,99, sem suspeitas.
+- **Desacoplamento: não comparável neste ficheiro.** Intervals.icu 6,3%; na Wattwise varia entre −3,7% e +6,9% consoante pormenores (aquecimento, média vs. potência ponderada), porque a volta é muito irregular (NP 224 vs. média 175). Como a spec indica, o desacoplamento só é calculado em esforços contínuos em Z2; validar com a volta estável de 10/11 (Intervals: 0,6%).
+- **Por validar:** carga por FC (HRSS) — faltam a FC limiar, FC máxima e FC de repouso definidas no Intervals.icu.
+- **Estado:** Provisória.

@@ -61,7 +61,8 @@ def analisar(serie: Serie, fis: Fisiologia, cfg: Config, rpe: float | None = Non
 
     mov = em_movimento(limpa)
     t_mov = int(mov.sum())
-    pm = float(np.nanmean(p)) if tem_p else None
+    # Média sobre o tempo total, com segundos sem dados a 0 W (como o Intervals.icu) (D-039)
+    pm = float(np.nansum(p)) / len(p) if tem_p else None
     npw = m_pot.potencia_normalizada(p, cfg.potencia.np_janela_s, mov) if tem_p else None
     fcm = float(np.nanmean(f)) if tem_f else None
 
