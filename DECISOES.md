@@ -191,8 +191,9 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Decisão:** um intervalo começa com a potência suavizada ≥ 88% do FTP e só acaba quando desce abaixo de 80% (FC: 92% / 88% da FC limiar). Agora o bloco é detetado como um só intervalo de 11 min 53 s a 302 W.
 - **Estado:** Provisória.
 
-### D-036 — Ficheiros reais de referência nos testes
-- **Pergunta:** os ficheiros FIT reais (dados pessoais de treino) ficam no repositório privado em `core/tests/fixtures/fit/`, ou fora do repositório?
-- **Por agora:** fora do repositório (`.gitignore`); os testes com ficheiros reais saltam-se quando os ficheiros não existem.
-- 1.º ficheiro: Wahoo ELEMNT ROAM, rolo, 17/11/2026 (sem posição GPS nem perfil do utilizador): potência ponderada 239,5 vs. 240 W (−0,2%), carga 64,2 vs. 63,9 (+0,5%).
-- **Estado:** Aberta.
+### D-036 — Ficheiros FIT reais fora do repositório
+- **Decisão (o Paulo delegou, 19/11/2026):** os ficheiros FIT reais são dados pessoais de treino (do Paulo e, na fase alfa, dos atletas) e **não entram no repositório** (`.gitignore`). Ficam numa pasta local `core/tests/fixtures/fit/`; os testes com ficheiros reais correm quando os ficheiros existem e saltam-se quando não existem.
+- No repositório ficam os valores de referência e os resultados de cada ficheiro (neste registo e nos testes).
+- Se um dia se quiser que corram sempre (ex.: na integração contínua), a alternativa é guardá-los num armazenamento privado na UE, com consentimento dos atletas.
+- 1.º ficheiro: Wahoo ELEMNT ROAM, rolo, 17/11/2026 (sem posição GPS nem perfil): potência ponderada 239,5 vs. 240 W (−0,2%), potência média 211,7 vs. 211 W (+0,3%), carga 64,2 vs. 63,9 (+0,5%), intensidade 0,717 vs. 0,717.
+- **Estado:** Aprovada.
