@@ -27,7 +27,7 @@ def descrever(p: Passo, *, ftp: float | None, fc_limiar: float | None, potencia:
         if p.rampa:
             ini, fim = (a, b) if p.rampa == "sobe" else (b, a)
             return f"rampa {ini}→{fim} W{cad}"
-        return (f"{a} W" if a == b else f"{a}–{b} W") + f" (Z{z}){cad}"
+        return (f"{a} W" if a == b else f"{a}–{b} W") + f" (Z{z}){cad}"   # indoor: a == b (alvo fixo)
     faixa = FC_POR_ZONA[z]
     if faixa is None or (z >= 5 and p.segundos < 180) or not fc_limiar:
         return f"esforço percebido {RPE_POR_ZONA[z]} (Z{z}){cad}"

@@ -45,14 +45,16 @@ def plano_md(a: Atleta, p: Plano, cfg: Config, *, detalhe_semanas: tuple[int, ..
         out.append(f"| {s.numero} | {s.inicio:%d/%m} | {NOMES_FASE[s.fase]} | {s.carga_alvo:.0f} | "
                    f"{s.carga_planeada:.0f} ({horas:.1f} h) | {s.condicao_fim:.1f} | {s.subida_condicao:+.1f} | "
                    f"{resumo} | {'; '.join(s.notas)} |")
-    kw = dict(ftp=a.ftp.valor if a.ftp else None, fc_limiar=a.fc_limiar.valor if a.fc_limiar else None,
-              potencia=a.equipamento.potenciometro, cfg=cfg)
+    from ww.perfil import tem_potencia
+    base_kw = dict(ftp=a.ftp.valor if a.ftp else None, fc_limiar=a.fc_limiar.valor if a.fc_limiar else None, cfg=cfg)
     for n in detalhe_semanas:
         s = p.semanas[n - 1]
         out += ["", f"**Semana {s.numero} — {NOMES_FASE[s.fase]}** (a partir de {s.inicio:%d/%m/%Y})", ""]
         for t in s.treinos:
+            kw = dict(base_kw, potencia=tem_potencia(a, t.ambiente))
             alvo = " → ".join(resumir(t.treino.passos, **kw)) if t.papel != "prova" else "prova"
-            out.append(f"- **{DIAS[t.data.weekday()]} {t.data:%d/%m}** — {t.treino.titulo} · {t.minutos} min · "
+            local = "🏠 indoor" if t.ambiente == "indoor" else "🌳 outdoor"
+            out.append(f"- **{DIAS[t.data.weekday()]} {t.data:%d/%m}** — {local} · {t.treino.titulo} · {t.minutos} min · "
                        f"carga {t.carga:.0f}{' · ALTA INTENSIDADE' if t.alta_intensidade else ''}  \n  {alvo}")
     return out
 

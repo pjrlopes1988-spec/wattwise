@@ -169,3 +169,7 @@ plano:
   arredondar_min: 15
   fracao_carga_dia_longo: 0.4           # parte da carga de resistência que vai para o dia longo
   duracao_minima_resistencia_min: 60    # em semanas de carga: menos treinos de resistência, mas de pelo menos 60 min (D-051)
+
+indoor:
+  # Bibliotecas separadas indoor/outdoor; o atleta escolhe onde treina (D-058)
+  duracao_max_min: 150      # treinos mais longos só existem na biblioteca outdoor

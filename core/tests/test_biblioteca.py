@@ -68,7 +68,29 @@ def test_descricao_e_nome(t):
 
 
 def test_nomes_unicos():
-    assert len({t.nome for t in TODOS}) == len(TODOS)
+    # o mesmo nome nas versões indoor e outdoor do mesmo treino; nunca em treinos diferentes
+    por_nome: dict[str, set[str]] = {}
+    for t in TODOS:
+        por_nome.setdefault(t.nome, set()).add(t.base)
+    assert {n: b for n, b in por_nome.items() if len(b) > 1} == {}
+
+
+@pytest.mark.parametrize("t", [t for t in TODOS if t.ambiente == "indoor"],
+                         ids=[t.id for t in TODOS if t.ambiente == "indoor"])
+def test_indoor_com_alvos_fixos_e_duracao_maxima(t):
+    from ww.config import carregar as cfg
+    assert all(p.pct_min == p.pct_max for p in t.passos if not p.rampa), f"{t.id}: alvo em intervalo"
+    assert t.minutos <= cfg().indoor.duracao_max_min, f"{t.id}: {t.minutos:.0f} min indoor"
+
+
+def test_versoes_indoor_correspondem_as_outdoor():
+    for t in TODOS:
+        if t.ambiente == "indoor" and t.origem == "wattwise":
+            o = LIB[t.base]
+            assert o.ambiente == "outdoor" and o.tipo == t.tipo and o.dificuldade == t.dificuldade
+            assert [p.segundos for p in o.passos] == [p.segundos for p in t.passos]
+            for po, pi in zip(o.passos, t.passos):
+                assert pi.rampa or po.pct_min <= pi.pct_min <= po.pct_max
 
 
 @pytest.mark.parametrize("tipo", PRINCIPAIS)

@@ -1,7 +1,7 @@
-# Biblioteca ORIGINAL da Wattwise (D-053) — gerada por core/tools/gerar_biblioteca.py.
+# Biblioteca OUTDOOR da Wattwise (D-053, D-058): alvos em intervalo (terreno, vento, trânsito).
 # Estruturas genéricas de treino escritas de raiz; nada copiado de outras plataformas (D-052).
-# O Paulo revê e ajusta. Nomes de marca em config/nomes_treinos.yaml.
-# Passo: {min, pct: [mín, máx] em % do FTP, cadencia, rampa: sobe|desce, escala}
+# Gerada por core/tools/gerar_biblioteca.py. Nomes de marca em config/nomes_treinos.yaml.
+# Passo: {min, pct: [mín, máx] em % do FTP, cadencia, rampa: sobe|desce, escala, alvo}
 - id: recuperacao
   nome: Recuperação ativa
   tipo: recuperacao
@@ -14,6 +14,8 @@
     - 45
     - 55
     escala: true
+  ambiente: outdoor
+  base: recuperacao
 - id: recuperacao_cadencia
   nome: Recuperação com cadência 45 min
   tipo: recuperacao
@@ -42,6 +44,8 @@
     pct:
     - 45
     - 55
+  ambiente: outdoor
+  base: recuperacao_cadencia
 - id: resistencia
   nome: Resistência Z2
   tipo: resistencia
@@ -63,6 +67,8 @@
     pct:
     - 50
     - 60
+  ambiente: outdoor
+  base: resistencia
 - id: z2_cadencia_90
   nome: Z2 com cadência 90 min
   tipo: resistencia
@@ -99,6 +105,8 @@
     - 45
     - 60
     rampa: desce
+  ambiente: outdoor
+  base: z2_cadencia_90
 - id: z2_progressivo_90
   nome: Z2 progressivo 90 min
   tipo: resistencia
@@ -120,6 +128,8 @@
     - 70
     - 75
   - *id002
+  ambiente: outdoor
+  base: z2_progressivo_90
 - id: z2_longo_tempo
   nome: Z2 longo 3 h com tempo no fim
   tipo: resistencia
@@ -152,6 +162,8 @@
     - 55
     - 65
   - *id002
+  ambiente: outdoor
+  base: z2_longo_tempo
 - id: z2_longo_sweetspot
   nome: Z2 longo 4 h com sweet spot
   tipo: resistencia
@@ -183,6 +195,8 @@
     - 55
     - 65
   - *id002
+  ambiente: outdoor
+  base: z2_longo_sweetspot
 - id: tempo_2x15
   nome: Tempo 2 × 15 min
   tipo: tempo
@@ -202,6 +216,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_2x15
 - id: tempo_3x10
   nome: Tempo 3 × 10 min
   tipo: tempo
@@ -221,6 +237,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_3x10
 - id: tempo_3x12
   nome: Tempo 3 × 12 min
   tipo: tempo
@@ -240,6 +258,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_3x12
 - id: tempo_2x20
   nome: Tempo 2 × 20 min
   tipo: tempo
@@ -259,6 +279,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_2x20
 - id: tempo_3x15
   nome: Tempo 3 × 15 min
   tipo: tempo
@@ -278,6 +300,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_3x15
 - id: tempo_2x30
   nome: Tempo 2 × 30 min
   tipo: tempo
@@ -297,6 +321,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_2x30
 - id: tempo_60
   nome: Tempo contínuo 60 min
   tipo: tempo
@@ -310,6 +336,8 @@
     - 76
     - 85
   - *id002
+  ambiente: outdoor
+  base: tempo_60
 - id: sweetspot_2x12
   nome: Sweet spot 2 × 12 min
   tipo: sweetspot
@@ -329,6 +357,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_2x12
 - id: sweetspot_3x10
   nome: Sweet spot 3 × 10 min
   tipo: sweetspot
@@ -348,6 +378,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_3x10
 - id: sweetspot_4x10
   nome: Sweet spot 4 × 10 min
   tipo: sweetspot
@@ -367,6 +399,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_4x10
 - id: sweetspot_3x12
   nome: Sweet spot 3 × 12 min
   tipo: sweetspot
@@ -386,6 +420,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_3x12
 - id: sweetspot_3x15
   nome: Sweet spot 3 × 15 min
   tipo: sweetspot
@@ -405,6 +441,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_3x15
 - id: sweetspot_2x20
   nome: Sweet spot 2 × 20 min
   tipo: sweetspot
@@ -424,6 +462,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_2x20
 - id: sweetspot_4x15
   nome: Sweet spot 4 × 15 min
   tipo: sweetspot
@@ -443,6 +483,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_4x15
 - id: sweetspot_2x30
   nome: Sweet spot 2 × 30 min
   tipo: sweetspot
@@ -462,6 +504,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_2x30
 - id: limiar_3x8
   nome: Limiar 3 × 8 min
   tipo: limiar
@@ -481,6 +525,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_3x8
 - id: limiar_4x6
   nome: Limiar 4 × 6 min
   tipo: limiar
@@ -500,6 +546,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_4x6
 - id: limiar_4x8
   nome: Limiar 4 × 8 min
   tipo: limiar
@@ -519,6 +567,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_4x8
 - id: limiar_3x10
   nome: Limiar 3 × 10 min
   tipo: limiar
@@ -538,6 +588,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_3x10
 - id: limiar_3x12
   nome: Limiar 3 × 12 min
   tipo: limiar
@@ -557,6 +609,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_3x12
 - id: limiar_2x15
   nome: Limiar 2 × 15 min
   tipo: limiar
@@ -576,6 +630,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_2x15
 - id: limiar_4x10
   nome: Limiar 4 × 10 min
   tipo: limiar
@@ -595,6 +651,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_4x10
 - id: limiar_2x20
   nome: Limiar 2 × 20 min
   tipo: limiar
@@ -614,6 +672,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_2x20
 - id: limiar_sobe_desce
   nome: Limiar sobe e desce 3 × 9 min
   tipo: limiar
@@ -653,6 +713,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_sobe_desce
 - id: vo2_4x3
   nome: VO2máx 4 × 3 min
   tipo: vo2max
@@ -672,6 +734,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_4x3
 - id: vo2_5x3
   nome: VO2máx 5 × 3 min
   tipo: vo2max
@@ -691,6 +755,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_5x3
 - id: vo2_6x3
   nome: VO2máx 6 × 3 min
   tipo: vo2max
@@ -710,6 +776,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_6x3
 - id: vo2_5x4
   nome: VO2máx 5 × 4 min
   tipo: vo2max
@@ -729,6 +797,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_5x4
 - id: vo2_6x4
   nome: VO2máx 6 × 4 min
   tipo: vo2max
@@ -748,6 +818,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_6x4
 - id: vo2_5x5
   nome: VO2máx 5 × 5 min
   tipo: vo2max
@@ -767,6 +839,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_5x5
 - id: vo2_piramide
   nome: VO2máx pirâmide 2-3-4-3-2
   tipo: vo2max
@@ -816,6 +890,8 @@
     - 45
     - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_piramide
 - id: vo2_30_30
   nome: VO2máx 3 × 8 × 30/30 s
   tipo: vo2max
@@ -841,6 +917,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_30_30
 - id: vo2_40_20
   nome: VO2máx 2 × 10 × 40/20 s
   tipo: vo2max
@@ -866,6 +944,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_40_20
 - id: vo2_ativacao
   nome: Ativação pré-prova 3 × 1 min
   tipo: vo2max
@@ -891,6 +971,8 @@
     pct:
     - 50
     - 60
+  ambiente: outdoor
+  base: vo2_ativacao
 - id: sprints_6x15s
   nome: Sprints 6 × 15 s
   tipo: anaerobio
@@ -910,6 +992,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: sprints_6x15s
 - id: anaerobio_8x30s
   nome: Anaeróbio 8 × 30 s
   tipo: anaerobio
@@ -929,6 +1013,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_8x30s
 - id: anaerobio_6x45s
   nome: Anaeróbio 6 × 45 s
   tipo: anaerobio
@@ -948,6 +1034,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_6x45s
 - id: anaerobio_2x5x1
   nome: Anaeróbio 2 × 5 × 1 min
   tipo: anaerobio
@@ -973,6 +1061,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_2x5x1
 - id: forca_5x5
   nome: Força 5 × 5 min em cadência baixa
   tipo: forca
@@ -995,6 +1085,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_5x5
 - id: forca_3x10
   nome: Força 3 × 10 min a 60 rpm
   tipo: forca
@@ -1017,6 +1109,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_3x10
 - id: forca_subida_6x4
   nome: Força em subida 6 × 4 min
   tipo: forca
@@ -1039,6 +1133,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_subida_6x4
 - id: teste_20min
   nome: Teste de FTP (20 min)
   tipo: teste
@@ -1066,6 +1162,8 @@
     pct:
     - 45
     - 55
+  ambiente: outdoor
+  base: teste_20min
 - id: teste_fc_limiar_30min
   nome: Teste de FC limiar (30 min, sem potenciómetro)
   tipo: teste
@@ -1086,6 +1184,8 @@
     pct:
     - 45
     - 55
+  ambiente: outdoor
+  base: teste_fc_limiar_30min
 - id: recuperacao_60
   nome: Recuperação 60 min
   tipo: recuperacao
@@ -1096,6 +1196,8 @@
     pct:
     - 45
     - 55
+  ambiente: outdoor
+  base: recuperacao_60
 - id: recuperacao_pernas_soltas
   nome: Pernas soltas 40 min
   tipo: recuperacao
@@ -1124,6 +1226,8 @@
     pct:
     - 45
     - 55
+  ambiente: outdoor
+  base: recuperacao_pernas_soltas
 - id: z2_2h
   nome: Z2 2 h
   tipo: resistencia
@@ -1136,6 +1240,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_2h
 - id: z2_2h30_sprints
   nome: Z2 2 h 30 com sprints
   tipo: resistencia
@@ -1163,6 +1269,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_2h30_sprints
 - id: z2_cadencia_baixa
   nome: Z2 com força 90 min
   tipo: resistencia
@@ -1189,6 +1297,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_cadencia_baixa
 - id: z2_longo_5h
   nome: Z2 longo 5 h
   tipo: resistencia
@@ -1202,6 +1312,8 @@
     - 60
     - 70
   - *id002
+  ambiente: outdoor
+  base: z2_longo_5h
 - id: tempo_4x10
   nome: Tempo 4 × 10 min
   tipo: tempo
@@ -1220,6 +1332,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_4x10
 - id: tempo_progressivo_3x15
   nome: Tempo progressivo 3 × 15 min
   tipo: tempo
@@ -1247,6 +1361,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_progressivo_3x15
 - id: tempo_45
   nome: Tempo contínuo 45 min
   tipo: tempo
@@ -1259,6 +1375,8 @@
     - 76
     - 85
   - *id002
+  ambiente: outdoor
+  base: tempo_45
 - id: sweetspot_5x8
   nome: Sweet spot 5 × 8 min
   tipo: sweetspot
@@ -1278,6 +1396,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_5x8
 - id: sweetspot_com_picos
   nome: Sweet spot com acelerações 3 × 12 min
   tipo: sweetspot
@@ -1303,6 +1423,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_com_picos
 - id: sweetspot_progressivo_2x20
   nome: Sweet spot progressivo 2 × 20 min
   tipo: sweetspot
@@ -1326,6 +1448,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_progressivo_2x20
 - id: sweetspot_3x20
   nome: Sweet spot 3 × 20 min
   tipo: sweetspot
@@ -1345,6 +1469,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_3x20
 - id: limiar_5x5
   nome: Limiar 5 × 5 min
   tipo: limiar
@@ -1364,6 +1490,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_5x5
 - id: limiar_2x12
   nome: Limiar 2 × 12 min
   tipo: limiar
@@ -1382,6 +1510,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_2x12
 - id: limiar_3x15
   nome: Limiar 3 × 15 min
   tipo: limiar
@@ -1401,6 +1531,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_3x15
 - id: limiar_sobe_desce_2x12
   nome: Limiar sobe e desce 2 × 12 min
   tipo: limiar
@@ -1426,6 +1558,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: limiar_sobe_desce_2x12
 - id: limiar_30
   nome: Limiar contínuo 30 min
   tipo: limiar
@@ -1438,6 +1572,8 @@
     - 95
     - 100
   - *id002
+  ambiente: outdoor
+  base: limiar_30
 - id: vo2_8x2
   nome: VO2máx 8 × 2 min
   tipo: vo2max
@@ -1457,6 +1593,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_8x2
 - id: vo2_4x4
   nome: VO2máx 4 × 4 min
   tipo: vo2max
@@ -1476,6 +1614,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_4x4
 - id: vo2_15_15
   nome: VO2máx 2 × 12 × 15/15 s
   tipo: vo2max
@@ -1501,6 +1641,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_15_15
 - id: vo2_arranque_5x4
   nome: VO2máx com arranque 5 × 4 min
   tipo: vo2max
@@ -1524,6 +1666,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_arranque_5x4
 - id: vo2_3x6
   nome: VO2máx 3 × 6 min
   tipo: vo2max
@@ -1543,6 +1687,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_3x6
 - id: sprints_10x10s
   nome: Sprints 10 × 10 s
   tipo: anaerobio
@@ -1562,6 +1708,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: sprints_10x10s
 - id: anaerobio_6x1
   nome: Anaeróbio 6 × 1 min
   tipo: anaerobio
@@ -1580,6 +1728,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_6x1
 - id: anaerobio_10x30s
   nome: Anaeróbio 10 × 30 s
   tipo: anaerobio
@@ -1598,6 +1748,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_10x30s
 - id: anaerobio_20_10
   nome: Anaeróbio 2 × 8 × 20/10 s
   tipo: anaerobio
@@ -1623,6 +1775,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_20_10
 - id: anaerobio_5x2
   nome: Anaeróbio 5 × 2 min
   tipo: anaerobio
@@ -1642,6 +1796,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_5x2
 - id: forca_arranques_8x20s
   nome: Arranques 8 × 20 s em cadência baixa
   tipo: forca
@@ -1664,6 +1820,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: forca_arranques_8x20s
 - id: forca_tempo_2x20
   nome: Força a tempo 2 × 20 min
   tipo: forca
@@ -1686,6 +1844,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_tempo_2x20
 - id: forca_limiar_4x5
   nome: Força ao limiar 4 × 5 min
   tipo: forca
@@ -1708,6 +1868,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_limiar_4x5
 - id: tempo_2x18_curto
   nome: Tempo 2 × 18 min (55 min)
   tipo: tempo
@@ -1736,6 +1898,8 @@
     - 45
     - 60
     rampa: desce
+  ambiente: outdoor
+  base: tempo_2x18_curto
 - id: tempo_40_curto
   nome: Tempo contínuo 40 min (55 min)
   tipo: tempo
@@ -1748,6 +1912,8 @@
     - 76
     - 85
   - *id005
+  ambiente: outdoor
+  base: tempo_40_curto
 - id: tempo_3x13_curto
   nome: Tempo 3 × 13 min (59 min)
   tipo: tempo
@@ -1766,6 +1932,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: tempo_3x13_curto
 - id: tempo_3x25
   nome: Tempo 3 × 25 min
   tipo: tempo
@@ -1785,6 +1953,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: tempo_3x25
 - id: sweetspot_2x14_curto
   nome: Sweet spot 2 × 14 min (48 min)
   tipo: sweetspot
@@ -1803,6 +1973,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: sweetspot_2x14_curto
 - id: sweetspot_3x11_curto
   nome: Sweet spot 3 × 11 min (55 min)
   tipo: sweetspot
@@ -1821,6 +1993,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: sweetspot_3x11_curto
 - id: sweetspot_2x20_curto
   nome: Sweet spot 2 × 20 min (59 min)
   tipo: sweetspot
@@ -1842,6 +2016,8 @@
     - 88
     - 93
   - *id005
+  ambiente: outdoor
+  base: sweetspot_2x20_curto
 - id: sweetspot_45_curto
   nome: Sweet spot contínuo 45 min (58 min)
   tipo: sweetspot
@@ -1859,6 +2035,8 @@
     - 88
     - 92
   - *id005
+  ambiente: outdoor
+  base: sweetspot_45_curto
 - id: limiar_3x9_curto
   nome: Limiar 3 × 9 min (51 min)
   tipo: limiar
@@ -1877,6 +2055,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: limiar_3x9_curto
 - id: limiar_2x15_curto
   nome: Limiar 2 × 15 min (50 min)
   tipo: limiar
@@ -1897,6 +2077,8 @@
     - 95
     - 100
   - *id005
+  ambiente: outdoor
+  base: limiar_2x15_curto
 - id: limiar_4x9_curto
   nome: Limiar 4 × 9 min (57 min)
   tipo: limiar
@@ -1920,6 +2102,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: limiar_4x9_curto
 - id: vo2_4x6
   nome: VO2máx 4 × 6 min
   tipo: vo2max
@@ -1938,6 +2122,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_4x6
 - id: vo2_2x8x2
   nome: VO2máx 2 × 8 × 2 min
   tipo: vo2max
@@ -1963,6 +2149,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: vo2_2x8x2
 - id: anaerobio_6x30s_curto
   nome: Anaeróbio 6 × 30 s (40 min)
   tipo: anaerobio
@@ -1981,6 +2169,8 @@
       - 45
       - 55
   - *id005
+  ambiente: outdoor
+  base: anaerobio_6x30s_curto
 - id: anaerobio_4x1
   nome: Anaeróbio 4 × 1 min
   tipo: anaerobio
@@ -1999,6 +2189,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_4x1
 - id: anaerobio_8x1
   nome: Anaeróbio 8 × 1 min
   tipo: anaerobio
@@ -2018,6 +2210,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: anaerobio_8x1
 - id: forca_arranques_5x15s
   nome: Arranques 5 × 15 s em cadência baixa
   tipo: forca
@@ -2040,6 +2234,8 @@
       - 45
       - 55
   - *id002
+  ambiente: outdoor
+  base: forca_arranques_5x15s
 - id: forca_z3_3x8
   nome: Força 3 × 8 min a 60 rpm
   tipo: forca
@@ -2062,6 +2258,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_z3_3x8
 - id: forca_limiar_5x6
   nome: Força ao limiar 5 × 6 min
   tipo: forca
@@ -2084,6 +2282,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_limiar_5x6
 - id: z2_75
   nome: Z2 75 min
   tipo: resistencia
@@ -2096,6 +2296,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_75
 - id: z2_3h
   nome: Z2 3 h
   tipo: resistencia
@@ -2108,6 +2310,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_3h
 - id: z2_2h_tempo
   nome: Z2 2 h 20 com tempo
   tipo: resistencia
@@ -2135,6 +2339,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_2h_tempo
 - id: tempo_2x10_curto
   nome: Tempo 2 × 10 min (40 min)
   tipo: tempo
@@ -2153,6 +2359,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: tempo_2x10_curto
 - id: tempo_3x8_curto
   nome: Tempo 3 × 8 min (48 min)
   tipo: tempo
@@ -2171,6 +2379,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: tempo_3x8_curto
 - id: sweetspot_3x13_curto
   nome: Sweet spot 3 × 13 min (58 min)
   tipo: sweetspot
@@ -2193,6 +2403,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: sweetspot_3x13_curto
 - id: sweetspot_2x22
   nome: Sweet spot 2 × 22 min
   tipo: sweetspot
@@ -2211,6 +2423,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: sweetspot_2x22
 - id: limiar_3x5_curto
   nome: Limiar 3 × 5 min (42 min)
   tipo: limiar
@@ -2230,6 +2444,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: limiar_3x5_curto
 - id: limiar_3x4_curto
   nome: Limiar 3 × 4 min (39 min)
   tipo: limiar
@@ -2249,6 +2465,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: limiar_3x4_curto
 - id: limiar_3x11_curto
   nome: Limiar 3 × 11 min (55 min)
   tipo: limiar
@@ -2271,6 +2489,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: limiar_3x11_curto
 - id: vo2_4x5_curto
   nome: VO2máx 4 × 5 min (44 min)
   tipo: vo2max
@@ -2289,6 +2509,8 @@
       - 45
       - 55
   - *id005
+  ambiente: outdoor
+  base: vo2_4x5_curto
 - id: vo2_5x5_curto
   nome: VO2máx 5 × 5 min (50 min)
   tipo: vo2max
@@ -2311,6 +2533,8 @@
       - 45
       - 55
   - *id005
+  ambiente: outdoor
+  base: vo2_5x5_curto
 - id: forca_ss_4x8_curto
   nome: Força 4 × 8 min a sweet spot (56 min)
   tipo: forca
@@ -2333,6 +2557,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: forca_ss_4x8_curto
 - id: forca_limiar_6x6
   nome: Força ao limiar 6 × 6 min
   tipo: forca
@@ -2355,6 +2581,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_limiar_6x6
 - id: forca_ss_3x15
   nome: Força 3 × 15 min a sweet spot
   tipo: forca
@@ -2377,6 +2605,8 @@
       - 50
       - 60
   - *id002
+  ambiente: outdoor
+  base: forca_ss_3x15
 - id: z2_2h45
   nome: Z2 2 h 45
   tipo: resistencia
@@ -2389,6 +2619,8 @@
     - 62
     - 72
   - *id002
+  ambiente: outdoor
+  base: z2_2h45
 - id: sweetspot_2x10_curto
   nome: Sweet spot 2 × 10 min (40 min)
   tipo: sweetspot
@@ -2407,6 +2639,8 @@
       - 50
       - 60
   - *id005
+  ambiente: outdoor
+  base: sweetspot_2x10_curto
 - id: tempo_3x14_curto
   nome: Tempo 3 × 14 min (60 min)
   tipo: tempo
@@ -2429,4 +2663,5 @@
       - 50
       - 60
   - *id005
-
+  ambiente: outdoor
+  base: tempo_3x14_curto

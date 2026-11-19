@@ -26,8 +26,8 @@ from typing import Literal
 
 from ww.config import Config
 from ww.metrics.load import fator
-from ww.perfil import Atleta, nivel_regras, precisa_de_teste
-from ww.treinos import Passo, Treino
+from ww.perfil import Ambiente, Atleta, ambiente_do_dia, nivel_regras, precisa_de_teste, tem_potencia
+from ww.treinos import Passo, Treino, biblioteca
 
 Fase = Literal["base", "construcao", "especifico", "recuperacao", "afinacao"]
 FASES_CARGA = ("base", "construcao", "especifico")
@@ -39,6 +39,7 @@ class TreinoPlaneado:
     treino: Treino
     papel: str           # sessao_chave, teste, dia_longo, resistencia, recuperacao, prova
     alta_intensidade: bool
+    ambiente: Ambiente = "outdoor"   # indoor: alvos fixos (D-058)
 
     @property
     def minutos(self) -> int:
@@ -243,8 +244,21 @@ def gerar(
     k7 = 1 - (1 - f_c) ** 7          # fração da diferença (carga − condição) absorvida numa semana
     rampa = c.rampa_condicao_semana[nivel]
     dif_max = int(c.dificuldade_max[nivel])
-    resist, recup = lib["resistencia"], lib["recuperacao"]
-    carga_min_resist = resist.com_duracao(60).carga / 60   # carga por minuto em Z2
+    libs = {"outdoor": biblioteca(lib, "outdoor"), "indoor": biblioteca(lib, "indoor")}
+
+    def tem_pot(d: date) -> bool:
+        return tem_potencia(atleta, amb(d))
+
+    def amb(d: date) -> Ambiente:
+        return ambiente_do_dia(atleta, d.weekday())
+
+    def resist(d: date) -> Treino:
+        return lib["resistencia_indoor" if amb(d) == "indoor" else "resistencia"]
+
+    def recup(d: date) -> Treino:
+        return lib["recuperacao_indoor" if amb(d) == "indoor" else "recuperacao"]
+
+    carga_min_resist = lib["resistencia"].com_duracao(60).carga / 60   # carga por minuto em Z2
 
     teste = precisa_de_teste(atleta)
     registo: list[str] = [
@@ -278,7 +292,9 @@ def gerar(
         # --- dias disponíveis nesta semana
         datas = [seg + timedelta(days=d) for d in range(7)]
         datas = [d for d in datas if d >= inicio and (prova is None or d <= prova)]
-        disp = {d: atleta.disponibilidade[d.weekday()] for d in datas
+        # indoor: o treino nunca passa da duração máxima no rolo (D-058)
+        disp = {d: min(atleta.disponibilidade[d.weekday()],
+                       cfg.indoor.duracao_max_min if amb(d) == "indoor" else 10**4) for d in datas
                 if atleta.disponibilidade[d.weekday()] >= c.duracao_minima_treino_min}
         dia_prova = prova if prova is not None and prova in datas else None
         if dia_prova is not None:
@@ -313,15 +329,17 @@ def gerar(
                      else getattr(c.tipos_por_fase, fase, []))
             # só dias onde cabe pelo menos um treino dos tipos desta fase (ou o teste)
             precisos = set(tipos) | ({"teste"} if com_teste else set())
-            curtos = [t.minutos for t in lib.values() if t.tipo in precisos
-                      and (t.dificuldade <= dif_max or t.tipo == "teste")
-                      and (not t.so_sem_potencia or not potencia)]
-            minimo = max(c.duracao_minima_sessao_chave_min, min(curtos) if curtos else 0)
-            cand = [d for d in disp if d != longo and disp[d] >= minimo]
+            def minimo_dia(d: date) -> float:
+                curtos = [t.minutos for t in libs[amb(d)].values() if t.tipo in precisos
+                          and (t.dificuldade <= dif_max or t.tipo == "teste")
+                          and (not t.so_sem_potencia or not tem_pot(d))]
+                return max(c.duracao_minima_sessao_chave_min, min(curtos) if curtos else 10**4)
+
+            cand = [d for d in disp if d != longo and disp[d] >= minimo_dia(d)]
             if com_teste and len(cand) > 1:
                 # o teste não é o primeiro treino do plano: antes, pelo menos um treino fácil
                 cand = [d for d in cand if d != min(disp)]
-            if not cand and n_chave and longo is not None and disp[longo] >= minimo:
+            if not cand and n_chave and longo is not None and disp[longo] >= minimo_dia(longo):
                 cand = [longo]
             if fase == "afinacao" and dia_prova is not None:
                 # ativação o mais perto possível da prova (2 dias antes no máximo)
@@ -343,12 +361,12 @@ def gerar(
                 # progressão dentro da fase, a começar 2 níveis abaixo do máximo do atleta
                 dif_alvo = min(dif_max, max(1, dif_max - 2) + semana_na_fase - 1) if fase != "afinacao" else 1
                 # o teste não depende do nível (é sempre o mesmo protocolo)
-                t = _escolher_treino(lib, tipo, disp[d], 5 if tipo == "teste" else dif_alvo,
-                                     5 if tipo == "teste" else dif_max, potencia, mais_leve=fase == "afinacao")
+                t = _escolher_treino(libs[amb(d)], tipo, disp[d], 5 if tipo == "teste" else dif_alvo,
+                                     5 if tipo == "teste" else dif_max, tem_pot(d), mais_leve=fase == "afinacao")
                 if t is None:
                     notas.append(f"{d}: nenhum treino '{tipo}' cabe em {disp[d]} min; fica resistência")
                     continue
-                treinos.append(TreinoPlaneado(d, t, papel, alta_intensidade(t, cfg)))
+                treinos.append(TreinoPlaneado(d, t, papel, alta_intensidade(t, cfg), amb(d)))
 
             # --- resistência / recuperação com a carga que falta
             usados = {t.data for t in treinos}
@@ -395,11 +413,11 @@ def gerar(
                 if minutos < c.duracao_minima_treino_min:
                     continue
                 if d == longo and minutos > 45:
-                    treinos.append(TreinoPlaneado(d, resist.com_duracao(minutos), "dia_longo", False))
+                    treinos.append(TreinoPlaneado(d, resist(d).com_duracao(minutos), "dia_longo", False, amb(d)))
                 elif minutos <= 45:
-                    treinos.append(TreinoPlaneado(d, recup.com_duracao(minutos), "recuperacao", False))
+                    treinos.append(TreinoPlaneado(d, recup(d).com_duracao(minutos), "recuperacao", False, amb(d)))
                 else:
-                    treinos.append(TreinoPlaneado(d, resist.com_duracao(minutos), "resistencia", False))
+                    treinos.append(TreinoPlaneado(d, resist(d).com_duracao(minutos), "resistencia", False, amb(d)))
 
         # --- verificação da rampa (spec 7.3): encurtar resistência se a Condição subir demais
         def simular(ts: list[TreinoPlaneado]) -> tuple[float, float, float, dict[date, float], date]:
@@ -436,7 +454,7 @@ def gerar(
             if novos_min < c.duracao_minima_treino_min:
                 treinos.remove(alvo_t)          # passa a dia de descanso
             else:
-                base_t = resist if alvo_t.treino.id == "resistencia" else recup
+                base_t = resist(alvo_t.data) if alvo_t.treino.base == "resistencia" else recup(alvo_t.data)
                 treinos[treinos.index(alvo_t)] = replace(alvo_t, treino=base_t.com_duracao(novos_min))
             ctl_fim, atl_fim, subida, diaria, dia_max = simular(treinos)
             if "rampa: resistência encurtada" not in notas:
@@ -454,3 +472,27 @@ def gerar(
         ctl, atl = ctl_fim, atl_fim
 
     return Plano(inicio, fim, nivel, tuple(semanas), tuple(registo), cfg.versao)
+
+
+def trocar_ambiente(tp: TreinoPlaneado, ambiente: Ambiente, lib: dict[str, Treino], cfg: Config) -> TreinoPlaneado:
+    """O atleta escolhe fazer o treino noutro ambiente (D-058).
+
+    Usa a versão do mesmo treino na outra biblioteca; se não existir (ex.: Z2 de 4 h indoor), o
+    mais parecido (tipo, dificuldade, duração). Indoor nunca passa da duração máxima no rolo.
+    A prova não muda de ambiente.
+    """
+    from ww.treinos import equivalente
+
+    if tp.papel == "prova" or tp.ambiente == ambiente:
+        return tp
+    limite = cfg.indoor.duracao_max_min if ambiente == "indoor" else None
+    t = tp.treino
+    if t.base in ("resistencia", "recuperacao"):          # escaláveis: mesma duração (com limite)
+        novo_base = lib[t.base + ("_indoor" if ambiente == "indoor" else "")]
+        minutos = min(tp.minutos, limite) if limite else tp.minutos
+        novo = novo_base.com_duracao(int(minutos))
+    else:
+        novo = equivalente(t, ambiente, lib, minutos_max=limite)
+        if novo is None:
+            raise ValueError(f"não há treino {t.tipo} equivalente para {ambiente}")
+    return replace(tp, treino=novo, ambiente=ambiente, alta_intensidade=alta_intensidade(novo, cfg))

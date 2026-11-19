@@ -5,6 +5,8 @@
   tipo: sweetspot
   dificuldade: 2
   origem: paulo
+  ambiente: indoor
+  base: paulo_express_sweet_spot_25_continuo
   descricao: Um bloco contínuo de 15 minutos a sweet spot, para quando só tens 25 minutos.
   passos:
   - min: 5.0
@@ -17,8 +19,8 @@
     rampa: sobe
   - min: 15.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 90
     - 90
@@ -35,6 +37,8 @@
   tipo: sweetspot
   dificuldade: 1
   origem: paulo
+  ambiente: indoor
+  base: paulo_express_sweet_spot_30
   descricao: Dois blocos de 9 minutos a sweet spot (90%) — o máximo de estímulo em 30 minutos.
   passos:
   - min: 5.0
@@ -47,36 +51,36 @@
     rampa: sobe
   - min: 9.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 9.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 85
     - 85
@@ -85,6 +89,8 @@
   tipo: tempo
   dificuldade: 1
   origem: paulo
+  ambiente: indoor
+  base: paulo_express_tempo_30
   descricao: Dois blocos de 10 minutos a Tempo (80%) em meia hora.
   passos:
   - min: 5.0
@@ -97,36 +103,36 @@
     rampa: sobe
   - min: 10.0
     pct:
-    - 78.0
-    - 82.0
+    - 80
+    - 80
     cadencia:
     - 90
     - 90
   - min: 2.0
     pct:
-    - 55.0
-    - 55.0
+    - 55
+    - 55
     cadencia:
     - 90
     - 90
   - min: 10.0
     pct:
-    - 78.0
-    - 82.0
+    - 80
+    - 80
     cadencia:
     - 90
     - 90
   - min: 2.0
     pct:
-    - 55.0
-    - 55.0
+    - 55
+    - 55
     cadencia:
     - 90
     - 90
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 85
     - 85
@@ -135,6 +141,8 @@
   tipo: resistencia
   dificuldade: 1
   origem: paulo
+  ambiente: indoor
+  base: paulo_express_z2_20
   descricao: 20 minutos de Z2 para dias sem tempo, com 3 acelerações de cadência.
   passos:
   - min: 4.0
@@ -147,57 +155,57 @@
     rampa: sobe
   - min: 4.0
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 90
     - 90
   - min: 0.5
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 110
     - 110
   - min: 2.5
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 90
     - 90
   - min: 0.5
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 110
     - 110
   - min: 2.5
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 90
     - 90
   - min: 0.5
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 110
     - 110
   - min: 2.5
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 85
     - 85
@@ -206,6 +214,8 @@
   tipo: forca
   dificuldade: 2
   origem: paulo
+  ambiente: indoor
+  base: paulo_arranques_de_forca_45
   descricao: 'Oito arranques de 15 s a partir de cadência muito baixa (como arrancar numa rampa parado): muita força por pedalada,
     150% do FTP, sentado. Recuperação longa.'
   passos:
@@ -219,120 +229,120 @@
     rampa: sobe
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 0.25
     pct:
-    - 150.0
-    - 150.0
+    - 150
+    - 150
     cadencia:
     - 40
     - 60
   - min: 2.25
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 5.0
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 90
     - 90
@@ -349,6 +359,8 @@
   tipo: forca
   dificuldade: 4
   origem: paulo
+  ambiente: indoor
+  base: paulo_contraste_de_cadencia_60
   descricao: 'Seis blocos de 6 min a sweet spot: 3 min a 60 rpm e 3 min a 100 rpm, à mesma potência. Melhora a eficiência
     e a capacidade de mudar de estilo na subida.'
   passos:
@@ -362,127 +374,127 @@
     rampa: sobe
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 98
     - 102
   - min: 2.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 98
     - 102
   - min: 2.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 98
     - 102
   - min: 2.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 98
     - 102
   - min: 2.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 98
     - 102
   - min: 2.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 88.0
-    - 88.0
+    - 88
+    - 88
     cadencia:
     - 98
     - 102
   - min: 2.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 90
     - 90
@@ -499,6 +511,8 @@
   tipo: forca
   dificuldade: 4
   origem: paulo
+  ambiente: indoor
+  base: paulo_forca_longa_3x12
   descricao: Três blocos de 12 min a 80% com cadência muito baixa (50-55 rpm). Treino de base para ciclistas de BTT e gravel
     com muitas subidas inclinadas.
   passos:
@@ -512,43 +526,43 @@
     rampa: sobe
   - min: 12.0
     pct:
-    - 78.0
-    - 82.0
+    - 80
+    - 80
     cadencia:
     - 50
     - 55
   - min: 5.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 12.0
     pct:
-    - 78.0
-    - 82.0
+    - 80
+    - 80
     cadencia:
     - 50
     - 55
   - min: 5.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 12.0
     pct:
-    - 78.0
-    - 82.0
+    - 80
+    - 80
     cadencia:
     - 50
     - 55
   - min: 5.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
@@ -565,6 +579,8 @@
   tipo: forca
   dificuldade: 3
   origem: paulo
+  ambiente: indoor
+  base: paulo_forca_sweet_spot_5x6
   descricao: Cinco intervalos de 6 min a sweet spot (90%) a 60 rpm. Força aplicada em todo o círculo da pedalada.
   passos:
   - min: 10.0
@@ -577,71 +593,71 @@
     rampa: sobe
   - min: 6.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 6.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 6.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 6.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 6.0
     pct:
-    - 88.0
-    - 92.0
+    - 90
+    - 90
     cadencia:
     - 58
     - 62
   - min: 3.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
@@ -658,6 +674,8 @@
   tipo: forca
   dificuldade: 4
   origem: paulo
+  ambiente: indoor
+  base: paulo_forca_tempo_4x8
   descricao: Quatro intervalos de 8 min a Tempo alto (85%) com cadência baixa (55-60 rpm), sentado e com o tronco estável.
     Desenvolve força-resistência para subidas. Se sentires os joelhos, sobe para 65 rpm.
   passos:
@@ -671,57 +689,57 @@
     rampa: sobe
   - min: 8.0
     pct:
-    - 85.0
-    - 85.0
+    - 85
+    - 85
     cadencia:
     - 55
     - 60
   - min: 4.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 8.0
     pct:
-    - 85.0
-    - 85.0
+    - 85
+    - 85
     cadencia:
     - 55
     - 60
   - min: 4.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 8.0
     pct:
-    - 85.0
-    - 85.0
+    - 85
+    - 85
     cadencia:
     - 55
     - 60
   - min: 4.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 8.0
     pct:
-    - 85.0
-    - 85.0
+    - 85
+    - 85
     cadencia:
     - 55
     - 60
   - min: 4.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
@@ -738,6 +756,8 @@
   tipo: forca
   dificuldade: 2
   origem: paulo
+  ambiente: indoor
+  base: paulo_torque_ao_limiar_10x1
   descricao: Dez esforços de 1 min ao limiar (100%) a 50 rpm, com 1 min de recuperação. Estímulo neuromuscular de força específica.
   passos:
   - min: 12.0
@@ -750,148 +770,148 @@
     rampa: sobe
   - min: 1.0
     pct:
-    - 100.0
-    - 100.0
+    - 100
+    - 100
     cadencia:
     - 50
     - 50
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
-    cadencia:
-    - 95
-    - 95
-  - min: 1.0
-    pct:
-    - 100.0
-    - 100.0
-    cadencia:
     - 50
     - 50
-  - min: 1.0
-    pct:
-    - 50.0
-    - 50.0
     cadencia:
     - 95
     - 95
   - min: 1.0
     pct:
-    - 100.0
-    - 100.0
+    - 100
+    - 100
     cadencia:
     - 50
     - 50
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
-    cadencia:
-    - 95
-    - 95
-  - min: 1.0
-    pct:
-    - 100.0
-    - 100.0
-    cadencia:
     - 50
     - 50
-  - min: 1.0
-    pct:
-    - 50.0
-    - 50.0
     cadencia:
     - 95
     - 95
   - min: 1.0
     pct:
-    - 100.0
-    - 100.0
+    - 100
+    - 100
     cadencia:
     - 50
     - 50
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
-    cadencia:
-    - 95
-    - 95
-  - min: 1.0
-    pct:
-    - 100.0
-    - 100.0
-    cadencia:
     - 50
     - 50
-  - min: 1.0
-    pct:
-    - 50.0
-    - 50.0
     cadencia:
     - 95
     - 95
   - min: 1.0
     pct:
-    - 100.0
-    - 100.0
+    - 100
+    - 100
     cadencia:
     - 50
     - 50
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
-    cadencia:
-    - 95
-    - 95
-  - min: 1.0
-    pct:
-    - 100.0
-    - 100.0
-    cadencia:
     - 50
     - 50
-  - min: 1.0
-    pct:
-    - 50.0
-    - 50.0
     cadencia:
     - 95
     - 95
   - min: 1.0
     pct:
-    - 100.0
-    - 100.0
+    - 100
+    - 100
     cadencia:
     - 50
     - 50
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 1.0
     pct:
-    - 100.0
-    - 100.0
+    - 100
+    - 100
     cadencia:
     - 50
     - 50
   - min: 1.0
     pct:
-    - 50.0
-    - 50.0
+    - 50
+    - 50
+    cadencia:
+    - 95
+    - 95
+  - min: 1.0
+    pct:
+    - 100
+    - 100
+    cadencia:
+    - 50
+    - 50
+  - min: 1.0
+    pct:
+    - 50
+    - 50
+    cadencia:
+    - 95
+    - 95
+  - min: 1.0
+    pct:
+    - 100
+    - 100
+    cadencia:
+    - 50
+    - 50
+  - min: 1.0
+    pct:
+    - 50
+    - 50
+    cadencia:
+    - 95
+    - 95
+  - min: 1.0
+    pct:
+    - 100
+    - 100
+    cadencia:
+    - 50
+    - 50
+  - min: 1.0
+    pct:
+    - 50
+    - 50
+    cadencia:
+    - 95
+    - 95
+  - min: 1.0
+    pct:
+    - 100
+    - 100
+    cadencia:
+    - 50
+    - 50
+  - min: 1.0
+    pct:
+    - 50
+    - 50
     cadencia:
     - 95
     - 95
   - min: 10.0
     pct:
-    - 65.0
-    - 65.0
+    - 65
+    - 65
     cadencia:
     - 90
     - 90

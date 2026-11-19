@@ -328,3 +328,13 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - `ww.exportar`: ZWO (% do FTP), ERG (watts, com o FTP do atleta) e MRC (% do FTP). Nos ERG/MRC, alvos em intervalo usam o meio do intervalo. Teste de ida e volta para todos os treinos (ZWO exportado e lido de volta sem diferenças; ERG com potência média e duração certas).
 - Exportação para .FIT de treino e envio automático para o dispositivo: fases posteriores (spec 3).
 - **Estado:** Provisória.
+
+### D-058 — Bibliotecas indoor e outdoor separadas; o atleta escolhe (pedido do Paulo, 19/11/2026)
+- **Indoor** (`config/treinos_indoor.yaml`): alvos **fixos** (no rolo em modo ERG não há descidas, vento nem trânsito); por defeito o meio do intervalo arredondado, ou o `alvo` indicado no passo. Só treinos até 150 min (`indoor.duracao_max_min`). Inclui os 10 treinos ZWO do Paulo (feitos para o rolo).
+- **Outdoor** (`config/treinos_outdoor.yaml`): alvos em intervalo; inclui os Z2 longos (até 5 h).
+- Mesmo treino nas duas bibliotecas = mesmo nome de marca (ex.: Angliru indoor a 98% / outdoor a 95–102%).
+- **O atleta escolhe:** no perfil indica onde treina em cada dia (`ambiente`); sem indicação, com rolo inteligente = indoor de segunda a sexta e outdoor ao fim de semana (**regra por defeito a validar pelo Paulo**); sem rolo = outdoor. Cada treino do plano pode ser trocado (`trocar_ambiente`): usa a versão do outro ambiente ou, se não existir, a mais parecida (tipo, dificuldade, duração); indoor nunca passa de 150 min. A prova é sempre outdoor.
+- Rolo inteligente sem potenciómetro: indoor tem alvos em watts (o rolo mede a potência); outdoor continua em FC/esforço percebido.
+- Exportação: cada treino sai tal como está na sua biblioteca (indoor com alvos fixos; outdoor com intervalos).
+- **Incidente corrigido:** um script de edição falhou a meio e esvaziou `test_exportar.py`; durante alguns minutos os testes de exportação "passavam" sem correr. Recuperado do Git; as edições passaram a escrever o ficheiro só depois de todas as substituições terem sucesso.
+- **Estado:** Provisória.

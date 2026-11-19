@@ -2,7 +2,9 @@
 
 - ZWO: alvos em % do FTP (o dispositivo/app aplica o FTP do atleta).
 - ERG: alvos em watts (precisa do FTP); MRC: alvos em % do FTP.
-Passos com alvo em intervalo usam o meio do intervalo no ERG/MRC (o formato só aceita um valor).
+- O treino é exportado tal como está na sua biblioteca (D-058): os indoor já têm alvos fixos
+  (modo ERG); os outdoor mantêm os intervalos no ZWO. ERG/MRC só aceitam um valor por passo:
+  usa-se o alvo fixo (`Passo.pct_fixo`).
 O envio automático para o dispositivo fica para uma fase posterior (spec 3).
 """
 
@@ -65,7 +67,7 @@ def _curso(t: Treino, unidade: str, valor) -> str:  # type: ignore[no-untyped-de
         if p.rampa:
             ini, fim = (p.pct_min, p.pct_max) if p.rampa == "sobe" else (p.pct_max, p.pct_min)
         else:
-            ini = fim = p.pct_medio
+            ini = fim = p.pct_fixo
         linhas.append(f"{tempo:.2f}\t{valor(ini)}")
         tempo += p.segundos / 60
         linhas.append(f"{tempo:.2f}\t{valor(fim)}")

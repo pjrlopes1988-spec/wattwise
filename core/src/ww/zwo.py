@@ -16,7 +16,7 @@ import re
 import sys
 import unicodedata
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
@@ -107,7 +107,8 @@ def classificar(passos: list[Passo]) -> tuple[str, int]:
     return tipo, dificuldade_objetiva(passos, tipo)
 
 
-def importar_ficheiro(caminho: Path) -> Importado:
+def importar_ficheiro(caminho: Path, indoor: bool = True) -> Importado:
+    """`indoor=True` (por defeito): os ZWO são treinos de rolo → alvos fixos, biblioteca indoor."""
     texto = caminho.read_bytes()
     if b"<!DOCTYPE" in texto or b"<!ENTITY" in texto:
         raise ValueError(f"{caminho.name}: XML com DOCTYPE/ENTITY não é aceite")
@@ -124,6 +125,9 @@ def importar_ficheiro(caminho: Path) -> Importado:
         return Importado(caminho.name, None, autor, tags, desporto, motivo)
     tipo, dif = classificar(passos)
     t = Treino(_ident(nome), nome, tipo, dif, tuple(passos), descricao=desc, origem="paulo")
+    if indoor:   # ZWO = treino de rolo: biblioteca indoor com alvos fixos (D-058)
+        t = replace(t.indoor(), ambiente="indoor")
+    t = replace(t, base=t.id)
     return Importado(caminho.name, t, autor, tags, desporto)
 
 
@@ -136,8 +140,8 @@ def para_yaml(t: Treino) -> dict:
         if p.rampa:
             d["rampa"] = p.rampa
         passos.append(d)
-    return {"id": t.id, "nome": t.nome, "tipo": t.tipo, "dificuldade": t.dificuldade,
-            "origem": t.origem, "descricao": t.descricao, "passos": passos}
+    return {"id": t.id, "nome": t.nome, "tipo": t.tipo, "dificuldade": t.dificuldade, "origem": t.origem,
+            "ambiente": t.ambiente, "base": t.base, "descricao": t.descricao, "passos": passos}
 
 
 def main(argv: list[str] | None = None) -> int:

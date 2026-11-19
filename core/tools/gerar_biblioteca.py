@@ -4,7 +4,7 @@ Estruturas genéricas de treino (conhecimento comum), escritas de raiz; nada cop
 outras plataformas (D-052). O Paulo revê e ajusta o YAML gerado; este script serve para
 recriar a biblioteca de forma consistente se se quiser mudar o padrão de aquecimento, etc.
 
-    python tools/gerar_biblioteca.py > ../config/treinos.yaml
+    python tools/gerar_biblioteca.py      (escreve config/treinos_outdoor.yaml e config/treinos_indoor.yaml)
 """
 
 import sys
@@ -359,8 +359,43 @@ treino("tempo_3x14_curto", "Tempo 3 × 14 min (60 min)", "tempo", 0,
        [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, rep(3, p(14, 76, 85), p(1.5, 50, 60))] + ARR_CURTO,
        "Três blocos de 14 min a tempo com recuperações curtas, numa hora.")
 
-cab = ("# Biblioteca ORIGINAL da Wattwise (D-053) — gerada por core/tools/gerar_biblioteca.py.\n"
-       "# Estruturas genéricas de treino escritas de raiz; nada copiado de outras plataformas (D-052).\n"
-       "# O Paulo revê e ajusta. Nomes de marca em config/nomes_treinos.yaml.\n"
-       "# Passo: {min, pct: [mín, máx] em % do FTP, cadencia, rampa: sobe|desce, escala}\n")
-print(cab + yaml.safe_dump(T, allow_unicode=True, sort_keys=False, width=120))
+DURACAO_MAX_INDOOR = 150   # min — igual a config/motor.yaml → indoor.duracao_max_min
+
+
+def _minutos(passos):
+    return sum(x.segundos for x in _expandir(passos)) / 60
+
+
+def _fixar(itens):
+    """Versão indoor dos passos: alvo fixo (o 'alvo' indicado ou o meio do intervalo arredondado)."""
+    out = []
+    for it in itens:
+        if "repetir" in it:
+            out.append({"repetir": it["repetir"], "passos": _fixar(it["passos"])})
+            continue
+        d = dict(it)
+        if "rampa" not in d:
+            v = d.pop("alvo", None)
+            v = v if v is not None else round((d["pct"][0] + d["pct"][1]) / 2)
+            d["pct"] = [v, v]
+        out.append(d)
+    return out
+
+
+outdoor = [dict(t, ambiente="outdoor", base=t["id"]) for t in T]
+indoor = [dict(t, id=f"{t['id']}_indoor", ambiente="indoor", base=t["id"], passos=_fixar(t["passos"]),
+               descricao=t["descricao"] + " No rolo: alvos fixos, em modo ERG.")
+          for t in T if _minutos(t["passos"]) <= DURACAO_MAX_INDOOR]
+
+raiz = Path(__file__).resolve().parents[2] / "config"
+comum = ("# Estruturas genéricas de treino escritas de raiz; nada copiado de outras plataformas (D-052).\n"
+         "# Gerada por core/tools/gerar_biblioteca.py. Nomes de marca em config/nomes_treinos.yaml.\n"
+         "# Passo: {min, pct: [mín, máx] em % do FTP, cadencia, rampa: sobe|desce, escala, alvo}\n")
+(raiz / "treinos_outdoor.yaml").write_text(
+    "# Biblioteca OUTDOOR da Wattwise (D-053, D-058): alvos em intervalo (terreno, vento, trânsito).\n" + comum
+    + yaml.safe_dump(outdoor, allow_unicode=True, sort_keys=False, width=120), encoding="utf-8")
+(raiz / "treinos_indoor.yaml").write_text(
+    "# Biblioteca INDOOR da Wattwise (D-058): alvos FIXOS para o rolo em modo ERG; treinos até "
+    f"{DURACAO_MAX_INDOOR} min.\n" + comum
+    + yaml.safe_dump(indoor, allow_unicode=True, sort_keys=False, width=120), encoding="utf-8")
+print(f"outdoor: {len(outdoor)} treinos; indoor: {len(indoor)} treinos")

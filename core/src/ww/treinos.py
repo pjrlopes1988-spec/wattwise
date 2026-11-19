@@ -13,7 +13,9 @@ from typing import Any
 
 import yaml
 
-CAMINHO_POR_DEFEITO = Path(__file__).resolve().parents[3] / "config" / "treinos.yaml"
+CAMINHO_OUTDOOR = Path(__file__).resolve().parents[3] / "config" / "treinos_outdoor.yaml"
+CAMINHO_INDOOR = Path(__file__).resolve().parents[3] / "config" / "treinos_indoor.yaml"
+CAMINHO_POR_DEFEITO = CAMINHO_OUTDOOR
 CAMINHO_PAULO = Path(__file__).resolve().parents[3] / "config" / "treinos_paulo.yaml"
 CAMINHO_NOMES = Path(__file__).resolve().parents[3] / "config" / "nomes_treinos.yaml"
 TIPOS = {"recuperacao", "resistencia", "tempo", "forca", "sweetspot", "limiar", "vo2max", "anaerobio", "teste"}
@@ -27,10 +29,16 @@ class Passo:
     cadencia: tuple[int, int] | None = None
     escala: bool = False
     rampa: str | None = None     # "sobe" (pct_min → pct_max) ou "desce" (pct_max → pct_min)
+    alvo: float | None = None    # alvo fixo indoor (% do FTP); por defeito o meio do intervalo (D-058)
 
     @property
     def pct_medio(self) -> float:
         return (self.pct_min + self.pct_max) / 2
+
+    @property
+    def pct_fixo(self) -> float:
+        """Alvo único para o rolo (modo ERG): sem descidas, vento nem trânsito, não há intervalo."""
+        return self.alvo if self.alvo is not None else round(self.pct_medio)
 
     @property
     def carga(self) -> float:
@@ -52,6 +60,8 @@ class Treino:
     descricao: str = ""
     origem: str = "wattwise"      # "wattwise" (provisório) ou "paulo" (biblioteca do treinador)
     subtitulo: str = ""           # descrição técnica curta (o `nome` é o nome de marca, D-050)
+    ambiente: str = "outdoor"     # "indoor" (alvos fixos, rolo) ou "outdoor" (intervalos) (D-058)
+    base: str = ""                # id comum às versões indoor e outdoor do mesmo treino
 
     @property
     def titulo(self) -> str:
@@ -68,6 +78,11 @@ class Treino:
     @property
     def carga(self) -> float:
         return sum(p.carga for p in self.passos)
+
+    def indoor(self) -> "Treino":
+        """Versão para o rolo: cada passo (exceto rampas) passa a ter um alvo fixo (D-058)."""
+        return replace(self, passos=tuple(
+            p if p.rampa else replace(p, pct_min=p.pct_fixo, pct_max=p.pct_fixo) for p in self.passos))
 
     def com_duracao(self, minutos: int) -> "Treino":
         """Estica/encolhe os passos marcados com `escala` para durar `minutos`."""
@@ -92,8 +107,11 @@ def _expandir(itens: list[dict[str, Any]]) -> list[Passo]:
             continue
         lo, hi = it["pct"]
         cad = tuple(it["cadencia"]) if "cadencia" in it else None
+        alvo = float(it["alvo"]) if "alvo" in it else None
+        if alvo is not None and not lo <= alvo <= hi:
+            raise ValueError(f"alvo indoor {alvo}% fora do intervalo [{lo}, {hi}]")
         out.append(Passo(round(float(it["min"]) * 60), float(lo), float(hi), cad,  # type: ignore[arg-type]
-                         bool(it.get("escala", False)), it.get("rampa")))
+                         bool(it.get("escala", False)), it.get("rampa"), alvo))
     return out
 
 
@@ -105,7 +123,7 @@ def carregar(*caminhos: Path | str, nomes: Path | str | None = CAMINHO_NOMES) ->
     """
     caminhos_explicitos = bool(caminhos)
     if not caminhos:
-        caminhos = tuple(c for c in (CAMINHO_POR_DEFEITO, CAMINHO_PAULO) if Path(c).exists())
+        caminhos = tuple(c for c in (CAMINHO_OUTDOOR, CAMINHO_INDOOR, CAMINHO_PAULO) if Path(c).exists())
     marca: dict[str, str] = {}
     if nomes is not None and Path(nomes).exists():
         marca = yaml.safe_load(Path(nomes).read_text(encoding="utf-8")) or {}
@@ -119,9 +137,14 @@ def carregar(*caminhos: Path | str, nomes: Path | str | None = CAMINHO_NOMES) ->
             passos=tuple(_expandir(d["passos"])), escalavel=bool(d.get("escalavel", False)),
             so_sem_potencia=bool(d.get("so_sem_potencia", False)),
             descricao=d.get("descricao", ""), origem=d.get("origem", "wattwise"),
+            ambiente=d.get("ambiente", "outdoor"), base=d.get("base", d["id"]),
         )
-        if d["id"] in marca:
-            t = replace(t, nome=str(marca[d["id"]]), subtitulo=d["nome"])
+        if t.ambiente not in ("indoor", "outdoor"):
+            raise ValueError(f"{t.id}: ambiente '{t.ambiente}' (indoor ou outdoor)")
+        if t.ambiente == "indoor" and any(p.pct_min != p.pct_max for p in t.passos if not p.rampa):
+            raise ValueError(f"{t.id}: treino indoor com alvo em intervalo (tem de ser fixo)")
+        if t.base in marca:
+            t = replace(t, nome=str(marca[t.base]), subtitulo=d["nome"])
         if t.id in out:
             raise ValueError(f"treino repetido: {t.id}")
         if t.tipo not in TIPOS:
@@ -133,7 +156,7 @@ def carregar(*caminhos: Path | str, nomes: Path | str | None = CAMINHO_NOMES) ->
         if t.escalavel and not any(p.escala for p in t.passos):
             raise ValueError(f"{t.id}: escalável sem passo com 'escala'")
         out[t.id] = t
-    sem_uso = set(marca) - set(out)
+    sem_uso = set(marca) - {t.base for t in out.values()}
     if sem_uso and nomes is not None and not caminhos_explicitos:
         raise ValueError(f"nomes de marca para treinos que não existem: {sorted(sem_uso)}")
     repetidos = {n for n in marca.values() if list(marca.values()).count(n) > 1}
@@ -202,3 +225,24 @@ def dificuldade_objetiva(passos: tuple[Passo, ...] | list[Passo], tipo: str) -> 
     if tipo == "forca":
         nivel += 1
     return min(5, nivel)
+
+
+def biblioteca(lib: dict[str, Treino], ambiente: str) -> dict[str, Treino]:
+    """Só os treinos de um ambiente (indoor ou outdoor)."""
+    return {k: t for k, t in lib.items() if t.ambiente == ambiente}
+
+
+def equivalente(t: Treino, ambiente: str, lib: dict[str, Treino], minutos_max: float | None = None) -> Treino | None:
+    """O mesmo treino no outro ambiente; se não existir (ex.: Z2 de 4 h indoor), o mais parecido:
+    mesmo tipo, dificuldade mais próxima (sem passar) e duração mais próxima (D-058)."""
+    if t.ambiente == ambiente:
+        return t
+    outra = biblioteca(lib, ambiente)
+    limite = minutos_max if minutos_max is not None else float("inf")
+    for c in outra.values():
+        if c.base == t.base and c.minutos <= limite:
+            return c
+    cand = [c for c in outra.values() if c.tipo == t.tipo and c.dificuldade <= t.dificuldade and c.minutos <= limite]
+    if not cand:
+        return None
+    return min(cand, key=lambda c: (t.dificuldade - c.dificuldade, abs(c.minutos - t.minutos), c.id))

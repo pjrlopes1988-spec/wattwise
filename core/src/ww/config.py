@@ -189,6 +189,10 @@ class Plano(_Base):
     _v = field_validator("rampa_condicao_semana", "dificuldade_max", "dias_descanso_min")(_todos_os_niveis)
 
 
+class Indoor(_Base):
+    duracao_max_min: int = Field(ge=30, le=600)
+
+
 class Qualidade(_Base):
     potencia_maxima_plausivel_w: float = Field(gt=0)
     fc_minima_plausivel: float = Field(gt=0)
@@ -233,6 +237,7 @@ class Config(_Base):
     modelo_fc_personalizado: ModeloFCPersonalizado
     perfil: Perfil
     plano: Plano
+    indoor: Indoor
     qualidade: Qualidade
     versao: str = ""
 

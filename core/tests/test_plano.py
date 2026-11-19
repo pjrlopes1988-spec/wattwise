@@ -124,3 +124,59 @@ def test_progressao_comeca_pelo_nivel(cfg):
     p = gerar(a, LIB, cfg, inicio=INICIO)
     s = next(s for s in p.semanas if s.fase == "construcao")
     assert min(t.treino.dificuldade for t in s.treinos if t.papel == "sessao_chave") >= 2
+
+
+# ------------------------------------------------------------------ indoor / outdoor (D-058)
+from dataclasses import replace as _replace  # noqa: E402
+
+from ww.perfil import Equipamento  # noqa: E402
+from ww.plano import trocar_ambiente  # noqa: E402
+
+
+def test_rolo_inteligente_dias_de_semana_indoor_com_alvos_fixos(cfg):
+    a = completar(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg)       # tem rolo inteligente
+    p = gerar(a, LIB, cfg, inicio=INICIO)
+    for t in p.treinos():
+        esperado = "indoor" if t.data.weekday() < 5 else "outdoor"
+        assert t.ambiente == esperado, t
+        assert t.treino.ambiente == esperado, t.treino.id
+        if t.ambiente == "indoor":
+            assert all(x.pct_min == x.pct_max for x in t.treino.passos if not x.rampa), t.treino.id
+            assert t.minutos <= cfg.indoor.duracao_max_min
+
+
+def test_atleta_escolhe_o_ambiente_de_cada_dia(cfg):
+    a = completar(CENARIOS["intermedio_prova_16_semanas"], HOJE, cfg)
+    a = _replace(a, ambiente=("indoor", "indoor", "outdoor", "indoor", "outdoor", "outdoor", "outdoor"))
+    p = gerar(a, LIB, cfg, inicio=INICIO)
+    for t in p.treinos():
+        if t.papel != "prova":
+            assert t.ambiente == a.ambiente[t.data.weekday()]
+
+
+def test_rolo_sem_potenciometro_da_watts_indoor(cfg):
+    from ww.perfil import tem_potencia
+    a = _replace(CENARIOS["iniciante_sem_potenciometro"], equipamento=Equipamento(rolo_inteligente=True))
+    assert tem_potencia(a, "indoor") and not tem_potencia(a, "outdoor")
+
+
+def test_trocar_treino_para_indoor_e_outdoor(cfg):
+    from datetime import date
+    from ww.plano import TreinoPlaneado
+    d = date(2026, 12, 1)
+    tp = TreinoPlaneado(d, LIB["limiar_2x20"], "sessao_chave", True, "outdoor")
+    ind = trocar_ambiente(tp, "indoor", LIB, cfg)
+    assert ind.treino.id == "limiar_2x20_indoor" and ind.ambiente == "indoor"
+    assert trocar_ambiente(ind, "outdoor", LIB, cfg).treino.id == "limiar_2x20"
+    # Z2 de 4 h escalável → indoor fica no máximo do rolo
+    longo = TreinoPlaneado(d, LIB["resistencia"].com_duracao(240), "dia_longo", False, "outdoor")
+    assert trocar_ambiente(longo, "indoor", LIB, cfg).minutos == cfg.indoor.duracao_max_min
+    # Z2 longo de 5 h (não existe indoor) → o resistência indoor mais parecido, dentro do limite
+    z5 = TreinoPlaneado(d, LIB["z2_longo_5h"], "dia_longo", False, "outdoor")
+    alt = trocar_ambiente(z5, "indoor", LIB, cfg)
+    assert alt.treino.ambiente == "indoor" and alt.treino.tipo == "resistencia"
+    assert alt.minutos <= cfg.indoor.duracao_max_min
+    # treinos do Paulo (só existem indoor) → outdoor: o mais parecido do mesmo tipo
+    torque = TreinoPlaneado(d, LIB["paulo_torque_ao_limiar_10x1"], "sessao_chave", True, "indoor")
+    out = trocar_ambiente(torque, "outdoor", LIB, cfg)
+    assert out.treino.ambiente == "outdoor" and out.treino.tipo == "forca"

@@ -20,6 +20,7 @@ Nivel = Literal["iniciante", "intermedio", "avancado", "competicao"]
 Disciplina = Literal["estrada", "gravel", "btt_xco", "btt_maratona", "contrarrelogio"]
 TipoObjetivo = Literal["prova", "ftp", "peso", "resistencia"]
 Fonte = Literal["atleta", "dispositivo", "teste", "estimado"]
+Ambiente = Literal["indoor", "outdoor"]
 
 DIAS = ("segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo")
 
@@ -72,6 +73,8 @@ class Atleta:
     altura_cm: float | None = None
     anos_treino_estruturado: int | None = None
     consentimento_responsavel: bool = False   # obrigatório abaixo da idade de consentimento próprio
+    # onde treina em cada dia (0 = segunda … 6 = domingo); None = regra por defeito (D-058)
+    ambiente: tuple[Ambiente, Ambiente, Ambiente, Ambiente, Ambiente, Ambiente, Ambiente] | None = None
 
     def idade(self, em: date) -> int:
         d = self.data_nascimento
@@ -138,3 +141,18 @@ def precisa_de_teste(a: Atleta) -> Literal["ftp", "fc_limiar"] | None:
 def nivel_regras(a: Atleta, hoje: date, cfg: Config) -> Nivel:
     """Nível usado nas regras de treino: menores de idade usam sempre as de iniciante (D-045)."""
     return "iniciante" if a.idade(hoje) < cfg.perfil.idade_adulto else a.nivel
+
+
+def ambiente_do_dia(a: Atleta, dia_semana: int) -> Ambiente:
+    """Indoor ou outdoor. Sem indicação do atleta: com rolo inteligente, indoor de segunda a sexta
+    e outdoor ao fim de semana; sem rolo, outdoor (D-058)."""
+    if a.ambiente is not None:
+        return a.ambiente[dia_semana]
+    if a.equipamento.rolo_inteligente:
+        return "indoor" if dia_semana < 5 else "outdoor"
+    return "outdoor"
+
+
+def tem_potencia(a: Atleta, ambiente: Ambiente) -> bool:
+    """Alvos em watts: com potenciómetro, ou no rolo inteligente (que mede a potência)."""
+    return a.equipamento.potenciometro or (ambiente == "indoor" and a.equipamento.rolo_inteligente)
