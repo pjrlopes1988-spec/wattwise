@@ -44,10 +44,39 @@ def test_recusa_xml_com_entidades(tmp_path):
 
 
 @pytest.mark.parametrize("min_trab,pct,tipo,dif", [
-    (20, 80, "tempo", 1), (35, 80, "tempo", 3), (30, 90, "sweetspot", 2), (40, 100, "limiar", 4),
-    (12, 110, "vo2max", 2), (3, 130, "anaerobio", 2), (0, 65, "resistencia", 1), (0, 50, "recuperacao", 1),
+    # bloco contínuo (sem recuperação) → densidade 1,5 (D-055):
+    (20, 80, "tempo", 2),        # 20 × 1,5 = 30 → escala tempo (20, 30, 40, 55) → nível 2
+    (35, 80, "tempo", 4),        # 52,5 → nível 4
+    (30, 90, "sweetspot", 4),    # 45 → escala (20, 30, 40, 55) → nível 4
+    (40, 100, "limiar", 5),      # 60 → escala (15, 24, 32, 40) → nível 5
+    (12, 110, "vo2max", 3),      # 18 → escala (10, 15, 20, 24) → nível 3
+    (3, 130, "anaerobio", 3),    # 4,5 → escala (2, 4, 6, 8) → nível 3
+    (0, 65, "resistencia", 1), (0, 50, "recuperacao", 1),
 ])
 def test_classificacao(min_trab, pct, tipo, dif):
     from ww.treinos import Passo
     passos = [Passo(600, 55, 65)] + ([Passo(min_trab * 60, pct, pct)] if min_trab else [Passo(1800, pct, pct)])
     assert classificar(passos) == (tipo, dif)
+
+
+def _intervalos(n, trab_s, pct, desc_s, cad=None):
+    from ww.treinos import Passo
+    out = [Passo(600, 45, 70, rampa="sobe")]
+    for k in range(n):
+        out.append(Passo(trab_s, pct, pct, cad))
+        if k < n - 1:
+            out.append(Passo(desc_s, 50, 50))
+    return out + [Passo(480, 45, 60, rampa="desce")]
+
+
+def test_dificuldade_com_recuperacoes_a_mao():
+    from ww.treinos import dificuldade_objetiva
+    # Limiar 3 × 8 min, 4 min de recuperação: razão 0,5 ≥ normal 0,3 → densidade 1 → 24 min → nível 2
+    assert dificuldade_objetiva(_intervalos(3, 480, 98, 240), "limiar") == 2
+    # 10 × 40/20 s: razão 0,5 < normal 0,75 → √1,5 = 1,2247 → 6,67 min × 1,2247 = 8,2 → nível 1;
+    # 20 × 40/20 s (duas séries seguidas): 13,3 × 1,2247 = 16,3 → nível 3
+    assert dificuldade_objetiva(_intervalos(10, 40, 120, 20), "vo2max") == 1
+    assert dificuldade_objetiva(_intervalos(20, 40, 120, 20), "vo2max") == 3
+    # Força: o mesmo treino (tempo 3 × 8, 4 min) em cadência baixa sobe 1 nível
+    assert dificuldade_objetiva(_intervalos(3, 480, 80, 240), "tempo") == 2
+    assert dificuldade_objetiva(_intervalos(3, 480, 80, 240, (55, 65)), "forca") == 3

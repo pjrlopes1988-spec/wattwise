@@ -21,9 +21,8 @@ from pathlib import Path
 
 import yaml
 
-from ww.treinos import Passo, Treino
+from ww.treinos import CADENCIA_BAIXA, Passo, Treino, dificuldade_objetiva, zona_de_trabalho
 
-CADENCIA_BAIXA = 70   # rpm: trabalho com cadência ≤ isto conta como força
 
 
 @dataclass(frozen=True)
@@ -95,32 +94,17 @@ def _ident(nome: str) -> str:
 
 
 def classificar(passos: list[Passo]) -> tuple[str, int]:
-    """Tipo e dificuldade (1–5) a partir do trabalho (passos ≥ 76% do FTP)."""
-    trabalho = [p for p in passos if p.pct_medio >= 76 and not p.rampa]
-    t_trab = sum(p.segundos for p in trabalho)
-    if t_trab < 60:
+    """Tipo pela zona dominante do trabalho (força se ≥ 50% do trabalho em cadência ≤ 70 rpm);
+    dificuldade pela regra única `dificuldade_objetiva` (D-055)."""
+    zona, trabalho = zona_de_trabalho(passos)
+    if zona is None:
         media = sum(p.pct_medio * p.segundos for p in passos) / max(1, sum(p.segundos for p in passos))
-        return ("resistencia" if media >= 56 else "recuperacao"), 1
-    # zona dominante pelo tempo
-    faixas = [("anaerobio", 121, 999), ("vo2max", 106, 121), ("limiar", 95, 106), ("sweetspot", 88, 95), ("tempo", 76, 88)]
-    tempo_faixa = {n: sum(p.segundos for p in trabalho if lo <= p.pct_medio < hi) for n, lo, hi in faixas}
-    # esforços curtos e muito intensos dominam mesmo com pouco tempo
-    if tempo_faixa["anaerobio"] >= 60 and tempo_faixa["anaerobio"] >= 0.3 * t_trab:
-        tipo = "anaerobio"
-    else:
-        tipo = max(tempo_faixa, key=lambda n: tempo_faixa[n])
+        tipo = "resistencia" if media >= 56 else "recuperacao"
+        return tipo, dificuldade_objetiva(passos, tipo)
+    t_trab = sum(p.segundos for p in trabalho)
     baixa = sum(p.segundos for p in trabalho if p.cadencia and p.cadencia[1] <= CADENCIA_BAIXA)
-    zona_trab = tipo
-    if baixa >= 0.5 * t_trab:
-        tipo = "forca"
-    minutos = tempo_faixa[zona_trab] / 60 if zona_trab != "forca" else t_trab / 60
-    escalas = {   # limites de minutos de trabalho para dificuldade 1, 2, 3, 4 (acima: 5)
-        "tempo": (20, 30, 40, 60), "sweetspot": (20, 30, 45, 60), "limiar": (15, 24, 32, 40),
-        "vo2max": (10, 15, 20, 24), "anaerobio": (2, 4, 6, 8),
-    }
-    lim = escalas[zona_trab]
-    dif = 1 + sum(minutos > x for x in lim)
-    return tipo, dif
+    tipo = "forca" if baixa >= 0.5 * t_trab else zona
+    return tipo, dificuldade_objetiva(passos, tipo)
 
 
 def importar_ficheiro(caminho: Path) -> Importado:

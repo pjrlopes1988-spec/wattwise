@@ -6,6 +6,7 @@ A carga prevista de cada passo usa a mesma escala da carga de potência:
 
 from __future__ import annotations
 
+import statistics
 from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
@@ -139,3 +140,65 @@ def carregar(*caminhos: Path | str, nomes: Path | str | None = CAMINHO_NOMES) ->
     if repetidos:
         raise ValueError(f"nomes de marca repetidos: {sorted(repetidos)}")
     return out
+
+
+# ------------------------------------------------------------------ dificuldade objetiva (D-055)
+
+# Zona de trabalho de cada tipo (% do FTP, pelo meio do alvo): [mín, máx)
+ZONAS_TRABALHO = {
+    "tempo": (76, 88), "sweetspot": (88, 95), "limiar": (93, 106), "vo2max": (105, 121), "anaerobio": (121, 999),
+}
+# Minutos de trabalho efetivo que separam os níveis 1|2|3|4|5
+ESCALAS = {
+    "tempo": (20, 30, 40, 55), "sweetspot": (20, 30, 40, 55), "limiar": (15, 24, 32, 40),
+    "vo2max": (10, 15, 20, 24), "anaerobio": (2, 4, 6, 8),
+}
+# Recuperação "normal" (descanso ÷ trabalho) de cada tipo; mais curta = mais difícil
+DESCANSO_NORMAL = {"tempo": 0.15, "sweetspot": 0.2, "limiar": 0.3, "vo2max": 0.75, "anaerobio": 2.0}
+CADENCIA_BAIXA = 70
+
+
+def zona_de_trabalho(passos: tuple[Passo, ...] | list[Passo]) -> tuple[str | None, list[Passo]]:
+    """Tipo de esforço dominante (pelo tempo) e os passos de trabalho (≥ 76% do FTP, sem rampas)."""
+    trabalho = [p for p in passos if p.pct_medio >= 76 and not p.rampa]
+    if sum(p.segundos for p in trabalho) < 60:
+        return None, []
+    tempo_zona = {z: sum(p.segundos for p in trabalho if lo <= p.pct_medio < hi) for z, (lo, hi) in ZONAS_TRABALHO.items()}
+    total = sum(p.segundos for p in trabalho)
+    if tempo_zona["anaerobio"] >= 60 and tempo_zona["anaerobio"] >= 0.3 * total:
+        return "anaerobio", trabalho
+    return max(tempo_zona, key=lambda z: tempo_zona[z]), trabalho
+
+
+def dificuldade_objetiva(passos: tuple[Passo, ...] | list[Passo], tipo: str) -> int:
+    """Nível 1–5 pela mesma regra para todos os treinos (originais e importados).
+
+    minutos efetivos = minutos de trabalho a partir do início da zona do tipo (a zona dominante, na
+    força) × fator de densidade, em que o fator = √(descanso normal do tipo ÷ descanso real entre
+    esforços), entre 1 e 1,5 (sem descanso: 1,5). Força: +1 nível (cadência baixa).
+    Recuperação, resistência e testes: pela duração (resistência) ou fixos.
+    """
+    if tipo in ("recuperacao", "teste"):
+        return 1 if tipo == "recuperacao" else 3
+    zona, trabalho = zona_de_trabalho(passos)
+    if tipo == "resistencia" or zona is None:
+        horas = sum(p.segundos for p in passos) / 3600
+        extra = 1 if zona is not None else 0      # Z2 com blocos de tempo/sweet spot
+        return min(5, 1 + sum(horas > h for h in (1.25, 2.25, 3.5, 4.5)) + extra)
+    if tipo in ZONAS_TRABALHO:
+        zona = tipo          # a zona do tipo declarado (ex.: 15/15 a 125% é VO2máx, não anaeróbio)
+    t_zona = sum(p.segundos for p in trabalho if p.pct_medio >= ZONAS_TRABALHO[zona][0])
+    t_trab = sum(p.segundos for p in trabalho)
+    # recuperação típica entre esforços: mediana dos descansos entre dois esforços ÷ mediana dos
+    # esforços (as pausas longas entre séries não diluem recuperações curtas como 40/20)
+    lista = list(passos)
+    descansos = [lista[i].segundos for i in range(1, len(lista) - 1)
+                 if lista[i].pct_medio < 76 and lista[i - 1].pct_medio >= 76 and lista[i + 1].pct_medio >= 76]
+    esforcos = [p.segundos for p in trabalho]
+    razao = statistics.median(descansos) / statistics.median(esforcos) if descansos else 0.0
+    densidade = min(1.5, max(1.0, (DESCANSO_NORMAL[zona] / razao) ** 0.5)) if razao > 0 else 1.5
+    minutos = t_zona / 60 * densidade
+    nivel = 1 + sum(minutos > x for x in ESCALAS[zona])
+    if tipo == "forca":
+        nivel += 1
+    return min(5, nivel)

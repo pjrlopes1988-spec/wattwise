@@ -7,11 +7,19 @@ recriar a biblioteca de forma consistente se se quiser mudar o padrão de aqueci
     python tools/gerar_biblioteca.py > ../config/treinos.yaml
 """
 
+import sys
+from pathlib import Path
+
 import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from ww.treinos import _expandir, dificuldade_objetiva  # noqa: E402
 
 AQ = [{"min": 12, "pct": [45, 70], "rampa": "sobe"}]           # aquecimento progressivo
 AQ_LONGO = [{"min": 15, "pct": [45, 70], "rampa": "sobe"}]
 ARR = [{"min": 8, "pct": [45, 60], "rampa": "desce"}]          # arrefecimento
+AQ_CURTO = [{"min": 10, "pct": [45, 72], "rampa": "sobe"}]     # versões até 60 min
+ARR_CURTO = [{"min": 5, "pct": [45, 60], "rampa": "desce"}]
 
 
 def rep(n, *passos):
@@ -28,9 +36,24 @@ def p(minutos, lo, hi, cad=None):
 T = []
 
 
+SENSACAO = {
+    "recuperacao": "Sensação: 1–2/10, muito fácil.",
+    "resistencia": "Sensação: 3–4/10, consegues conversar.",
+    "tempo": "Sensação nos blocos: 5–6/10, só frases curtas.",
+    "sweetspot": "Sensação nos blocos: 6–7/10, exigente mas controlado.",
+    "limiar": "Sensação nos blocos: 7–8/10, difícil, só palavras soltas.",
+    "vo2max": "Sensação nos esforços: 9/10, respiração no máximo.",
+    "anaerobio": "Sensação nos esforços: 10/10, tudo o que tens.",
+    "forca": "Sentado, tronco estável, força em todo o círculo da pedalada. Parar se houver dor nos joelhos.",
+    "teste": "Fazer descansado, depois de 1–2 dias leves.",
+}
+
+
 def treino(id, nome, tipo, dif, passos, descricao, **extra):
-    T.append({"id": id, "nome": nome, "tipo": tipo, "dificuldade": dif, **extra,
-              "descricao": descricao, "passos": passos})
+    """`dif` é ignorado: a dificuldade é calculada pela regra única (D-055)."""
+    dificuldade = dificuldade_objetiva(_expandir(passos), tipo)
+    T.append({"id": id, "nome": nome, "tipo": tipo, "dificuldade": dificuldade, **extra,
+              "descricao": f"{descricao} {SENSACAO[tipo]}", "passos": passos})
 
 
 # ---------------------------------------------------------------- recuperação e resistência
@@ -90,8 +113,8 @@ for id_, nome, dif, n, m, r in [
            f"{n} blocos de {m} min ao limiar (95–102% do FTP): o ritmo que aguentas cerca de uma hora. "
            "Treino-chave para subir o FTP.")
 treino("limiar_sobe_desce", "Limiar sobe e desce 3 × 9 min", "limiar", 4,
-       AQ + [rep(3, p(1.5, 93, 95), p(1.5, 105, 108), p(1.5, 93, 95), p(1.5, 105, 108), p(1.5, 93, 95),
-                 p(1.5, 105, 108), p(5, 50, 60))] + ARR,
+       AQ + [rep(3, p(1.5, 95, 97), p(1.5, 103, 106), p(1.5, 95, 97), p(1.5, 103, 106), p(1.5, 95, 97),
+                 p(1.5, 103, 106), p(5, 50, 60))] + ARR,
        "Blocos de 9 min a alternar entre ligeiramente abaixo e acima do limiar. Ensina o corpo a "
        "recuperar em esforço, como nas mudanças de ritmo de uma prova.")
 
@@ -241,6 +264,100 @@ treino("forca_tempo_2x20", "Força a tempo 2 × 20 min", "forca", 3,
 treino("forca_limiar_4x5", "Força ao limiar 4 × 5 min", "forca", 4,
        AQ + [rep(4, p(5, 95, 100, (50, 60)), p(5, 50, 60))] + ARR,
        "Quatro blocos ao limiar com cadência de 50–60 rpm. Exigente para os joelhos: só com boa base de força.")
+
+# ================================================================ cobertura completa (D-056)
+# Versões até 60 min (dias de semana) nos níveis em que faltavam, e níveis com menos de 2 treinos.
+treino("tempo_2x18_curto", "Tempo 2 × 18 min (55 min)", "tempo", 0, AQ_CURTO + [rep(2, p(18, 76, 85), p(3, 50, 60))] + ARR_CURTO,
+       "Dois blocos de 18 min a tempo, em menos de uma hora.")
+treino("tempo_40_curto", "Tempo contínuo 40 min (55 min)", "tempo", 0, AQ_CURTO + [p(40, 76, 85)] + ARR_CURTO,
+       "Quarenta minutos seguidos a tempo, com aquecimento curto.")
+treino("tempo_3x13_curto", "Tempo 3 × 13 min (59 min)", "tempo", 0, AQ_CURTO + [rep(3, p(13, 76, 85), p(2, 50, 60))] + ARR_CURTO,
+       "Três blocos de 13 min a tempo com recuperações curtas.")
+treino("tempo_3x25", "Tempo 3 × 25 min", "tempo", 0, AQ_LONGO + [rep(3, p(25, 76, 85), p(5, 50, 60))] + ARR,
+       "Setenta e cinco minutos de tempo em três blocos. Para provas longas.")
+treino("sweetspot_2x14_curto", "Sweet spot 2 × 14 min (48 min)", "sweetspot", 0,
+       AQ_CURTO + [rep(2, p(14, 88, 93), p(3, 50, 60))] + ARR_CURTO,
+       "Dois blocos de 14 min a sweet spot em menos de uma hora.")
+treino("sweetspot_3x11_curto", "Sweet spot 3 × 11 min (55 min)", "sweetspot", 0,
+       AQ_CURTO + [rep(3, p(11, 88, 93), p(3, 50, 60))] + ARR_CURTO,
+       "Três blocos de 11 min a sweet spot com recuperações curtas.")
+treino("sweetspot_2x20_curto", "Sweet spot 2 × 20 min (59 min)", "sweetspot", 0,
+       AQ_CURTO + [p(20, 88, 93), p(4, 50, 60), p(20, 88, 93)] + ARR_CURTO,
+       "Dois blocos de 20 min a sweet spot, com aquecimento curto, numa hora.")
+treino("sweetspot_45_curto", "Sweet spot contínuo 45 min (58 min)", "sweetspot", 0,
+       [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, p(45, 88, 92)] + ARR_CURTO,
+       "Quarenta e cinco minutos seguidos a sweet spot. Muito exigente para uma hora de treino.")
+treino("limiar_3x9_curto", "Limiar 3 × 9 min (51 min)", "limiar", 0, AQ_CURTO + [rep(3, p(9, 95, 102), p(3, 50, 60))] + ARR_CURTO,
+       "Três blocos de 9 min ao limiar, em menos de uma hora.")
+treino("limiar_2x15_curto", "Limiar 2 × 15 min (50 min)", "limiar", 0, AQ_CURTO + [p(15, 95, 100), p(5, 50, 60), p(15, 95, 100)] + ARR_CURTO,
+       "Dois blocos de 15 min ao limiar com aquecimento curto.")
+treino("limiar_4x9_curto", "Limiar 4 × 9 min (57 min)", "limiar", 0,
+       [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, rep(4, p(9, 95, 100), p(2, 50, 60))] + ARR_CURTO,
+       "Quatro blocos de 9 min ao limiar com recuperações curtas. Duro para uma hora.")
+treino("vo2_4x6", "VO2máx 4 × 6 min", "vo2max", 0, AQ + [rep(4, p(6, 105, 110), p(5, 45, 55))] + ARR,
+       "Quatro esforços longos de VO2máx. Muito exigente.")
+treino("vo2_2x8x2", "VO2máx 2 × 8 × 2 min", "vo2max", 0,
+       AQ + [rep(2, rep(8, p(2, 112, 118), p(1, 45, 55)), p(6, 45, 55))] + ARR,
+       "Duas séries de 8 × 2 min com 1 min de recuperação. Recuperações curtas: muito duro.")
+treino("anaerobio_6x30s_curto", "Anaeróbio 6 × 30 s (40 min)", "anaerobio", 0,
+       AQ_CURTO + [rep(6, p(0.5, 130, 150), p(3.5, 45, 55))] + ARR_CURTO,
+       "Seis esforços de 30 s muito fortes, em 40 minutos.")
+treino("anaerobio_4x1", "Anaeróbio 4 × 1 min", "anaerobio", 0, AQ + [rep(4, p(1, 120, 130), p(4, 45, 55))] + ARR,
+       "Quatro esforços de 1 min muito fortes, recuperação completa.")
+treino("anaerobio_8x1", "Anaeróbio 8 × 1 min", "anaerobio", 0, AQ + [rep(8, p(1, 120, 130), p(3, 45, 55))] + ARR,
+       "Oito esforços de 1 min muito fortes. Muito exigente: só com boa base.")
+treino("forca_arranques_5x15s", "Arranques 5 × 15 s em cadência baixa", "forca", 0,
+       AQ + [rep(5, p(0.25, 140, 160, (40, 60)), p(4.75, 45, 55))] + ARR,
+       "Cinco arranques curtos a partir de cadência muito baixa. Introdução à força explosiva.")
+treino("forca_z3_3x8", "Força 3 × 8 min a 60 rpm", "forca", 0, AQ + [rep(3, p(8, 76, 80, (55, 65)), p(4, 50, 60))] + ARR,
+       "Três blocos de 8 min a tempo baixo e cadência baixa. Primeiro contacto com o trabalho de força.")
+treino("forca_limiar_5x6", "Força ao limiar 5 × 6 min", "forca", 0, AQ + [rep(5, p(6, 95, 100, (50, 60)), p(5, 50, 60))] + ARR,
+       "Cinco blocos ao limiar em cadência baixa. Muito exigente para os joelhos: só com boa base de força.")
+treino("z2_75", "Z2 75 min", "resistencia", 0, AQ + [p(55, 62, 72)] + ARR,
+       "Setenta e cinco minutos a ritmo de conversa.")
+
+treino("z2_3h", "Z2 3 h", "resistencia", 0, AQ_LONGO + [p(157, 62, 72)] + ARR,
+       "Três horas a ritmo de conversa. Comer e beber desde o início.")
+treino("z2_2h_tempo", "Z2 2 h 20 com tempo", "resistencia", 0,
+       AQ_LONGO + [p(60, 62, 72), rep(2, p(10, 76, 82), p(10, 62, 70)), p(17, 62, 72)] + ARR,
+       "Z2 com dois blocos de 10 min a tempo a meio. Prepara mudanças de ritmo em voltas longas.")
+treino("tempo_2x10_curto", "Tempo 2 × 10 min (40 min)", "tempo", 0, AQ_CURTO + [rep(2, p(10, 76, 82), p(3, 50, 60))] + ARR_CURTO,
+       "Dois blocos de 10 min a tempo. Introdução ao ritmo de tempo.")
+treino("tempo_3x8_curto", "Tempo 3 × 8 min (48 min)", "tempo", 0, AQ_CURTO + [rep(3, p(8, 76, 82), p(3, 50, 60))] + ARR_CURTO,
+       "Três blocos de 8 min a tempo, em menos de uma hora.")
+treino("sweetspot_3x13_curto", "Sweet spot 3 × 13 min (58 min)", "sweetspot", 0,
+       [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, rep(3, p(13, 88, 93), p(2, 50, 60))] + ARR_CURTO,
+       "Três blocos de 13 min a sweet spot com recuperações curtas.")
+treino("sweetspot_2x22", "Sweet spot 2 × 22 min", "sweetspot", 0, AQ + [rep(2, p(22, 88, 93), p(5, 50, 60))] + ARR,
+       "Dois blocos longos de sweet spot.")
+treino("limiar_3x5_curto", "Limiar 3 × 5 min (42 min)", "limiar", 0, AQ_CURTO + [rep(3, p(5, 95, 100), p(4, 50, 60))] + ARR_CURTO,
+       "Três blocos curtos ao limiar. Primeiro contacto com o ritmo de limiar.")
+treino("limiar_3x4_curto", "Limiar 3 × 4 min (39 min)", "limiar", 0, AQ_CURTO + [rep(3, p(4, 95, 100), p(4, 50, 60))] + ARR_CURTO,
+       "Três blocos de 4 min ao limiar. O treino de limiar mais acessível.")
+treino("limiar_3x11_curto", "Limiar 3 × 11 min (55 min)", "limiar", 0,
+       [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, rep(3, p(11, 95, 100), p(3, 50, 60))] + ARR_CURTO,
+       "Três blocos de 11 min ao limiar, numa hora.")
+treino("vo2_4x5_curto", "VO2máx 4 × 5 min (44 min)", "vo2max", 0, AQ_CURTO + [rep(4, p(5, 106, 112), p(3, 45, 55))] + ARR_CURTO,
+       "Quatro esforços de 5 min com recuperações curtas.")
+treino("vo2_5x5_curto", "VO2máx 5 × 5 min (50 min)", "vo2max", 0,
+       [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, rep(5, p(5, 106, 112), p(2.5, 45, 55))] + ARR_CURTO,
+       "Cinco esforços de 5 min com pouca recuperação. Muito exigente.")
+treino("forca_ss_4x8_curto", "Força 4 × 8 min a sweet spot (56 min)", "forca", 0,
+       AQ_CURTO + [rep(4, p(8, 88, 92, (55, 62)), p(3, 50, 60))] + ARR_CURTO,
+       "Quatro blocos a sweet spot em cadência baixa, numa hora.")
+treino("forca_limiar_6x6", "Força ao limiar 6 × 6 min", "forca", 0, AQ + [rep(6, p(6, 95, 100, (50, 60)), p(4, 50, 60))] + ARR,
+       "Seis blocos ao limiar em cadência baixa. O treino de força mais exigente da biblioteca.")
+treino("forca_ss_3x15", "Força 3 × 15 min a sweet spot", "forca", 0, AQ + [rep(3, p(15, 88, 92, (55, 62)), p(5, 50, 60))] + ARR,
+       "Três blocos longos a sweet spot em cadência baixa. Para subidas longas.")
+
+treino("z2_2h45", "Z2 2 h 45", "resistencia", 0, AQ_LONGO + [p(142, 62, 72)] + ARR,
+       "Duas horas e três quartos a ritmo de conversa.")
+treino("sweetspot_2x10_curto", "Sweet spot 2 × 10 min (40 min)", "sweetspot", 0,
+       AQ_CURTO + [rep(2, p(10, 88, 92), p(3, 50, 60))] + ARR_CURTO,
+       "Dois blocos de 10 min a sweet spot. Introdução ao sweet spot.")
+treino("tempo_3x14_curto", "Tempo 3 × 14 min (60 min)", "tempo", 0,
+       [{"min": 8, "pct": [45, 75], "rampa": "sobe"}, rep(3, p(14, 76, 85), p(1.5, 50, 60))] + ARR_CURTO,
+       "Três blocos de 14 min a tempo com recuperações curtas, numa hora.")
 
 cab = ("# Biblioteca ORIGINAL da Wattwise (D-053) — gerada por core/tools/gerar_biblioteca.py.\n"
        "# Estruturas genéricas de treino escritas de raiz; nada copiado de outras plataformas (D-052).\n"

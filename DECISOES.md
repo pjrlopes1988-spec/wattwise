@@ -310,3 +310,21 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - O Paulo pediu treinos "semelhantes" ao catálogo do TrainerRoad. Não se usou esse catálogo como modelo (seria cópia indireta; D-052) — os ficheiros já tinham sido apagados. Em vez disso, a biblioteca original foi alargada a partir de formatos clássicos de treino (15/15, 30/30, 40/20, 20/10, pirâmides, sobe e desce, progressivos, sprints, força em cadência baixa, Z2 longos com variações).
 - Por tipo: recuperação 4, resistência 10, tempo 11, sweet spot 14, limiar 14, VO2máx 15, anaeróbio 9, força 12, testes 2. Níveis 1–5 cobertos em quase todos os tipos.
 - **Estado:** Provisória — o Paulo revê em `docs/biblioteca.md`.
+
+### D-055 — Regra única de dificuldade (todos os treinos, originais e importados)
+- Minutos de trabalho a partir do início da zona do tipo (tempo 76%, sweet spot 88%, limiar 93%, VO2máx 105%, anaeróbio 121%) × fator de densidade = √(recuperação normal do tipo ÷ recuperação típica entre esforços), entre 1 e 1,5 (sem recuperação: 1,5). Recuperação "típica" = mediana dos descansos entre esforços ÷ mediana dos esforços (as pausas entre séries não diluem recuperações curtas como 40/20).
+- Escalas (minutos efetivos que separam os níveis 1|2|3|4|5): tempo e sweet spot 20/30/40/55; limiar 15/24/32/40; VO2máx 10/15/20/24; anaeróbio 2/4/6/8. Força: +1 nível (cadência baixa) — a força começa no nível 2. Resistência: pela duração (1 h 15, 2 h 15, 3 h 30, 4 h 30) e +1 se tiver blocos de tempo/sweet spot.
+- O conversor ZWO usa a mesma regra; os 10 treinos do Paulo foram reclassificados.
+- **Estado:** Provisória (o Paulo valida as escalas).
+
+### D-056 — Biblioteca completa e inspeção automática
+- 118 treinos originais + 10 do Paulo = **128**. Tempo, sweet spot, limiar, VO2máx e anaeróbio: ≥ 2 treinos em cada nível 1–5 e uma versão até 60 min nos níveis 1–4 (dias de semana). Força ≥ 2 nos níveis 2–5; resistência ≥ 2 nos níveis 1–5.
+- Descrições: o quê + sensação esperada (esforço percebido) + para quê.
+- Teste de inspeção (`core/tests/test_biblioteca.py`) sobre todos os treinos: duração e carga/hora plausíveis, aquecimento ≥ 4 min e arrefecimento, trabalho na zona do tipo, recuperação entre esforços intensos, dificuldade pela regra única, descrição, nome único, nenhuma referência a outras plataformas, cobertura por nível.
+- Correções apanhadas pela inspeção: "sobe e desce" com a parte de baixo em sweet spot (corrigido para 95–97%); versão curta de tempo com 61 min.
+- **Estado:** Provisória — o Paulo revê `docs/biblioteca.md`.
+
+### D-057 — Exportação ZWO, ERG e MRC
+- `ww.exportar`: ZWO (% do FTP), ERG (watts, com o FTP do atleta) e MRC (% do FTP). Nos ERG/MRC, alvos em intervalo usam o meio do intervalo. Teste de ida e volta para todos os treinos (ZWO exportado e lido de volta sem diferenças; ERG com potência média e duração certas).
+- Exportação para .FIT de treino e envio automático para o dispositivo: fases posteriores (spec 3).
+- **Estado:** Provisória.

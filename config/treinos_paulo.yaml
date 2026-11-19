@@ -3,7 +3,7 @@
 - id: paulo_express_sweet_spot_25_continuo
   nome: Express Sweet Spot 25 Contínuo
   tipo: sweetspot
-  dificuldade: 1
+  dificuldade: 2
   origem: paulo
   descricao: Um bloco contínuo de 15 minutos a sweet spot, para quando só tens 25 minutos.
   passos:
@@ -204,7 +204,7 @@
 - id: paulo_arranques_de_forca_45
   nome: Arranques de Força 45
   tipo: forca
-  dificuldade: 1
+  dificuldade: 2
   origem: paulo
   descricao: 'Oito arranques de 15 s a partir de cadência muito baixa (como arrancar numa rampa parado): muita força por pedalada,
     150% do FTP, sentado. Recuperação longa.'
@@ -347,7 +347,7 @@
 - id: paulo_contraste_de_cadencia_60
   nome: Contraste de Cadência 60
   tipo: forca
-  dificuldade: 3
+  dificuldade: 4
   origem: paulo
   descricao: 'Seis blocos de 6 min a sweet spot: 3 min a 60 rpm e 3 min a 100 rpm, à mesma potência. Melhora a eficiência
     e a capacidade de mudar de estilo na subida.'
@@ -497,7 +497,7 @@
 - id: paulo_forca_longa_3x12
   nome: Força Longa 3x12
   tipo: forca
-  dificuldade: 3
+  dificuldade: 4
   origem: paulo
   descricao: Três blocos de 12 min a 80% com cadência muito baixa (50-55 rpm). Treino de base para ciclistas de BTT e gravel
     com muitas subidas inclinadas.
@@ -563,7 +563,7 @@
 - id: paulo_forca_sweet_spot_5x6
   nome: Força Sweet Spot 5x6
   tipo: forca
-  dificuldade: 2
+  dificuldade: 3
   origem: paulo
   descricao: Cinco intervalos de 6 min a sweet spot (90%) a 60 rpm. Força aplicada em todo o círculo da pedalada.
   passos:
@@ -656,7 +656,7 @@
 - id: paulo_forca_tempo_4x8
   nome: Força Tempo 4x8
   tipo: forca
-  dificuldade: 3
+  dificuldade: 4
   origem: paulo
   descricao: Quatro intervalos de 8 min a Tempo alto (85%) com cadência baixa (55-60 rpm), sentado e com o tronco estável.
     Desenvolve força-resistência para subidas. Se sentires os joelhos, sobe para 65 rpm.
@@ -736,7 +736,7 @@
 - id: paulo_torque_ao_limiar_10x1
   nome: Torque ao Limiar 10x1
   tipo: forca
-  dificuldade: 1
+  dificuldade: 2
   origem: paulo
   descricao: Dez esforços de 1 min ao limiar (100%) a 50 rpm, com 1 min de recuperação. Estímulo neuromuscular de força específica.
   passos:

@@ -7,3 +7,4 @@ __pycache__/
 
 # Ficheiros FIT reais (dados pessoais) ficam fora do repositório até decisão do Paulo (D-036)
 core/tests/fixtures/fit/*.fit
+Wattwise_biblioteca_ZWO.zip

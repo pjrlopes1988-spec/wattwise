@@ -24,6 +24,10 @@ z2_2h: Tâmega
 z2_2h30_sprints: Cávado
 z2_cadencia_baixa: Côa
 z2_longo_5h: Ebro
+z2_75: Paiva
+z2_3h: Tormes
+z2_2h_tempo: Sil
+z2_2h45: Esla
 
 # --- Serras (tempo)
 tempo_2x15: Sintra
@@ -37,6 +41,13 @@ paulo_express_tempo_30: Montesinho
 tempo_4x10: Bussaco
 tempo_progressivo_3x15: Malcata
 tempo_45: Moncayo
+tempo_2x10_curto: Arada
+tempo_3x8_curto: Freita
+tempo_2x18_curto: Candeeiros
+tempo_40_curto: Aire
+tempo_3x13_curto: Sicó
+tempo_3x14_curto: Estrela
+tempo_3x25: Picos de Europa
 
 # --- Serras (sweet spot)
 sweetspot_2x12: Lousã
@@ -53,6 +64,13 @@ sweetspot_5x8: Ossa
 sweetspot_com_picos: Montseny
 sweetspot_progressivo_2x20: Grazalema
 sweetspot_3x20: Peña de Francia
+sweetspot_2x10_curto: Bornes
+sweetspot_2x14_curto: Gardunha
+sweetspot_3x11_curto: Larouco
+sweetspot_2x20_curto: Montemuro
+sweetspot_3x13_curto: Javalambre
+sweetspot_45_curto: Aitana
+sweetspot_2x22: Urbión
 
 # --- Subidas míticas (limiar)
 limiar_3x8: Fóia
@@ -69,6 +87,12 @@ limiar_2x12: Lagoa Comprida
 limiar_3x15: Ézaro
 limiar_sobe_desce_2x12: La Camperona
 limiar_30: Valdelinares
+limiar_3x4_curto: Ancares
+limiar_3x5_curto: El Fito
+limiar_3x9_curto: Velefique
+limiar_2x15_curto: Calar Alto
+limiar_3x11_curto: Covão d'Ametade
+limiar_4x9_curto: La Farrapona
 
 # --- Ventos (VO2máx)
 vo2_ativacao: Brisa
@@ -86,6 +110,10 @@ vo2_4x4: Sotavento
 vo2_15_15: Gregal
 vo2_arranque_5x4: Mestral
 vo2_3x6: Siroco
+vo2_4x5_curto: Zéfiro
+vo2_5x5_curto: Alísio
+vo2_4x6: Llebeig
+vo2_2x8x2: Rajada
 
 # --- Ventos (anaeróbio)
 sprints_6x15s: Garbí
@@ -97,6 +125,9 @@ anaerobio_6x1: Migjorn
 anaerobio_10x30s: Bochorno
 anaerobio_20_10: Matacabras
 anaerobio_5x2: Galerna
+anaerobio_6x30s_curto: Ventisca
+anaerobio_4x1: Remoinho
+anaerobio_8x1: Furacão
 
 # --- Castelos (força)
 forca_5x5: Marvão
@@ -111,6 +142,12 @@ paulo_arranques_de_forca_45: Almourol
 forca_arranques_8x20s: Belver
 forca_tempo_2x20: Sabugal
 forca_limiar_4x5: Peñíscola
+forca_arranques_5x15s: Penedono
+forca_z3_3x8: Trancoso
+forca_ss_4x8_curto: Almeida
+forca_limiar_5x6: Coca
+forca_limiar_6x6: Cardona
+forca_ss_3x15: La Mota
 
 # --- Faróis (testes)
 teste_20min: Sagres
