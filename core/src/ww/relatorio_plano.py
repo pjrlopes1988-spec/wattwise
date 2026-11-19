@@ -83,7 +83,7 @@ def gerar_relatorio(cenarios: dict[str, Atleta], hoje, inicio, cfg: Config) -> s
         a = completar(a0, hoje, cfg)
         p = gerar(a, lib, cfg, inicio=inicio)
         from ww.perfil import semanas_de_carga
-        ciclo_txt = f"{semanas_de_carga(a, hoje, cfg)}+1" + (" (automático)" if a.ciclo == "auto" else " (escolha do atleta)")
+        ciclo_txt = f"{semanas_de_carga(a, hoje, cfg)}+1" + (" (escolha do atleta)" if a.ciclo else " (sugerido; o atleta pode mudar)")
         semanas_prova = tuple(s.numero for s in p.semanas if any(t.papel == "prova" for t in s.treinos))
         detalhe = (1, 5) + semanas_prova
         out += ["", "---", "", f"## {nome.replace('_', ' ').capitalize()}", ""] + _perfil_md(a, a.idade(hoje))

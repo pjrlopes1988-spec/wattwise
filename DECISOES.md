@@ -362,8 +362,7 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Estado:** Provisória (o Paulo valida as regras de cada prioridade).
 
 ### D-061 — Ciclos 3+1 ou 2+1, à escolha do atleta (pedido do Paulo, 19/11/2026)
-- Pergunta no perfil: "Como queres organizar os ciclos?" — **Automático** (recomendado), **3 semanas de carga + 1 de recuperação**, **2 + 1**.
-- Automático: 2+1 a partir dos 50 anos (recuperação mais lenta), 3+1 abaixo (`perfil.idade_ciclo_2_1`, a validar).
+- Pergunta no perfil: "Como queres organizar os ciclos?" — **3 semanas de carga + 1 de recuperação** ou **2 + 1**. **O atleta escolhe sempre**; a opção adequada aparece já selecionada como sugestão: 2+1 a partir dos 50 anos (recuperação mais lenta), 3+1 abaixo (`perfil.idade_ciclo_2_1`, a validar). Sem escolha, usa-se a sugestão. (Atualizado a pedido do Paulo: não há opção "automático".)
 - 4+1 não é oferecido: a spec 7.3 obriga a recuperação pelo menos a cada 4 semanas.
 - Aplica-se a todas as fases e a todos os ciclos entre provas A. Na Fase 3, o motor poderá antecipar uma recuperação por sinais de cansaço/VFC, qualquer que seja o ciclo.
 - **Estado:** Aprovada (proposta do Paulo); idade do automático provisória.

@@ -332,7 +332,7 @@ def gerar(
     teste = precisa_de_teste(atleta)
     registo: list[str] = [
         f"nível usado nas regras: {nivel}" + (" (menor de idade)" if nivel != atleta.nivel else ""),
-        f"ciclos {carga_por_ciclo}+1" + (" (automático pela idade)" if atleta.ciclo == "auto" else " (escolha do atleta)"),
+        f"ciclos {carga_por_ciclo}+1" + (" (escolha do atleta)" if atleta.ciclo else " (sugestão pela idade)"),
         f"{n_sem} semanas, fases: {', '.join(seq)}",
     ]
     if teste:

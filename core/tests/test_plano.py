@@ -327,10 +327,13 @@ def test_ciclo_escolhido_pelo_atleta(cfg):
         assert _max_seguidas(p) == esperado, ciclo
 
 
-def test_ciclo_automatico_pela_idade(cfg):
-    assert semanas_de_carga(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg) == 3          # 46 anos
-    assert semanas_de_carga(CENARIOS["pouca_disponibilidade"], HOJE, cfg) == 2          # 50 anos
+def test_ciclo_sugerido_pela_idade_mas_o_atleta_escolhe(cfg):
+    from ww.perfil import ciclo_sugerido
+    assert ciclo_sugerido(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg) == "3+1"        # 46 anos
+    assert ciclo_sugerido(CENARIOS["pouca_disponibilidade"], HOJE, cfg) == "2+1"        # 50 anos
+    assert semanas_de_carga(CENARIOS["pouca_disponibilidade"], HOJE, cfg) == 2          # ainda não escolheu
     assert semanas_de_carga(_replace(CENARIOS["pouca_disponibilidade"], ciclo="3+1"), HOJE, cfg) == 3
+    assert semanas_de_carga(_replace(CENARIOS["avancado_com_tudo_ftp"], ciclo="2+1"), HOJE, cfg) == 2
 
 
 def test_fases_2_mais_1_a_mao(cfg):

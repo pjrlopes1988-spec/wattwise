@@ -15,7 +15,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Disponibilidade: ter 60 min, qui 60 min, sáb 120 min; dia longo: sábado
 - Equipamento: cinta FC
 - FTP 107 (estimado) W · FC limiar 165 (estimado) · FC máx. 183 (estimado) · FC repouso 60 (estimado)
-- Ciclos: 3+1 (automático)
+- Ciclos: 3+1 (sugerido; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -65,7 +65,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Disponibilidade: seg 60 min, ter 90 min, qui 90 min, sáb 180 min, dom 240 min; dia longo: domingo
 - Equipamento: potenciómetro, cinta FC
 - FTP 250 W · FC limiar 165 · FC máx. 185 · FC repouso 50
-- Ciclos: 3+1 (automático)
+- Ciclos: 3+1 (sugerido; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -143,7 +143,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Disponibilidade: seg 90 min, ter 90 min, qua 60 min, qui 90 min, sáb 210 min, dom 180 min; dia longo: sábado
 - Equipamento: potenciómetro, cinta FC, rolo inteligente
 - FTP 310 W · FC limiar 170 · FC máx. 188 · FC repouso 45
-- Ciclos: 3+1 (automático)
+- Ciclos: 3+1 (sugerido; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -225,7 +225,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Disponibilidade: seg 90 min, ter 120 min, qua 60 min, qui 120 min, sex 60 min, sáb 180 min, dom 150 min; dia longo: domingo
 - Equipamento: potenciómetro, cinta FC
 - FTP 240 W · FC limiar 169 (estimado) · FC máx. 188 (estimado) · FC repouso 60 (estimado)
-- Ciclos: 3+1 (automático)
+- Ciclos: 3+1 (sugerido; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -301,7 +301,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Disponibilidade: qua 45 min, sáb 90 min
 - Equipamento: potenciómetro
 - FTP 230 W · FC limiar 156 (estimado) · FC máx. 173 (estimado) · FC repouso 60 (estimado)
-- Ciclos: 2+1 (automático)
+- Ciclos: 2+1 (sugerido; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -346,7 +346,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro, cinta FC
 - FTP 290 W · FC limiar 168 · FC máx. 186 · FC repouso 46
 - Provas: **D** Volta do clube (13/12/2026, 2 h); **C** Clássica de inverno (17/01/2027, 2.5 h); **B** Granfondo de preparação (14/02/2027, 3 h); **A** Granfondo da Serra (14/03/2027, 4 h); **B** Contrarrelógio regional (11/04/2027, 1 h); **A** Volta ao Alentejo (etapa) (23/05/2027, 3.5 h)
-- Ciclos: 3+1 (automático)
+- Ciclos: 3+1 (sugerido; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -503,7 +503,7 @@ Gerado com a configuração `f483dcb5166d` e a biblioteca provisória de 240 tre
 - Disponibilidade: ter 75 min, qui 75 min, sáb 150 min, dom 120 min; dia longo: sábado
 - Equipamento: potenciómetro
 - FTP 190 W · FC limiar 178 (estimado) · FC máx. 198 (estimado) · FC repouso 60 (estimado)
-- Ciclos: 3+1 (automático)
+- Ciclos: 3+1 (sugerido; o atleta pode mudar)
 - Regras de treino usadas: **iniciante** (menor de idade)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
