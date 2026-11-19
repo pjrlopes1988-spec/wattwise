@@ -192,3 +192,23 @@ provas:
   duracao_por_defeito_h: 2.0
   # intensidade média estimada pela duração da prova (h → IF); carga = h × IF² × 100
   intensidade_por_duracao: [[1.0, 0.95], [2.0, 0.88], [3.0, 0.82], [5.0, 0.76], [24.0, 0.70]]
+
+# ------------------------------------------------------------------ Fase 3: motor de adaptação diária
+motor:
+  versao: "1.0"
+  # Prontidão (spec 7.4) — cada sinal fora do normal conta 1; alguns são "fortes" (vermelho direto) (D-065)
+  vfc_dias_abaixo_vermelho: 3        # VFC (média 7 d) abaixo da faixa N dias seguidos → vermelho
+  frescura_pct_sinal: -30            # frescura abaixo disto (zona de risco) → sinal
+  frescura_pct_vermelho: -45         # "muito negativa" → vermelho
+  questionario_limiar_mau: 4         # cansaço, dores musculares, stress (1–5): ≥ isto → sinal
+  humor_limiar_mau: 2                # humor/motivação (1–5): ≤ isto → sinal
+  sinais_para_vermelho: 2            # 2 ou mais sinais → vermelho
+  # Ações
+  amarelo_fator_carga: 0.75          # amarelo: versão mais fácil com até 75% da carga
+  amarelo_fator_resistencia: 0.75    # amarelo em dia de resistência: 75% da duração
+  vermelho_recuperacao_min: 40       # vermelho: recuperação ativa (ou descanso)
+  doenca_febre_descanso: true        # doença com febre → descanso; sem febre → recuperação
+  alarmes: [dor_peito, desmaio, palpitacoes, falta_ar_anormal]   # → bloqueado, procurar médico
+  # Semana (spec 7.4)
+  excesso_carga_7d_pct: 15           # carga real dos últimos 7 dias acima do planeado → encurtar os próximos
+  alta_intensidade_if_feito: 0.85    # atividade feita com intensidade ≥ isto conta como alta intensidade

@@ -215,6 +215,23 @@ class Provas(_Base):
         return v
 
 
+class Motor(_Base):
+    versao: str
+    vfc_dias_abaixo_vermelho: int = Field(ge=1)
+    frescura_pct_sinal: float
+    frescura_pct_vermelho: float
+    questionario_limiar_mau: int = Field(ge=1, le=5)
+    humor_limiar_mau: int = Field(ge=1, le=5)
+    sinais_para_vermelho: int = Field(ge=1)
+    amarelo_fator_carga: float = Field(gt=0, lt=1)
+    amarelo_fator_resistencia: float = Field(gt=0, lt=1)
+    vermelho_recuperacao_min: int = Field(ge=20)
+    doenca_febre_descanso: bool
+    alarmes: list[str]
+    excesso_carga_7d_pct: float = Field(gt=0)
+    alta_intensidade_if_feito: float = Field(gt=0.5, lt=1.2)
+
+
 class Qualidade(_Base):
     potencia_maxima_plausivel_w: float = Field(gt=0)
     fc_minima_plausivel: float = Field(gt=0)
@@ -261,6 +278,7 @@ class Config(_Base):
     plano: Plano
     indoor: Indoor
     provas: Provas
+    motor: Motor
     qualidade: Qualidade
     versao: str = ""
 
