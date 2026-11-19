@@ -171,6 +171,16 @@ plano:
   arredondar_min: 15
   fracao_carga_dia_longo: 0.4           # parte da carga de resistência que vai para o dia longo
   duracao_minima_resistencia_min: 60    # em semanas de carga: menos treinos de resistência, mas de pelo menos 60 min (D-051)
+  # Preferência do atleta: 1 (menos agressivo) a 5 (mais agressivo); 3 = comportamento normal (D-069).
+  # Nunca ultrapassa a segurança: a subida máxima do nível, os dias seguidos e o motor diário mantêm-se.
+  agressividade:
+    1: {rampa_fator: 0.70, dificuldade_delta: -1, sessoes_chave_delta: -1, fator_recuperacao: 0.55}
+    2: {rampa_fator: 0.85, dificuldade_delta: -1, sessoes_chave_delta: 0, fator_recuperacao: 0.60}
+    3: {rampa_fator: 1.00, dificuldade_delta: 0, sessoes_chave_delta: 0, fator_recuperacao: 0.60}
+    4: {rampa_fator: 1.00, dificuldade_delta: 1, sessoes_chave_delta: 0, fator_recuperacao: 0.65}
+    5: {rampa_fator: 1.00, dificuldade_delta: 1, sessoes_chave_delta: 1, fator_recuperacao: 0.70}
+  sessoes_chave_max: 3
+  agressividade_max_menores: 3
 
 indoor:
   # Bibliotecas separadas indoor/outdoor; o atleta escolhe onde treina (D-058)

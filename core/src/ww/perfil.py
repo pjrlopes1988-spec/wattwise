@@ -122,6 +122,7 @@ class Atleta:
     onde_treina: OndeTreina | None = None
     provas: tuple[Prova, ...] = ()     # calendário de provas A–D (D-060)
     ciclo: Ciclo | None = None         # escolha do atleta; None = ainda não escolheu → sugestão (D-061)
+    agressividade: int | None = None   # 1 (menos agressivo) a 5 (mais agressivo); None = sugestão 3 (D-069)
 
     def idade(self, em: date) -> int:
         d = self.data_nascimento
@@ -176,6 +177,8 @@ def validar(a: Atleta, hoje: date, cfg: Config) -> None:
         erros.append("duas provas (ou etapas) no mesmo dia")
     if a.ciclo is not None and a.ciclo not in ("3+1", "2+1"):
         erros.append("ciclo tem de ser 3+1 ou 2+1")
+    if a.agressividade is not None and a.agressividade not in (1, 2, 3, 4, 5):
+        erros.append("intensidade preferida tem de ser de 1 a 5")
     fl, fm, fr = a.fc_limiar, a.fc_max, a.fc_repouso
     if fl and fm and fl.valor >= fm.valor:
         erros.append("FC limiar tem de ser inferior à FC máxima")
@@ -253,3 +256,11 @@ def semanas_de_carga(a: Atleta, hoje: date, cfg: Config) -> int:
     """Semanas de carga antes de cada recuperação: a escolha do atleta (ou a sugestão, se ainda
     não escolheu)."""
     return 2 if (a.ciclo or ciclo_sugerido(a, hoje, cfg)) == "2+1" else 3
+
+
+def agressividade(a: Atleta, hoje: date, cfg: Config) -> int:
+    """Intensidade preferida (1–5): a escolha do atleta ou a sugestão 3; menores limitados (D-069)."""
+    v = a.agressividade if a.agressividade is not None else 3
+    if a.idade(hoje) < cfg.perfil.idade_adulto:
+        v = min(v, cfg.plano.agressividade_max_menores)
+    return v

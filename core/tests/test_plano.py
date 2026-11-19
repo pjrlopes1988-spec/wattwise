@@ -416,3 +416,52 @@ def test_verificar_prontidao_depois_da_recuperacao_de_A(epoca, cfg):
     # 1.ª A (14/03, semana 16) → recuperação na 17 → verificar na 18; a 2.ª A acaba o plano
     assert [s.numero for s in marcadas] == [18]
     assert p.semanas[16].fase == "recuperacao"
+
+
+# ------------------------------------------------------------------ intensidade preferida 1–5 (D-069)
+def _plano_agr(cfg, n, cenario="avancado_com_tudo_ftp"):
+    a = completar(_replace(CENARIOS[cenario], agressividade=n), HOJE, cfg)
+    return a, gerar(a, LIB, cfg, inicio=INICIO)
+
+
+def test_nivel_3_e_igual_a_sem_escolha(cfg):
+    a = completar(CENARIOS["avancado_com_tudo_ftp"], HOJE, cfg)
+    assert gerar(a, LIB, cfg, inicio=INICIO).semanas == _plano_agr(cfg, 3)[1].semanas
+
+
+def test_mais_agressivo_mais_carga_e_dificuldade(cfg):
+    cargas, difs, chaves = [], [], []
+    for n in (1, 2, 3, 4, 5):
+        _, p = _plano_agr(cfg, n)
+        cargas.append(sum(s.carga_planeada for s in p.semanas))
+        ks = [t for t in p.treinos() if t.papel == "sessao_chave"]
+        difs.append(sum(t.treino.dificuldade for t in ks) / len(ks))
+        chaves.append(len(ks))
+    assert cargas[0] < cargas[1] < cargas[2], cargas
+    assert difs[0] < difs[2] < difs[4], difs
+    assert chaves[4] > chaves[2] > chaves[0], chaves
+
+
+@pytest.mark.parametrize("n", [1, 2, 3, 4, 5])
+def test_preferencia_nunca_ultrapassa_a_seguranca(cfg, n):
+    from ww.plano import _excesso
+    a, p = _plano_agr(cfg, n)
+    maximo = cfg.plano.rampa_condicao_semana["avancado"]
+    for s in p.semanas:
+        assert s.subida_condicao <= maximo * cfg.plano.agressividade[n].rampa_fator + 1e-6
+        assert sum(t.papel == "sessao_chave" for t in s.treinos) <= cfg.plano.sessoes_chave_max
+    altos = {t.data for t in p.treinos() if t.alta_intensidade}
+    assert _excesso(altos, cfg.plano.max_dias_alta_intensidade_seguidos) == 0
+
+
+def test_menores_limitados_a_3(cfg):
+    from ww.perfil import agressividade
+    j = _replace(CENARIOS["juvenil_14_anos"], agressividade=5)
+    assert agressividade(j, HOJE, cfg) == 3
+    assert _plano_agr(cfg, 5, "juvenil_14_anos")[1].semanas == _plano_agr(cfg, 3, "juvenil_14_anos")[1].semanas
+
+
+def test_validacao_intensidade(cfg):
+    for n in (0, 6):
+        with pytest.raises(PerfilInvalido, match="intensidade"):
+            validar(_replace(CENARIOS["avancado_com_tudo_ftp"], agressividade=n), HOJE, cfg)

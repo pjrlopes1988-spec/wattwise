@@ -1,6 +1,6 @@
 # Wattwise — Planos dos cenários de teste (Fase 2)
 
-Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
+Gerado com a configuração `55c30bee202b` e a biblioteca provisória de 240 treinos. Atletas **fictícios**. Para o Paulo validar como treinador (spec 10.3).
 
 **Como ler:** *Carga alvo* = a necessária para subir a Condição o máximo permitido para o nível; *Planeada* = o que cabe na disponibilidade; *Subida* = variação da Condição na semana (limite: iniciante 5, intermedio 6, avancado 7, competicao 8). Em todos os cenários, verificado por testes automáticos: disponibilidade respeitada, dias de descanso mínimos, nunca mais de 2 dias seguidos de alta intensidade, recuperação pelo menos a cada 4 semanas, subida da Condição dentro do limite em quaisquer 7 dias seguidos.
 
@@ -16,6 +16,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - Equipamento: cinta FC
 - FTP 107 (estimado) W · FC limiar 165 (estimado) · FC máx. 183 (estimado) · FC repouso 60 (estimado)
 - Ciclos: 3+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -66,6 +67,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro, cinta FC
 - FTP 250 W · FC limiar 165 · FC máx. 185 · FC repouso 50
 - Ciclos: 3+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -144,6 +146,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro, cinta FC, rolo inteligente
 - FTP 310 W · FC limiar 170 · FC máx. 188 · FC repouso 45
 - Ciclos: 3+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -226,6 +229,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro, cinta FC
 - FTP 240 W · FC limiar 169 (estimado) · FC máx. 188 (estimado) · FC repouso 60 (estimado)
 - Ciclos: 3+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -302,6 +306,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro
 - FTP 230 W · FC limiar 156 (estimado) · FC máx. 173 (estimado) · FC repouso 60 (estimado)
 - Ciclos: 2+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -347,6 +352,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - FTP 290 W · FC limiar 168 · FC máx. 186 · FC repouso 46
 - Provas: **D** Volta do clube (13/12/2026, 2 h); **C** Clássica de inverno (17/01/2027, 2.5 h); **B** Granfondo de preparação (14/02/2027, 3 h); **A** Granfondo da Serra (14/03/2027, 4 h); **B** Contrarrelógio regional (11/04/2027, 1 h); **A** Volta ao Alentejo — 4 etapas (20/05 CR 15 km 0.5 h, 21/05 plana 3.5 h, 22/05 montanha 4 h, 24/05 final 3 h)
 - Ciclos: 3+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |
 |---|---|---|---|---|---|---|---|---|
@@ -508,6 +514,7 @@ Gerado com a configuração `e1ecba23eeaa` e a biblioteca provisória de 240 tre
 - Equipamento: potenciómetro
 - FTP 190 W · FC limiar 178 (estimado) · FC máx. 198 (estimado) · FC repouso 60 (estimado)
 - Ciclos: 3+1 (sugerido; o atleta pode mudar)
+- Intensidade preferida: 3/5 (sugerida; o atleta pode mudar)
 - Regras de treino usadas: **iniciante** (menor de idade)
 
 | Sem. | Início | Fase | Carga alvo | Planeada | Condição | Subida | Treinos | Notas |

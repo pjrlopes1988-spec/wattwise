@@ -16,13 +16,16 @@ CASOS = {
     "sem_vfc": ("pouca_disponibilidade", Comportamento(semente=15, com_vfc=False, responde_questionario=0.3)),
     "epoca_com_provas_e_etapas": ("epoca_provas_abcd", Comportamento(semente=16, excesso_prob=0.25, volta_grupo_prob=0.4)),
     "juvenil": ("juvenil_14_anos", Comportamento(semente=17, doencas=((90, 4, 0),))),
+    "mais_agressivo_5": ("avancado_com_tudo_ftp", Comportamento(semente=18, excesso_prob=0.2, volta_grupo_prob=0.3)),
 }
+AGRESSIVIDADE = {"mais_agressivo_5": 5}
 
 
 @pytest.fixture(scope="module", params=list(CASOS))
 def sim(request, cfg):
+    from dataclasses import replace
     cenario, comp = CASOS[request.param]
-    a = completar(CENARIOS[cenario], HOJE, cfg)
+    a = completar(replace(CENARIOS[cenario], agressividade=AGRESSIVIDADE.get(request.param)), HOJE, cfg)
     return request.param, comp, simular(a, LIB, cfg, inicio=INICIO, dias=182, comportamento=comp)
 
 

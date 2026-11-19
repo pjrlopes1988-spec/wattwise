@@ -161,6 +161,13 @@ class SessoesChave(_Base):
     afinacao: PorNivel
 
 
+class Agressividade(_Base):
+    rampa_fator: float = Field(gt=0, le=1.0)      # nunca acima do máximo do nível (segurança)
+    dificuldade_delta: int = Field(ge=-2, le=2)
+    sessoes_chave_delta: int = Field(ge=-2, le=2)
+    fator_recuperacao: float = Field(gt=0, lt=1)
+
+
 class Plano(_Base):
     rampa_condicao_semana: PorNivel
     semanas_carga_por_ciclo: int = Field(ge=1, le=3)   # spec 7.3: recuperação pelo menos a cada 4 semanas
@@ -186,6 +193,16 @@ class Plano(_Base):
     arredondar_min: int = Field(gt=0)
     fracao_carga_dia_longo: float = Field(gt=0, lt=1)
     duracao_minima_resistencia_min: int = Field(gt=0)
+    agressividade: dict[int, Agressividade]
+    sessoes_chave_max: int = Field(ge=1, le=4)
+    agressividade_max_menores: int = Field(ge=1, le=5)
+
+    @field_validator("agressividade")
+    @classmethod
+    def _cinco_niveis(cls, v: dict) -> dict:
+        if set(v) != {1, 2, 3, 4, 5}:
+            raise ValueError("agressividade: é preciso definir os níveis 1 a 5")
+        return v
 
     _v = field_validator("rampa_condicao_semana", "dificuldade_max", "dias_descanso_min")(_todos_os_niveis)
 

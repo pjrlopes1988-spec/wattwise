@@ -26,8 +26,8 @@ from typing import Literal
 
 from ww.config import Config
 from ww.metrics.load import fator
-from ww.perfil import (Ambiente, Atleta, Etapa, Prova, ambientes, calendario_provas, nivel_regras, precisa_de_teste,
-                       semanas_de_carga, tem_potencia)
+from ww.perfil import (Ambiente, Atleta, Etapa, Prova, agressividade, ambientes, calendario_provas, nivel_regras,
+                       precisa_de_teste, semanas_de_carga, tem_potencia)
 from ww.treinos import Passo, Treino, biblioteca
 
 Fase = Literal["base", "construcao", "especifico", "recuperacao", "afinacao"]
@@ -332,7 +332,9 @@ def gerar(
     f_c = fator(cfg.carga_forma.constante_condicao_dias, cfg.carga_forma.fator_media)
     f_a = fator(cfg.carga_forma.constante_fadiga_dias, cfg.carga_forma.fator_media)
     k7 = 1 - (1 - f_c) ** 7          # fração da diferença (carga − condição) absorvida numa semana
-    rampa = c.rampa_condicao_semana[nivel]
+    agr_n = agressividade(atleta, inicio, cfg)
+    agr = c.agressividade[agr_n]
+    rampa = c.rampa_condicao_semana[nivel] * agr.rampa_fator      # nunca acima do máximo do nível
     dif_max = int(c.dificuldade_max[nivel])
     libs = {"outdoor": biblioteca(lib, "outdoor"), "indoor": biblioteca(lib, "indoor")}
 
@@ -366,6 +368,7 @@ def gerar(
     registo: list[str] = [
         f"nível usado nas regras: {nivel}" + (" (menor de idade)" if nivel != atleta.nivel else ""),
         f"ciclos {carga_por_ciclo}+1" + (" (escolha do atleta)" if atleta.ciclo else " (sugestão pela idade)"),
+        f"intensidade preferida {agr_n}/5" + ("" if atleta.agressividade is not None else " (sugestão)"),
         f"{n_sem} semanas, fases: {', '.join(seq)}",
     ]
     if teste:
@@ -399,7 +402,7 @@ def gerar(
                 notas.append("mini-afinação para prova B")
         else:
             ref = ultima_carga if ultima_carga is not None else 7 * (ctl + rampa / k7)
-            alvo = ref * (c.fator_semana_recuperacao if fase == "recuperacao" else c.fator_afinacao)
+            alvo = ref * (agr.fator_recuperacao if fase == "recuperacao" else c.fator_afinacao)
 
         # --- dias disponíveis nesta semana
         datas = [seg + timedelta(days=d) for d in range(7)]
@@ -441,6 +444,8 @@ def gerar(
 
             # --- sessões-chave
             n_chave = int(getattr(c.sessoes_chave, fase)[nivel])
+            if fase in FASES_CARGA:      # preferência do atleta (D-069), dentro do máximo
+                n_chave = max(0, min(c.sessoes_chave_max, n_chave + agr.sessoes_chave_delta))
             # provas B, C e D contam como sessão-chave dessa semana
             n_chave = max(0, n_chave - sum(cp.conta_como_sessao_chave[p.prioridade] for p in provas_sem
                                            if p.prioridade != "A"))
@@ -480,7 +485,8 @@ def gerar(
                     tipo = tipos[(j + i) % len(tipos)] if tipos else "resistencia"
                     papel = "sessao_chave"
                 # progressão dentro da fase, a começar 2 níveis abaixo do máximo do atleta
-                dif_alvo = min(dif_max, max(1, dif_max - 2) + semana_na_fase - 1) if fase != "afinacao" else 1
+                dif_alvo = min(dif_max, max(1, dif_max - 2 + agr.dificuldade_delta) + semana_na_fase - 1) \
+                    if fase != "afinacao" else 1
                 # o teste não depende do nível (é sempre o mesmo protocolo)
                 t = _escolher_treino(libs[amb(d)], tipo, disp[d], 5 if tipo == "teste" else dif_alvo,
                                      5 if tipo == "teste" else dif_max, tem_pot(d), mais_leve=fase == "afinacao")

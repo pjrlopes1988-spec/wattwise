@@ -45,7 +45,8 @@ NOMES_SINAIS = {
 def main() -> int:
     sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tests"))
     from cenarios import CENARIOS, HOJE, INICIO  # type: ignore[import-not-found]
-    from test_simulacao import CASOS  # type: ignore[import-not-found]
+    from test_simulacao import AGRESSIVIDADE, CASOS  # type: ignore[import-not-found]
+    from dataclasses import replace
 
     cfg = carregar()
     lib = carregar_lib()
@@ -63,7 +64,7 @@ def main() -> int:
            "|---|---|---|---|---|---|---|---|"]
     detalhes = []
     for nome, (cenario, comp) in CASOS.items():
-        a = completar(CENARIOS[cenario], HOJE, cfg)
+        a = completar(replace(CENARIOS[cenario], agressividade=AGRESSIVIDADE.get(nome)), HOJE, cfg)
         r = simular(a, lib, cfg, inicio=INICIO, dias=182, comportamento=comp)
         e = r.contagem_estados()
         n = len(r.dias)

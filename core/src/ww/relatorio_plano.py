@@ -94,6 +94,9 @@ def gerar_relatorio(cenarios: dict[str, Atleta], hoje, inicio, cfg: Config) -> s
         detalhe = (1, 5) + semanas_prova
         out += ["", "---", "", f"## {nome.replace('_', ' ').capitalize()}", ""] + _perfil_md(a, a.idade(hoje))
         out.append(f"- Ciclos: {ciclo_txt}")
+        from ww.perfil import agressividade
+        out.append(f"- Intensidade preferida: {agressividade(a, hoje, cfg)}/5"
+                   + (" (escolha do atleta)" if a.agressividade is not None else " (sugerida; o atleta pode mudar)"))
         if p.nivel_regras != a.nivel:
             out.append(f"- Regras de treino usadas: **{p.nivel_regras}** (menor de idade)")
         out += plano_md(a, p, cfg, detalhe_semanas=tuple(sorted(set(detalhe))))

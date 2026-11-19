@@ -410,3 +410,10 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - **Simulação de temporada** (`ww.simulacao`, `core/tests/test_simulacao.py`): 7 cenários × 182 dias, comportamento realista; verificação dia a dia de todos os limites. **0 violações** em todos. Relatório: `docs/simulacao_fase3.md`.
 - **Limitação conhecida:** teste de FTP adiado por amarelo ainda não é remarcado automaticamente.
 - **Estado:** Provisória — a Fase 3 aguarda validação do Paulo.
+
+### D-069 — Intensidade preferida do atleta, 1 (menos agressivo) a 5 (mais agressivo) (Paulo, 19/11/2026)
+- Pergunta no perfil "Que intensidade de treino preferes?"; sugestão 3 (= comportamento anterior, planos validados não mudam); o atleta escolhe.
+- Efeitos (`config/motor.yaml` → `plano.agressividade`): subida da carga 70 / 85 / 100 / 100 / 100% do máximo do nível; dificuldade das sessões-chave −1 / −1 / 0 / +1 / +1; sessões-chave por semana −1 / 0 / 0 / 0 / +1 (máximo 3); carga da semana de recuperação 55 / 60 / 60 / 65 / 70%.
+- **A preferência nunca passa por cima da segurança:** a subida máxima de cada nível, os 2 dias seguidos de alta intensidade e todas as regras do motor diário mantêm-se. Menores de 18: limitado a 3.
+- Exemplo (avançado, 12 semanas): carga total 3459 → 4850 e Condição final 38,5 → 52,9 do nível 1 ao 5. Simulação de 6 meses com nível 5: 0 violações.
+- **Estado:** Provisória (o Paulo valida os valores de cada nível).

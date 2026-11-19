@@ -1,6 +1,6 @@
 # Wattwise — Simulação de temporada (Fase 3)
 
-Motor v1.0, configuração `84864caff0ec`. Cada cenário: 182 dias (6 meses) dia a dia. O atleta simulado falha treinos, às vezes faz mais do que o previsto, vai a voltas de grupo, dorme mal e fica doente; a VFC, a FC de repouso e o cansaço reagem à fadiga. O motor decide cada manhã.
+Motor v1.0, configuração `55c30bee202b`. Cada cenário: 182 dias (6 meses) dia a dia. O atleta simulado falha treinos, às vezes faz mais do que o previsto, vai a voltas de grupo, dorme mal e fica doente; a VFC, a FC de repouso e o cansaço reagem à fadiga. O motor decide cada manhã.
 
 **Critério da Fase 3 (spec 11):** nenhuma violação dos limites de segurança (spec 7.3), verificados dia a dia sobre as prescrições do motor: nada com sinal de alarme; sem intensidade com doença; dias vermelhos só com recuperação/descanso; nunca mais de 2 dias seguidos de alta intensidade (contando o que o atleta fez de facto, incluindo voltas de grupo); a Condição nunca sobe mais do que a rampa do nível em 7 dias (com a carga real); recuperação pelo menos a cada 4 semanas.
 
@@ -13,6 +13,7 @@ Motor v1.0, configuração `84864caff0ec`. Cada cenário: 182 dias (6 meses) dia
 | sem vfc | **0** | 92% | 7% | 1% | 0 | 5 → 10 | 45 |
 | epoca com provas e etapas | **0** | 71% | 20% | 9% | 0 | 17 → 39 | 109 |
 | juvenil | **0** | 90% | 5% | 5% | 0 | 10 → 30 | 92 |
+| mais agressivo 5 | **0** | 73% | 20% | 7% | 0 | 18 → 54 | 133 |
 
 ## Iniciante sem potenciometro
 
@@ -83,6 +84,16 @@ Atleta: Filipe (fictício) (competicao). Comportamento: cumprimento 90%, faz mai
 **Decisões:** verde: treino mantido (93), dia de descanso (78), vermelho: recuperação ativa (3), doença: recuperação, sem intensidade (3), amarelo: resistência mais curta (2), amarelo: versão mais fácil (2), guarda da rampa: treino reduzido (1), amarelo: recuperação mantida (1)
 
 Exemplo (29/11): estado **amarelo**; sinais: sono curto = 5.8 (limiar 6.0); planeado: Tejo · Resistência Z2 60 min → final: Tejo · Resistência Z2 45 min; dados em falta: vfc_a_calibrar, fc_repouso
+
+## Mais agressivo 5
+
+Atleta: Carlos (fictício) (avancado). Comportamento: cumprimento 90%, faz mais 20% das vezes, volta de grupo 30% dos sábados livres.
+
+**Sinais mais frequentes:** frescura negativa (31), sono curto (11), frescura muito negativa (6), cansaço (5), dores musculares (5), FC de repouso alta (1)
+
+**Decisões:** verde: treino mantido (115), dia de descanso (26), amarelo: resistência mais curta (17), amarelo: versão mais fácil (12), vermelho: recuperação ativa (11), amarelo: recuperação mantida (1), guarda da rampa: treino reduzido (1)
+
+Exemplo (06/12): estado **vermelho**; sinais: cansaço = 4 (limiar 4), dores musculares = 4 (limiar 4), frescura negativa = -28.4 (limiar -25.0); planeado: Montejunto · Sweet spot 3 × 15 min 80 min, Montejunto · Sweet spot 3 × 15 min 80 min → final: Mondego · Recuperação ativa 40 min, Mondego · Recuperação ativa 40 min
 
 ---
 
