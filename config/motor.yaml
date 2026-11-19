@@ -42,6 +42,23 @@ modelo_potencia_critica:
     w_linha_j: 15000
     pmax_w_por_kg: 14.0
 
+eftp:
+  # morton_1_esforco (por defeito) | morton_3p | monod_2p  (spec 6.1)
+  metodo: morton_1_esforco
+  # Durações (s) guardadas na curva de cada atividade para os modelos
+  duracoes_curva_s: [5, 10, 15, 30, 60, 120, 180, 240, 300, 420, 600, 900, 1200, 1500, 1800]
+  # W' e Pmax do próprio atleta: ajuste de 3 parâmetros aos melhores esforços desta janela
+  janela_perfil_dias: 90
+  w_linha_plausivel_j: [5000, 40000]   # fora disto usa-se a população
+  # eFTP com histórico: sem esforços comparáveis, desce devagar (D-023). A VALIDAR.
+  decaimento_carencia_dias: 28
+  decaimento_pct_por_semana: 0.5
+  # Subidas acima disto precisam de 2.º esforço (outra atividade) ou de treinos de limiar cumpridos
+  subida_sem_confirmacao_max_pct: 3.0
+  alteracao_minima_pct: 1.0      # abaixo disto não se incomoda o atleta
+  dias_para_resposta: 3          # depois: aplica descidas, nunca subidas
+  fator_teste_20min: 0.95
+
 qualidade:
   potencia_maxima_plausivel_w: 2500
   fc_minima_plausivel: 30

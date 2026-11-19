@@ -117,3 +117,20 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 ### D-022 — Falha de sinal de potência
 - **Decisão:** potência 0 com cadência > 30 rpm = falha de sinal (passa a desconhecida). Potência 0 sem cadência = parou de pedalar (válido).
 - **Estado:** Provisória.
+
+### D-023 — Decaimento do eFTP com histórico
+- **Decisão:** cada esforço vale por inteiro durante 28 dias; depois a sua potência desce 0,5% por semana (composto). Ex.: 10 semanas após a carência → ×0,951. O eFTP da época não decai.
+- **Consequência:** sem esforços duros há ~6 semanas, o eFTP com histórico desce mais de 1% e gera uma proposta de descida ("sem esforços recentes"), que se aplica se o atleta não responder em 3 dias (spec 6.1).
+- **Estado:** Provisória (o Paulo valida o ritmo de decaimento e se as descidas por decaimento devem aplicar-se sozinhas).
+
+### D-024 — Subidas grandes de FTP sem confirmação
+- **Decisão:** se o eFTP sobe mais de 3% e só há uma atividade a suportá-lo (sem treinos de limiar cumpridos), propõe-se subir **apenas até +3%** e explica-se que o resto aguarda confirmação. Com um 2.º esforço noutra atividade (também ≥ +3%) ou treinos de limiar cumpridos, propõe-se o valor completo.
+- **Alternativa:** não propor nada até haver confirmação. Escolhi a subida parcial porque o atleta vê progresso sem risco grande.
+- **Estado:** Provisória.
+
+### D-025 — Pormenores do eFTP
+- Esforços usados no método de 1 esforço: 5–30 min (configurável), só de atividades com qualidade suficiente.
+- W′ e Pmax do próprio atleta: ajuste de Morton (3 parâmetros) aos melhores esforços dos últimos 90 dias, se houver um esforço ≤ 15 s, um de 2–6 min e um de 10–30 min, e W′ entre 5 000 e 40 000 J. Caso contrário, valores de população (W′ 15 000 J; Pmax 14 W/kg) — **a validar pelo Paulo**.
+- Cada estimativa guarda os esforços que a determinaram (marcadores do gráfico 4).
+- Alterações abaixo de 1% não geram proposta.
+- **Estado:** Provisória.

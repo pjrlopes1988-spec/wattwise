@@ -76,6 +76,19 @@ class ModeloPotenciaCritica(_Base):
     populacao: Populacao
 
 
+class Eftp(_Base):
+    metodo: Literal["morton_1_esforco", "morton_3p", "monod_2p"]
+    duracoes_curva_s: list[int]
+    janela_perfil_dias: int = Field(gt=0)
+    w_linha_plausivel_j: tuple[float, float]
+    decaimento_carencia_dias: int = Field(ge=0)
+    decaimento_pct_por_semana: float = Field(ge=0, lt=10)
+    subida_sem_confirmacao_max_pct: float = Field(ge=0)
+    alteracao_minima_pct: float = Field(ge=0)
+    dias_para_resposta: int = Field(ge=1)
+    fator_teste_20min: float = Field(gt=0.8, le=1.0)
+
+
 class Qualidade(_Base):
     potencia_maxima_plausivel_w: float = Field(gt=0)
     fc_minima_plausivel: float = Field(gt=0)
@@ -92,6 +105,7 @@ class Config(_Base):
     frequencia_cardiaca: FrequenciaCardiaca
     carga_forma: CargaForma
     modelo_potencia_critica: ModeloPotenciaCritica
+    eftp: Eftp
     qualidade: Qualidade
     versao: str = ""
 
