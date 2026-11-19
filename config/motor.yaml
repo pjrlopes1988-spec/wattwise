@@ -116,3 +116,52 @@ modelo_fc_personalizado:
   minimo_atividades: 20
   r2_minimo: 0.8
   janela_dias: 180
+
+# ------------------------------------------------------------------ Fase 2: perfil e plano
+perfil:
+  idade_minima: 10                 # pedido do Paulo (19/11/2026); a spec tinha 18 (D-045)
+  idade_consentimento_proprio: 14  # abaixo disto: consentimento de um responsável legal (PT 13, ES 14). Jurista.
+  idade_adulto: 18                 # abaixo disto: regras de treino de iniciante, seja qual for o nível
+  # Valores conservadores quando o atleta não sabe (marcados "estimado"; teste guiado na 1.ª semana) (D-042)
+  ftp_w_kg_estimado: {iniciante: 2.0, intermedio: 2.6, avancado: 3.2, competicao: 3.8}
+  fator_ftp_feminino: 0.88
+  fc_limiar_fator_fc_max: 0.90     # FC limiar ≈ 90% da FC máxima
+  fc_repouso_estimada: 60
+
+plano:
+  # Subida máxima da Condição por semana (spec 7.3) (D-043)
+  rampa_condicao_semana: {iniciante: 5, intermedio: 6, avancado: 7, competicao: 8}
+  semanas_carga_por_ciclo: 3            # 3 de carga + 1 de recuperação (spec 7.2)
+  fator_semana_recuperacao: 0.60        # carga da semana de recuperação vs. última de carga
+  fator_afinacao: 0.55                  # carga da semana de afinação vs. última de carga
+  semanas_base_arranque_frio: 3         # atleta sem histórico (spec 7.6)
+  semanas_especifico: 4
+  semanas_construcao_max: 8
+  semanas_afinacao_prova_longe: 2       # prova a 12+ semanas
+  semanas_prova_longe: 12
+  horizonte_sem_prova_semanas: 12
+  carga_prova_estimada: 100
+  sessoes_chave:
+    base: {iniciante: 0, intermedio: 1, avancado: 1, competicao: 1}
+    construcao: {iniciante: 1, intermedio: 2, avancado: 2, competicao: 2}
+    especifico: {iniciante: 1, intermedio: 2, avancado: 2, competicao: 2}
+    recuperacao: {iniciante: 0, intermedio: 0, avancado: 0, competicao: 0}
+    afinacao: {iniciante: 1, intermedio: 1, avancado: 1, competicao: 1}
+  tipos_por_fase:
+    base: [tempo, forca, sweetspot]
+    construcao: [sweetspot, limiar]
+    afinacao: [vo2max]
+    especifico:
+      estrada: [limiar, vo2max]
+      gravel: [sweetspot, limiar]
+      btt_xco: [vo2max, anaerobio]
+      btt_maratona: [sweetspot, limiar]
+      contrarrelogio: [limiar, sweetspot]
+  dificuldade_max: {iniciante: 2, intermedio: 3, avancado: 4, competicao: 5}
+  dias_descanso_min: {iniciante: 2, intermedio: 1, avancado: 1, competicao: 1}
+  max_dias_alta_intensidade_seguidos: 2  # spec 7.3
+  tipos_alta_intensidade: [limiar, vo2max, anaerobio, teste]
+  duracao_minima_sessao_chave_min: 45
+  duracao_minima_treino_min: 30
+  arredondar_min: 15
+  fracao_carga_dia_longo: 0.4           # parte da carga de resistência que vai para o dia longo

@@ -114,6 +114,78 @@ class ModeloFCPersonalizado(_Base):
     janela_dias: int = Field(gt=0)
 
 
+Nivel = Literal["iniciante", "intermedio", "avancado", "competicao"]
+PorNivel = dict[Nivel, float]
+
+
+def _todos_os_niveis(v: dict) -> dict:
+    falta = {"iniciante", "intermedio", "avancado", "competicao"} - set(v)
+    if falta:
+        raise ValueError(f"faltam níveis: {sorted(falta)}")
+    return v
+
+
+class Perfil(_Base):
+    idade_minima: int = Field(ge=10)
+    idade_consentimento_proprio: int = Field(ge=13)
+    idade_adulto: int = Field(ge=16)
+    ftp_w_kg_estimado: PorNivel
+    fator_ftp_feminino: float = Field(gt=0.5, le=1.0)
+    fc_limiar_fator_fc_max: float = Field(gt=0.7, lt=1.0)
+    fc_repouso_estimada: float = Field(gt=30, lt=100)
+
+    _v = field_validator("ftp_w_kg_estimado")(_todos_os_niveis)
+
+
+class TiposEspecifico(_Base):
+    estrada: list[str]
+    gravel: list[str]
+    btt_xco: list[str]
+    btt_maratona: list[str]
+    contrarrelogio: list[str]
+
+
+class TiposPorFase(_Base):
+    base: list[str]
+    construcao: list[str]
+    afinacao: list[str]
+    especifico: TiposEspecifico
+
+
+class SessoesChave(_Base):
+    base: PorNivel
+    construcao: PorNivel
+    especifico: PorNivel
+    recuperacao: PorNivel
+    afinacao: PorNivel
+
+
+class Plano(_Base):
+    rampa_condicao_semana: PorNivel
+    semanas_carga_por_ciclo: int = Field(ge=1, le=3)   # spec 7.3: recuperação pelo menos a cada 4 semanas
+    fator_semana_recuperacao: float = Field(gt=0, lt=1)
+    fator_afinacao: float = Field(gt=0, lt=1)
+    semanas_base_arranque_frio: int = Field(ge=0)
+    semanas_especifico: int = Field(ge=0)
+    semanas_construcao_max: int = Field(ge=0)
+    semanas_afinacao_prova_longe: int = Field(ge=1)
+    semanas_prova_longe: int = Field(ge=1)
+    horizonte_sem_prova_semanas: int = Field(ge=4)
+    carga_prova_estimada: float = Field(gt=0)
+    sessoes_chave: SessoesChave
+    tipos_por_fase: TiposPorFase
+    dificuldade_max: PorNivel
+    dias_descanso_min: PorNivel
+    max_dias_alta_intensidade_seguidos: int = Field(ge=1)
+    tipos_alta_intensidade: list[str]
+    duracao_minima_sessao_chave_min: int = Field(gt=0)
+    duracao_minima_treino_min: int = Field(gt=0)
+    arredondar_min: int = Field(gt=0)
+    fracao_carga_dia_longo: float = Field(gt=0, lt=1)
+
+    _v = field_validator("rampa_condicao_semana", "dificuldade_max", "dias_descanso_min")(_todos_os_niveis)
+
+
 class Qualidade(_Base):
     potencia_maxima_plausivel_w: float = Field(gt=0)
     fc_minima_plausivel: float = Field(gt=0)
@@ -156,6 +228,8 @@ class Config(_Base):
     seiler: Seiler
     dados: Dados
     modelo_fc_personalizado: ModeloFCPersonalizado
+    perfil: Perfil
+    plano: Plano
     qualidade: Qualidade
     versao: str = ""
 

@@ -236,3 +236,37 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Com a FC de repouso real (48): 09/11 → 48,6 (−2,8%); 14/11 → 112,7 (−4,5%). Diferença explicada pelo valor de repouso, não pelo método. **A confirmar** depois de o Paulo corrigir o "RH Mínimo" no Intervals.icu.
 - **Correção na app:** um perfil com FC repouso ≥ FC limiar (ou FC limiar ≥ FC máx.) fazia a análise parar com erro. Agora não se calcula HRSS, a carga passa para o recurso seguinte (RPE) e a atividade leva o aviso `perfil_fc_invalido` para o atleta corrigir o perfil.
 - **Estado:** Provisória.
+
+## Fase 2 — perfil do atleta e geração do plano
+
+### D-042 — Estimativas de perfil
+- FTP em falta: 2,0 / 2,6 / 3,2 / 3,8 W/kg (iniciante / intermédio / avançado / competição) × 0,88 se feminino. FC máx. em falta: Tanaka (208 − 0,7 × idade). FC limiar em falta: 90% da FC máx. FC repouso em falta: 60. Sempre marcados "estimado"; nunca substituem valores do atleta.
+- Teste guiado na 1.ª semana se o valor de referência for estimado: teste de 20 min (com potenciómetro) ou teste de FC limiar de 30 min (sem). Nunca é o primeiro treino do plano.
+- **Estado:** Provisória (o Paulo valida os valores).
+
+### D-043 — Carga semanal e limites de segurança do plano
+- Carga-alvo das semanas de carga: a que sobe a Condição o máximo permitido (5 / 6 / 7 / 8 pontos por semana por nível). Recuperação: 60% da última semana de carga; afinação: 55%.
+- A subida da Condição é verificada em **quaisquer 7 dias seguidos** (não só de segunda a domingo); se ultrapassar, encurtam-se os treinos de resistência. Um teste apanhou uma subida de 8,5 com limite 8 entre duas semanas.
+- Recuperação após cada 3 semanas de carga; nunca mais de 2 dias seguidos de alta intensidade (também entre semanas e contando a prova); dias de descanso mínimos por nível (2 iniciante, 1 restantes; a prova conta como dia de treino).
+- Quando a disponibilidade não chega, o plano fica abaixo do alvo (nunca acima) e regista "carga limitada pela disponibilidade".
+- **Estado:** Provisória.
+
+### D-044 — Biblioteca de treinos provisória
+- `config/treinos.yaml`: 23 treinos (recuperação, resistência escalável, tempo, força em cadência baixa, sweet spot, limiar, VO2máx, anaeróbio, ativação pré-prova, testes). Carga prevista = horas × (intensidade)² × 100.
+- Progressão: dificuldade sobe 1 por semana dentro da fase, a começar 2 abaixo do máximo do nível (iniciante 1, intermédio 1, avançado 2, competição 3). Afinação: o treino mais leve do tipo. Testes não dependem do nível.
+- **Estado:** Provisória — **o Paulo valida/substitui** (spec 13).
+
+### D-045 — Idade mínima 10 anos
+- **Decisão do Paulo (19/11/2026):** idade mínima 10 anos (a spec tinha 18).
+- Salvaguardas: abaixo dos 14 anos é obrigatório o consentimento de um responsável legal (RGPD: PT 13, ES 14 — usa-se 14); menores de 18 usam sempre as regras de treino de iniciante.
+- **A validar com jurista:** consentimento para dados de saúde de menores. **A validar pelo Paulo:** regras próprias para jovens.
+- **Estado:** Aprovada (idade); salvaguardas provisórias.
+
+### D-046 — Alvos sem potenciómetro
+- Zona de potência do passo → zona de FC de Friel (Z1 65–80%, Z2 81–89%, Z3 90–93%, Z4 94–100%, Z5 100–106% da FC limiar). Esforços curtos acima do limiar (< 3 min, Z5+) e Z6/Z7: esforço percebido (a FC não acompanha).
+- **Estado:** Provisória.
+
+### D-047 — Cenários de teste do plano
+- 6 atletas fictícios em `core/tests/cenarios.py` (iniciante sem potenciómetro, intermédio com prova a 16 semanas, avançado com tudo, competição XCO com prova a 8 semanas, pouca disponibilidade, juvenil de 14 anos). Regras de segurança verificadas por testes em todos.
+- Relatório para validação: `docs/cenarios_fase2.md` (`python -m ww.relatorio_plano`).
+- **Estado:** Aguarda validação do Paulo (critério da Fase 2).

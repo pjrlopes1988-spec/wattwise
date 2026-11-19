@@ -1,0 +1,278 @@
+# Biblioteca inicial de treinos — Wattwise (D-044)
+# PROVISÓRIA: o Paulo valida, corrige e acrescenta (spec 13).
+#
+# Cada treino: id, nome, tipo, dificuldade (1–5) e passos.
+# Passo: {min: duração, pct: [mín, máx] em % do FTP, cadencia: [mín, máx] (opcional)}
+# Bloco repetido: {repetir: N, passos: [...]}
+# Treinos de resistência/recuperação com "escalavel: true": o passo marcado com
+# "escala: true" estica ou encolhe para caber no tempo pedido pelo plano.
+#
+# Tipos: recuperacao, resistencia, tempo, forca, sweetspot, limiar, vo2max, anaerobio, teste
+
+- id: recuperacao
+  nome: Recuperação ativa
+  tipo: recuperacao
+  dificuldade: 1
+  escalavel: true
+  passos:
+    - {min: 30, pct: [45, 55], escala: true}
+
+- id: resistencia
+  nome: Resistência Z2
+  tipo: resistencia
+  dificuldade: 1
+  escalavel: true
+  passos:
+    - {min: 10, pct: [50, 60]}
+    - {min: 40, pct: [62, 72], escala: true}
+    - {min: 10, pct: [50, 60]}
+
+- id: tempo_3x10
+  nome: Tempo 3 × 10 min
+  tipo: tempo
+  dificuldade: 2
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 3
+      passos:
+        - {min: 10, pct: [76, 85]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: tempo_2x20
+  nome: Tempo 2 × 20 min
+  tipo: tempo
+  dificuldade: 3
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 2
+      passos:
+        - {min: 20, pct: [76, 87]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: forca_5x5
+  nome: Força 5 × 5 min em cadência baixa
+  tipo: forca
+  dificuldade: 2
+  passos:
+    - {min: 10, pct: [55, 65]}
+    - repetir: 5
+      passos:
+        - {min: 5, pct: [78, 82], cadencia: [50, 60]}
+        - {min: 3, pct: [50, 60]}
+    - {min: 7, pct: [50, 60]}
+
+- id: sweetspot_3x10
+  nome: Sweet spot 3 × 10 min
+  tipo: sweetspot
+  dificuldade: 2
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 3
+      passos:
+        - {min: 10, pct: [88, 93]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: sweetspot_3x15
+  nome: Sweet spot 3 × 15 min
+  tipo: sweetspot
+  dificuldade: 3
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 3
+      passos:
+        - {min: 15, pct: [88, 93]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: sweetspot_2x30
+  nome: Sweet spot 2 × 30 min
+  tipo: sweetspot
+  dificuldade: 4
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 2
+      passos:
+        - {min: 30, pct: [88, 93]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: limiar_4x6
+  nome: Limiar 4 × 6 min
+  tipo: limiar
+  dificuldade: 2
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 4
+      passos:
+        - {min: 6, pct: [95, 100]}
+        - {min: 4, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: limiar_4x8
+  nome: Limiar 4 × 8 min
+  tipo: limiar
+  dificuldade: 3
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 4
+      passos:
+        - {min: 8, pct: [95, 102]}
+        - {min: 4, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: limiar_3x12
+  nome: Limiar 3 × 12 min
+  tipo: limiar
+  dificuldade: 4
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 3
+      passos:
+        - {min: 12, pct: [95, 102]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: limiar_2x20
+  nome: Limiar 2 × 20 min
+  tipo: limiar
+  dificuldade: 5
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 2
+      passos:
+        - {min: 20, pct: [95, 100]}
+        - {min: 8, pct: [50, 60]}
+    - {min: 10, pct: [50, 60]}
+
+- id: vo2_5x3
+  nome: VO2máx 5 × 3 min
+  tipo: vo2max
+  dificuldade: 2
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 5
+      passos:
+        - {min: 3, pct: [106, 115]}
+        - {min: 3, pct: [45, 55]}
+    - {min: 10, pct: [50, 60]}
+
+- id: vo2_5x4
+  nome: VO2máx 5 × 4 min
+  tipo: vo2max
+  dificuldade: 3
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 5
+      passos:
+        - {min: 4, pct: [106, 118]}
+        - {min: 4, pct: [45, 55]}
+    - {min: 10, pct: [50, 60]}
+
+- id: vo2_6x4
+  nome: VO2máx 6 × 4 min
+  tipo: vo2max
+  dificuldade: 4
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - repetir: 6
+      passos:
+        - {min: 4, pct: [108, 120]}
+        - {min: 4, pct: [45, 55]}
+    - {min: 10, pct: [50, 60]}
+
+- id: vo2_ativacao
+  nome: Ativação pré-prova 3 × 1 min
+  tipo: vo2max
+  dificuldade: 1
+  passos:
+    - {min: 20, pct: [55, 70]}
+    - repetir: 3
+      passos:
+        - {min: 1, pct: [110, 120]}
+        - {min: 3, pct: [45, 55]}
+    - {min: 10, pct: [50, 60]}
+
+- id: anaerobio_8x30s
+  nome: Anaeróbio 8 × 30 s
+  tipo: anaerobio
+  dificuldade: 3
+  passos:
+    - {min: 20, pct: [55, 70]}
+    - repetir: 8
+      passos:
+        - {min: 0.5, pct: [130, 150]}
+        - {min: 4.5, pct: [45, 55]}
+    - {min: 10, pct: [50, 60]}
+
+- id: teste_20min
+  nome: Teste de FTP (20 min)
+  tipo: teste
+  dificuldade: 3
+  passos:
+    - {min: 20, pct: [55, 70]}
+    - {min: 5, pct: [105, 115]}
+    - {min: 10, pct: [50, 60]}
+    - {min: 20, pct: [100, 110]}
+    - {min: 10, pct: [45, 55]}
+
+- id: teste_fc_limiar_30min
+  nome: Teste de FC limiar (30 min, sem potenciómetro)
+  tipo: teste
+  dificuldade: 3
+  so_sem_potencia: true
+  passos:
+    - {min: 15, pct: [55, 70]}
+    - {min: 30, pct: [95, 105]}
+    - {min: 10, pct: [45, 55]}
+
+# --- versões curtas (dias de semana com ~60 min)
+- id: sweetspot_2x12
+  nome: Sweet spot 2 × 12 min
+  tipo: sweetspot
+  dificuldade: 1
+  passos:
+    - {min: 12, pct: [55, 70]}
+    - repetir: 2
+      passos:
+        - {min: 12, pct: [88, 93]}
+        - {min: 4, pct: [50, 60]}
+    - {min: 8, pct: [50, 60]}
+
+- id: limiar_3x8
+  nome: Limiar 3 × 8 min
+  tipo: limiar
+  dificuldade: 2
+  passos:
+    - {min: 12, pct: [55, 70]}
+    - repetir: 3
+      passos:
+        - {min: 8, pct: [95, 100]}
+        - {min: 4, pct: [50, 60]}
+    - {min: 8, pct: [50, 60]}
+
+- id: tempo_2x15
+  nome: Tempo 2 × 15 min
+  tipo: tempo
+  dificuldade: 1
+  passos:
+    - {min: 12, pct: [55, 70]}
+    - repetir: 2
+      passos:
+        - {min: 15, pct: [76, 85]}
+        - {min: 5, pct: [50, 60]}
+    - {min: 3, pct: [50, 60]}
+
+- id: vo2_4x3
+  nome: VO2máx 4 × 3 min
+  tipo: vo2max
+  dificuldade: 1
+  passos:
+    - {min: 12, pct: [55, 70]}
+    - repetir: 4
+      passos:
+        - {min: 3, pct: [106, 115]}
+        - {min: 3, pct: [45, 55]}
+    - {min: 8, pct: [50, 60]}
