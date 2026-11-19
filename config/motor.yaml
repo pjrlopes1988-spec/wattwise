@@ -68,3 +68,15 @@ qualidade:
   pausa_minima_s: 10                 # intervalo sem registos maior que isto = pausa
   indice_minimo_para_modelos: 0.9    # eFTP, W' e modelos personalizados
   penalizacao_fc_otica: 0.1
+
+recuperacao:
+  # VFC (spec 6.4): média de 7 dias comparada com a faixa normal dos últimos 60 dias (D-026)
+  vfc_janela_media_dias: 7
+  vfc_minimo_valores_na_media: 4     # menos medições na semana → sem estado
+  vfc_janela_faixa_dias: 60
+  vfc_largura_faixa_dp: 1.0          # faixa = média ± 1,0 desvio-padrão. A VALIDAR.
+  vfc_dias_calibracao: 14            # antes disto: "a calibrar", o motor não usa a VFC
+  # FC de repouso: mesma abordagem; "elevada" = média de 7 dias acima da faixa
+  fcr_largura_faixa_dp: 1.0
+  fcr_dias_elevada_alerta: 3         # dias seguidos elevada → sinal de alerta
+  sono_curto_h: 6.0

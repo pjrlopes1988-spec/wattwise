@@ -134,3 +134,17 @@ Estados: **Proposta** · **Provisória** (em uso; o Paulo pode mudar a qualquer 
 - Cada estimativa guarda os esforços que a determinaram (marcadores do gráfico 4).
 - Alterações abaixo de 1% não geram proposta.
 - **Estado:** Provisória.
+
+### D-026 — Linha de base da VFC e da FC de repouso
+- **Decisão:**
+  - VFC transformada em ln, tanto rMSSD como SDNN (a spec só refere rMSSD; aplico o mesmo ao SDNN porque ambos têm distribuição assimétrica). Cada fonte + métrica tem linha de base própria.
+  - Estado do dia: média dos últimos 7 dias (mín. 4 medições) comparada com a faixa normal = média ± **1,0** desvio-padrão dos valores diários dos últimos 60 dias.
+  - "A calibrar" até a fonte em uso ter 14 dias com medição. Ao mudar de fonte, recomeça a calibração.
+  - Várias medições no mesmo dia: média (em ln).
+  - FC de repouso: mesma abordagem, sem ln; alerta quando a média de 7 dias está acima da faixa 3 dias seguidos.
+  - Sono curto: < 6 h.
+- **Estado:** Provisória (o Paulo valida a largura da faixa — 1,0 DP é uma escolha minha; há quem use 0,5 ou 0,75 — e os 3 dias de alerta da FC repouso).
+
+### D-027 — Importação de bem-estar por CSV
+- **Decisão:** até haver integrações (Fase 5), a VFC, a FC de repouso e o sono entram por CSV exportado da app do atleta. Formato base `data;fonte;rmssd;sdnn;fc_repouso;sono_h`; outros formatos com um mapa de colunas. Valores fora de limites plausíveis são rejeitados e reportados, nunca corrigidos.
+- **Estado:** Provisória.

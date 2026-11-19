@@ -89,6 +89,17 @@ class Eftp(_Base):
     fator_teste_20min: float = Field(gt=0.8, le=1.0)
 
 
+class Recuperacao(_Base):
+    vfc_janela_media_dias: int = Field(ge=1)
+    vfc_minimo_valores_na_media: int = Field(ge=1)
+    vfc_janela_faixa_dias: int = Field(ge=14)
+    vfc_largura_faixa_dp: float = Field(gt=0)
+    vfc_dias_calibracao: int = Field(ge=7)
+    fcr_largura_faixa_dp: float = Field(gt=0)
+    fcr_dias_elevada_alerta: int = Field(ge=1)
+    sono_curto_h: float = Field(gt=0)
+
+
 class Qualidade(_Base):
     potencia_maxima_plausivel_w: float = Field(gt=0)
     fc_minima_plausivel: float = Field(gt=0)
@@ -106,6 +117,7 @@ class Config(_Base):
     carga_forma: CargaForma
     modelo_potencia_critica: ModeloPotenciaCritica
     eftp: Eftp
+    recuperacao: Recuperacao
     qualidade: Qualidade
     versao: str = ""
 
